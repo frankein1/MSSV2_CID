@@ -108,11 +108,39 @@
 
   const trpcClient = useTrpcClient()
 
+  // Multi-structure support
+  const { data: multiStructureList } =
+    await trpcClient.config.getMultiStructureList.useQuery()
+
+  const isMultiStructure = computed(
+    () => (multiStructureList.value?.length ?? 0) > 1
+  )
+
+  const selectedStructureIds = ref<string[]>(
+    multiStructureList.value?.map(s => s.id) ?? []
+  )
+
+  const structureOptions = computed(() =>
+    toOptions(multiStructureList.value ?? [], 'id', 'name')
+  )
+
+  provide('multiStructureConfig', {
+    structureOptions,
+    selectedStructureIds,
+    isMultiStructure
+  })
+
+  const filterOptionsInput = computed(() =>
+    isMultiStructure.value && selectedStructureIds.value.length
+      ? { structureIds: selectedStructureIds.value }
+      : undefined
+  )
+
   const {
     data: socialSupportSubjectOptions,
     error: socialSupportSubjectOptionsError
   } = await trpcClient.structure.getActiveOrUsedSocialSupportSubjects.useQuery(
-    undefined,
+    filterOptionsInput,
     {
       transform: socialSupportSubject =>
         toOptions(socialSupportSubject, 'id', 'name'),
@@ -123,22 +151,29 @@
   const {
     data: beneficiariesCitiesOptions,
     error: beneficiariesCitiesOptionsError
-  } = await trpcClient.config.getBeneficiariesCities.useQuery(undefined, {
-    transform: beneficiariesCities => {
-      const definedCities = beneficiariesCities.filter(hasDefinedCity)
-      return toOptions(definedCities, 'city', 'city')
+  } = await trpcClient.config.getBeneficiariesCities.useQuery(
+    filterOptionsInput,
+    {
+      transform: beneficiariesCities => {
+        const definedCities = beneficiariesCities.filter(hasDefinedCity)
+        return toOptions(definedCities, 'city', 'city')
+      }
     }
-  })
+  )
 
   const {
     data: beneficiariesEmployersOptions,
     error: beneficiariesEmployersOptionsError
-  } = await trpcClient.config.getBeneficiariesEmployers.useQuery(undefined, {
-    transform: beneficiariesEmployers => {
-      const definedEmployers = beneficiariesEmployers.filter(hasDefinedEmployer)
-      return toOptions(definedEmployers, 'employer', 'employer')
+  } = await trpcClient.config.getBeneficiariesEmployers.useQuery(
+    filterOptionsInput,
+    {
+      transform: beneficiariesEmployers => {
+        const definedEmployers =
+          beneficiariesEmployers.filter(hasDefinedEmployer)
+        return toOptions(definedEmployers, 'employer', 'employer')
+      }
     }
-  })
+  )
 
   // const {
   //   data: beneficiariesSchoolsOptions,
@@ -162,10 +197,13 @@
   const {
     data: supportProgramNameOptions,
     error: supportProgramNameOptionsError
-  } = await trpcClient.supportProgram.getActiveNameList.useQuery(undefined, {
-    transform: programNames => toOptions(programNames, 'id', 'name'),
-    queryKey: 'config.getActiveSupportProgramNameList.options'
-  })
+  } = await trpcClient.supportProgram.getActiveNameList.useQuery(
+    filterOptionsInput,
+    {
+      transform: programNames => toOptions(programNames, 'id', 'name'),
+      queryKey: 'config.getActiveSupportProgramNameList.options'
+    }
+  )
 
   const fetchError = computed(() => {
     if (socialSupportSubjectOptionsError.value) {

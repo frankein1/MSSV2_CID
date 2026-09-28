@@ -8,7 +8,9 @@ export type SecurityRuleStructure = Pick<
 export type SecurityRuleGrantee = Pick<
   User,
   'id' | 'status' | 'role' | 'structureId'
->
+> & {
+  multiStructureIds?: string[]
+}
 
 export type SecurityRuleContext = {
   user: SecurityRuleGrantee

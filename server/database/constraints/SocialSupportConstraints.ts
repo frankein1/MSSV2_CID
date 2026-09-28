@@ -18,7 +18,11 @@ const get = (user: SecurityRuleGrantee) => {
 
   Object.assign<Prisma.SocialSupportWhereInput, Prisma.SocialSupportWhereInput>(
     where,
-    { structureId: user.structureId }
+    {
+      structureId: user.multiStructureIds
+        ? { in: user.multiStructureIds }
+        : user.structureId
+    }
   )
 
   if (isReferent(user)) {

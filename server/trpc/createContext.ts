@@ -11,7 +11,12 @@ export const createContext = async (event: H3Event) => {
   try {
     const user = await fetchUserContext(userId)
     enrichLogger(event, user)
-    return { event, user }
+    const multiStructureIds: string[] | undefined =
+      event.context.multiStructureIds
+    return {
+      event,
+      user: multiStructureIds ? { ...user, multiStructureIds } : user
+    }
   } catch {
     return { event, user: null }
   }

@@ -17,7 +17,9 @@ const get = (user: SecurityRuleGrantee) => {
     Prisma.SocialSupportSubjectWhereInput,
     Prisma.SocialSupportSubjectWhereInput
   >(where, {
-    ownedByStructureId: user.structureId
+    ownedByStructureId: user.multiStructureIds
+      ? { in: user.multiStructureIds }
+      : user.structureId
   })
 
   return where
