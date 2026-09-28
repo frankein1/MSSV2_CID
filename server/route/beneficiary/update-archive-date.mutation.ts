@@ -85,8 +85,8 @@ async function getUserAndBeneficiary(
     UserRepo.findUniqueOrThrow(ctx.user, {
       where: { id: ctx.user.id },
       select: {
-        firstName: true,
-        lastName: true
+        // firstName: true,
+        // lastName: true
       }
     }),
     BeneficiaryRepo.findUniqueOrThrow(ctx.user, {

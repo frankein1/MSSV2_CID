@@ -61,7 +61,7 @@
       socialSupportSubjectOptions: Options
       beneficiariesCitiesOptions: Options
       beneficiariesEmployersOptions: Options
-      beneficiariesSchoolsOptions: Options
+      beneficiariesSchoolsOptions?: Options
       agentOptions: Options
       supportProgramNameOptions?: Options
       filters: StatFilterInput
@@ -73,7 +73,8 @@
       isHelpRequest: false,
       isHistory: false,
       validationSchema: undefined,
-      supportProgramNameOptions: () => []
+      supportProgramNameOptions: () => [],
+      beneficiariesSchoolsOptions: () => []
     }
   )
 

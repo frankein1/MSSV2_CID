@@ -12,19 +12,19 @@ export async function getBeneficiaryListQuery(
     select: {
       id: true,
       familyFileId: true,
-      firstName: true,
-      birthName: true,
-      usualName: true,
-      birthDate: true,
-      phone1: true,
-      street: true,
+      // firstName: true,
+      // birthName: true,
+      // usualName: true,
+      // birthDate: true,
+      // phone1: true,
+      // street: true,
       city: true,
       zipcode: true,
       ...(options?.referents && {
         familyFile: {
           select: {
             referents: {
-              select: { id: true, firstName: true, lastName: true }
+              select: { id: true }
             }
           }
         }

@@ -52,7 +52,7 @@ const handler = async ({
     title: notificationTypeKeys.byKey[n.type],
     description: getDescription(n),
     descriptionHint: getDescriptionHint(n),
-    detail: n.comment?.content || n.detail
+    detail: null // ANONYMIZED: detail and comment.content removed
   }))
 
   return { notifications: formatNotifications, totalCount }

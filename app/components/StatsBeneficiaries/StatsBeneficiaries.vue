@@ -193,7 +193,7 @@
 
           <!-- ↓ SCHOOLS ↓ -->
 
-          <StatsCard
+          <!-- <StatsCard
             class="fr-col-12 fr-col-lg-6 fr-col-xl-4"
             :card-id="beneficiariesCardConfig.schoolClass.id"
             :card-name="beneficiariesCardConfig.schoolClass.name"
@@ -202,9 +202,9 @@
               :beneficiary-count="beneficiaryCount?.count || 0"
               :filters="filters"
             />
-          </StatsCard>
+          </StatsCard> -->
 
-          <StatsCard
+          <!-- <StatsCard
             class="fr-col-12 fr-col-lg-6 fr-col-xl-4"
             :card-id="beneficiariesCardConfig.repClassification.id"
             :card-name="beneficiariesCardConfig.repClassification.name"
@@ -213,7 +213,7 @@
               :beneficiary-count="beneficiaryCount?.count || 0"
               :filters="filters"
             />
-          </StatsCard>
+          </StatsCard> -->
 
           <StatsCard
             class="fr-col-12 fr-col-lg-6 fr-col-xl-4"

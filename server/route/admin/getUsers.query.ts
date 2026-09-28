@@ -45,10 +45,10 @@ const adminHandler = async ({
     where,
     select: {
       id: true,
-      lastName: true,
-      firstName: true,
+      // lastName: true,
+      // firstName: true,
       lastAccess: true,
-      email: true,
+      // email: true,
       role: true,
       status: true,
       structure: true

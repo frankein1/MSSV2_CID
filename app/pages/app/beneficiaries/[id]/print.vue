@@ -53,10 +53,10 @@
             <hr />
             <p class="fr-text--bold">Santé</p>
           </template>
-          <BeneficiaryInfoHealthContent
+          <!-- <BeneficiaryInfoHealthContent
             v-if="beneficiary.health"
             :health="beneficiary.health"
-          />
+          /> -->
           <template v-if="beneficiary.occupationIncome">
             <hr />
             <p class="fr-text--bold">Activité</p>

@@ -1,12 +1,16 @@
-import type { Beneficiary, BudgetIncome } from '@prisma/client'
 import { taxHouseHoldRelationshipKeys } from '~~/client/options'
 
 export const formatBudgetMemberLabel = (
-  income: Pick<BudgetIncome, 'relationship' | 'firstName' | 'lastName'> & {
-    beneficiary: Pick<
-      Beneficiary,
-      'relationship' | 'firstName' | 'usualName'
-    > | null
+  income: {
+    relationship?: unknown
+    firstName?: string | null
+    lastName?: string | null
+  } & {
+    beneficiary: {
+      relationship?: unknown
+      firstName?: string | null
+      usualName?: string | null
+    } | null
   }
 ) => {
   const beneficiary = income.beneficiary
@@ -16,7 +20,7 @@ export const formatBudgetMemberLabel = (
   names.push(`${firstName} ${lastName}`)
   const relationship = beneficiary?.relationship || income.relationship
   if (relationship) {
-    names.push(taxHouseHoldRelationshipKeys.value(relationship))
+    names.push(taxHouseHoldRelationshipKeys.value(relationship as string))
   }
   return `${names.join(' - ')} (${beneficiary ? 'Bénéficiaire' : 'Membre du foyer'})`
 }

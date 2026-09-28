@@ -22,10 +22,10 @@ export default defineEventHandler(async event => {
       id: userId
     },
     select: {
-      firstName: true,
-      lastName: true,
+      // firstName: true,
+      // lastName: true,
       id: true,
-      email: true,
+      // email: true,
       role: true,
       status: true,
       structureId: true,
@@ -70,10 +70,10 @@ export default defineEventHandler(async event => {
   const CGUHistoryVersion = user.CGUHistory[0]?.version || null
 
   const userProfile = {
-    firstName: user.firstName,
-    lastName: user.lastName,
+    // firstName: user.firstName,
+    // lastName: user.lastName,
     id: user.id,
-    email: user.email,
+    // email: user.email,
     role: user.role,
     status: user.status,
     structureId: user.structure?.id || null,

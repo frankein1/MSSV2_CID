@@ -107,26 +107,26 @@ export const getOneWithAttendees = async (
             beneficiary: {
               select: {
                 birthDate: true,
-                birthName: true,
-                firstName: true,
-                usualName: true,
+                // birthName: true,
+                // firstName: true,
+                // usualName: true,
                 title: true,
-                street: true,
+                // street: true,
                 city: true,
-                zipcode: true,
-                phone1: true,
-                email: true
+                zipcode: true
+                // phone1: true,
+                // email: true
               }
             },
             workshopExternalAttendee: {
               select: {
-                firstName: true,
-                lastName: true,
+                // firstName: true,
+                // lastName: true,
                 gender: true,
-                birthDate: true,
-                email: true,
+                // birthDate: true,
+                // email: true,
                 city: true,
-                phone: true,
+                // phone: true,
                 isAnonymized: true
               }
             }

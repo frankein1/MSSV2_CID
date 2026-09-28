@@ -86,13 +86,13 @@ export function formatSocialSupportDetail(
     familyFile
   })
 
-  const commentItems = filterComments({ comments, ctx })
+  // const commentItems = filterComments({ comments, ctx })
 
   return {
     data: {
       ...filteredSocialSupport,
       minister: minister,
-      comments: commentItems,
+      // comments: commentItems,
       documents: documentItems,
       hasUnreadNotifications: !!_count.notifications,
       followup: filteredFollowup,

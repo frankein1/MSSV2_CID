@@ -21,11 +21,12 @@
     >
       {{ partner.phone2 }}
     </div>
+    <!-- ANONYMIZED: email removed -->
     <div
-      v-if="el.email"
+      v-if="(el as any).email"
       class="fr-icon-mail-line partner-card-content__info fr-icon--sm fr-text--sm"
     >
-      {{ el.email }}
+      {{ (el as any).email }}
     </div>
     <div
       v-if="websiteDisplay"

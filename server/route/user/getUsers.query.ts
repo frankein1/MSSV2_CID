@@ -17,9 +17,9 @@ export const getUsers = async (ctx: ProtectedAppContext) => {
   const users = await UserRepo.findMany(ctx.user, {
     select: {
       id: true,
-      firstName: true,
-      lastName: true,
-      email: true,
+      // firstName: true,
+      // lastName: true,
+      // email: true,
       status: true,
       role: true,
       aidantConnectAuthorisation: true,

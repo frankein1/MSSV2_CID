@@ -9,19 +9,19 @@ const handler = async ({ ctx: { user } }: { ctx: ProtectedAppContext }) => {
   return await UserRepo.findMany(user, {
     select: {
       id: true,
-      firstName: true,
-      lastName: true,
+      // firstName: true,
+      // lastName: true,
       status: true
     },
     where: {
       role: { not: 'Administrator' },
       structureId: user.structureId
-    },
-    orderBy: { lastName: 'asc' }
+    }
+    // orderBy: { lastName: 'asc' }
   }).then(agents =>
     agents.map(user => ({
       id: user.id,
-      name: formatUserDisplayName(user),
+      name: formatUserDisplayName({ ...user, firstName: '', lastName: '' }),
       status: user.status
     }))
   )

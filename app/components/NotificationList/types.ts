@@ -12,9 +12,8 @@ export type NotificationItemType = {
   supportProgramId?: string | null
   beneficiary?: {
     id: string
-    firstName: string | null
-    usualName: string | null
-    birthName: string | null
+    // ANONYMIZED: firstName, usualName, birthName removed
+    archiveDueDate?: Date | null
     familyFile: {
       id: string
     }
@@ -22,14 +21,8 @@ export type NotificationItemType = {
   socialSupport?: {
     socialSupportType: SocialSupportType
   } | null
-  itemCreatedBy?: {
-    firstName: string | null
-    lastName: string | null
-  } | null
-  comment?: {
-    content: string | null
-  } | null
   detail?: string | null
   created?: Date | null
+  archiveDate?: Date | null
   onClick?: (() => void) | null
 }

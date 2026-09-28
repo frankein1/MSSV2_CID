@@ -1,16 +1,9 @@
-import type { Document } from '@prisma/client'
-import type { FieldLabels } from '~~/types/fieldLabels'
-
-type DocumentFieldLabels = Pick<
-  Document,
-  'type' | 'confidential' | 'tags' | 'name' | 'expirationDate'
-> & { file: string }
-
-export const documentFieldLabels: FieldLabels<DocumentFieldLabels> = {
+// ANONYMIZED: 'name' removed from Document schema
+export const documentFieldLabels = {
   type: 'Type de document',
   confidential: 'Confidentiel',
   tags: 'Thèmes',
   name: 'Nom du fichier',
   file: 'Fichier',
   expirationDate: "Date d'expiration"
-}
+} as const

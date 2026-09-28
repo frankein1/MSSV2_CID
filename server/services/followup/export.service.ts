@@ -147,7 +147,11 @@ async function getList({
   const [followups, users, partners, ministers] = await Promise.all([
     findAllForExport(ctx.user, where),
     UserRepo.findMany(ctx.user, {
-      select: { id: true, firstName: true, lastName: true }
+      select: {
+        id: true
+        //  firstName: true,
+        //  lastName: true
+      }
     }),
     PartnerOrganizationRepo.findMany(ctx.user, {
       select: {
@@ -159,8 +163,8 @@ async function getList({
     MinisterRepo.findMany(ctx.user, {
       select: {
         id: true,
-        firstName: true,
-        lastName: true,
+        // firstName: true,
+        // lastName: true,
         function: true,
         government: true
       }
@@ -211,14 +215,15 @@ function formatRow(filtered: FilteredFollowup, maps: LookupMaps): RowType {
     // endOfSocialSupport: getBooleanOrEmpty(filtered.endOfSocialSupport),
     status: socialSupportStatusKeys.value(filtered.status) || '',
     subjects: filtered.subjects.map(s => s.name).join(', '),
-    beneficiaryFileNumber: filtered.beneficiary.fileNumber || '',
-    beneficiaryLastName: nameOrEmpty(
-      filtered.beneficiary.usualName?.toLocaleUpperCase() ||
-        (filtered.beneficiary.birthName
-          ? `(${filtered.beneficiary.birthName?.toLocaleUpperCase()})`
-          : '')
-    ),
-    beneficiaryFirstName: nameOrEmpty(filtered.beneficiary.firstName),
+    // beneficiaryFileNumber: filtered.beneficiary.fileNumber || '',
+    beneficiaryLastName: '',
+    // nameOrEmpty(
+    //   filtered.beneficiary.usualName?.toLocaleUpperCase() ||
+    //     (filtered.beneficiary.birthName
+    //       ? `(${filtered.beneficiary.birthName?.toLocaleUpperCase()})`
+    //       : '')
+    // ),
+    // beneficiaryFirstName: nameOrEmpty(filtered.beneficiary.firstName),
     medium: followupMediumKeys.value(filtered.medium) || '',
     classified: getBooleanOrEmpty(filtered.classified),
     documents:
@@ -228,15 +233,15 @@ function formatRow(filtered: FilteredFollowup, maps: LookupMaps): RowType {
     dueDate: filtered.dueDate || '',
     forwardedToJustice: getBooleanOrEmpty(filtered.forwardedToJustice),
     helpRequested: getBooleanOrEmpty(filtered.helpRequested),
-    minister: minister ? formatMinisterName(minister) : '',
+    // minister: minister ? formatMinisterName(minister) : '',
     numeroPegase: filtered.numeroPegase || '',
     place: filtered.place || '',
     prescribingOrganizationId: prescribingOrg?.name || '',
     synthesis: filtered.synthesis || '',
     thirdPersonName: filtered.thirdPersonName || '',
     updated: filtered.updated || '',
-    createdById: createdBy ? formatUserDisplayName(createdBy) : '',
-    lastUpdatedById: lastUpdatedBy ? formatUserDisplayName(lastUpdatedBy) : '',
+    // createdById: createdBy ? formatUserDisplayName(createdBy) : '',
+    // lastUpdatedById: lastUpdatedBy ? formatUserDisplayName(lastUpdatedBy) : '',
     duration: followupDurationKeys.value(filtered.duration) || '',
     isDuringWalkInSession: getBooleanOrEmpty(filtered.isDuringWalkInSession),
     type: redirections

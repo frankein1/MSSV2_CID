@@ -103,12 +103,12 @@ export const beneficiaryMobilityKeys = buildKeys({
 })
 
 export const beneficiaryGirKeys = buildKeys({
-  [BeneficiaryGir.Level1]: 'Niveau 1',
-  [BeneficiaryGir.Level2]: 'Niveau 2',
-  [BeneficiaryGir.Level3]: 'Niveau 3',
-  [BeneficiaryGir.Level4]: 'Niveau 4',
-  [BeneficiaryGir.Level5]: 'Niveau 5',
-  [BeneficiaryGir.Level6]: 'Niveau 6'
+  // [BeneficiaryGir.Level1]: 'Niveau 1',
+  // [BeneficiaryGir.Level2]: 'Niveau 2',
+  // [BeneficiaryGir.Level3]: 'Niveau 3',
+  // [BeneficiaryGir.Level4]: 'Niveau 4',
+  // [BeneficiaryGir.Level5]: 'Niveau 5',
+  // [BeneficiaryGir.Level6]: 'Niveau 6'
 })
 
 export const beneficiarySocioProfessionalCategoryKeys = buildKeys({

@@ -43,7 +43,7 @@ const adminHandler = async ({
       city: true,
       address: true,
       phone: true,
-      email: true,
+      // email: true,
       inhabitantsNumber: true,
       inseeCode: true,
       siret: true,

@@ -1,18 +1,5 @@
-import type { Workshop, WorkshopExternalAttendee } from '@prisma/client'
-import type { FieldLabels } from '~~/types/fieldLabels'
-
-type WorkshopFieldLabels = Omit<
-  Workshop & { name: string },
-  | 'partnerOrganization'
-  | 'supportProgramName'
-  | 'structure'
-  | 'structureId'
-  | 'createdAt'
-  | 'createdById'
-  | 'workshopNameId'
->
-
-export const workshopLabels: FieldLabels<WorkshopFieldLabels> = {
+// ANONYMIZED: host, description removed from Workshop; firstName, lastName, email, phone, birthDate from WorkshopExternalAttendee
+export const workshopLabels = {
   id: 'Identifiant',
   name: 'Nom de l’atelier / thématique',
   date: 'Date',
@@ -25,10 +12,10 @@ export const workshopLabels: FieldLabels<WorkshopFieldLabels> = {
   sessionName: 'Nom ou numéro de cette séance',
   description: 'Description / notes',
   attendeeLimit: 'Nombre de personnes participantes',
-  ageLimitCondition: 'Conditions d’âge (à titre informatif)',
+  ageLimitCondition: "Conditions d'âge (à titre informatif)",
   ageLimit: 'Âge (ans)',
   chargeable: 'Atelier payant'
-}
+} as const
 
 export const workshopAttendeeLabels = {
   paymentReceived: 'Règlement',
@@ -44,6 +31,4 @@ export const workshopExternalAttendeeLabels = {
   phone: 'Téléphone',
   birthDate: 'Date de naissance',
   city: 'Ville'
-} satisfies FieldLabels<
-  Omit<WorkshopExternalAttendee, 'created' | 'updated' | 'isAnonymized'>
->
+} as const

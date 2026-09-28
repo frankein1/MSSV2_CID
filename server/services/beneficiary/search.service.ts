@@ -25,18 +25,13 @@ export async function search({
   // TODO check pg_trgm https://www.postgresql.org/docs/12/pgtrgm.html#id-1.11.7.40.7 for indexing
   const results = await BeneficiaryRepo.findMany(ctx.user, {
     where,
-    orderBy: [{ usualName: 'asc' }, { birthName: 'asc' }],
+    orderBy: [{ birthDate: 'asc' }],
     select: {
       id: true,
       familyFileId: true,
-      fileNumber: true,
-      usualName: true,
-      firstName: true,
-      birthName: true,
+      // ANONYMIZED fileNumber, usualName, firstName, birthName, phone1, numeroPegase
       status: true,
-      phone1: true,
-      birthDate: true,
-      numeroPegase: isMinistry
+      birthDate: true
     },
     take: 10
   })

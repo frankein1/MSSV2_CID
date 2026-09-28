@@ -40,11 +40,11 @@
       :entourages="beneficiary.entourages"
     />
 
-    <BeneficiaryInfoHealth
+    <!-- <BeneficiaryInfoHealth
       v-if="beneficiary.health"
       :beneficiary-id="beneficiary.id"
       :health="beneficiary.health"
-    />
+    /> -->
 
     <BeneficiaryInfoOccupationIncome
       v-if="beneficiary.occupationIncome"
@@ -74,13 +74,13 @@
   }>()
 
   const beneficiaryTitle = computed(() => {
-    let title = 'Informations'
-    if (beneficiary.general?.firstName) {
-      title = title + ' ' + beneficiary.general.firstName
-    }
-    if (beneficiary.general?.usualName) {
-      title = title + ' ' + beneficiary.general.usualName
-    }
+    const title = 'Informations'
+    // if (beneficiary.general?.firstName) {
+    //   title = title + ' ' + beneficiary.general.firstName
+    // }
+    // if (beneficiary.general?.usualName) {
+    //   title = title + ' ' + beneficiary.general.usualName
+    // }
     return title
   })
 

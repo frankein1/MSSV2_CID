@@ -29,7 +29,6 @@
             :social-support-subject-options="socialSupportSubjectOptions"
             :beneficiaries-cities-options="beneficiariesCitiesOptions"
             :beneficiaries-employers-options="beneficiariesEmployersOptions"
-            :beneficiaries-schools-options="beneficiariesSchoolsOptions"
             :agent-options="agentsOptions"
             :support-program-name-options="supportProgramNameOptions"
           />
@@ -141,18 +140,18 @@
     }
   })
 
-  const {
-    data: beneficiariesSchoolsOptions,
-    error: beneficiariesSchoolsOptionsError
-  } = await trpcClient.config.getBeneficiariesSchools.useQuery(undefined, {
-    transform: beneficiariesSchools => {
-      const renamedSchools = beneficiariesSchools.map(school => ({
-        name: `${school.name}, ${school.zipcode} ${school.city}`,
-        uai: school.uai
-      }))
-      return toOptions(renamedSchools, 'uai', 'name')
-    }
-  })
+  // const {
+  //   data: beneficiariesSchoolsOptions,
+  //   error: beneficiariesSchoolsOptionsError
+  // } = await trpcClient.config.getBeneficiariesSchools.useQuery(undefined, {
+  //   transform: beneficiariesSchools => {
+  //     const renamedSchools = beneficiariesSchools.map(school => ({
+  //       name: `${school.name}, ${school.zipcode} ${school.city}`,
+  //       uai: school.uai
+  //     }))
+  //     return toOptions(renamedSchools, 'uai', 'name')
+  //   }
+  // })
 
   const { data: agentsOptions, error: agentsOptionsError } =
     await trpcClient.config.getAgents.useQuery(undefined, {
@@ -178,9 +177,9 @@
     if (beneficiariesEmployersOptionsError.value) {
       return "La liste des employeurs n'a pas pu être chargée."
     }
-    if (beneficiariesSchoolsOptionsError.value) {
-      return "La liste des établissements scolaires n'a pas pu être chargée."
-    }
+    // if (beneficiariesSchoolsOptionsError.value) {
+    //   return "La liste des établissements scolaires n'a pas pu être chargée."
+    // }
     if (agentsOptionsError.value) {
       return "La liste des référents n'a pas pu être chargée."
     }

@@ -1,10 +1,10 @@
-import type { Beneficiary } from '@prisma/client'
 import { calculateAge } from './calculateAge'
 import { formatDate } from '../formatDate'
 
-export function formatBeneficiaryBirthInfo(
-  info: Pick<Beneficiary, 'birthDate' | 'birthPlace'>
-) {
+export function formatBeneficiaryBirthInfo(info: {
+  birthDate?: Date | null
+  birthPlace?: string | null
+}) {
   if (!info.birthDate && !info.birthPlace) {
     return ''
   }

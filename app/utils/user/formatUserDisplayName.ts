@@ -1,7 +1,6 @@
-import type { User } from '@prisma/client'
-
-export const formatUserDisplayName = (
-  user: Pick<User, 'firstName' | 'lastName'>
-): string => {
-  return `${user.firstName} ${user.lastName?.toUpperCase() || ''}`
+export const formatUserDisplayName = (user: {
+  firstName?: string | null
+  lastName?: string | null
+}): string => {
+  return `${user.firstName ?? ''} ${user.lastName?.toUpperCase() || ''}`.trim()
 }

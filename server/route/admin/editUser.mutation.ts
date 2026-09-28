@@ -43,7 +43,7 @@ const adminHandler = async ({
   const updatedUser = await UserRepo.prisma.update({
     where: { id },
     data: {
-      email: cleanEmail(email),
+      // email: cleanEmail(email),
       ...user
     }
   })

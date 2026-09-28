@@ -30,7 +30,7 @@ const handler = async ({ ctx: { user } }: { ctx: ProtectedAppContext }) => {
     title: notificationTypeKeys.byKey[notif.type],
     description: getDescription(notif),
     descriptionHint: getDescriptionHint(notif),
-    detail: notif.comment?.content || notif.detail
+    detail: null // ANONYMIZED: detail and comment.content removed
   }))
   return formatNotifications
 }

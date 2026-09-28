@@ -16,127 +16,129 @@ import { prismaClient } from '~~/server/prisma'
 import { UserRole, UserStatus } from '@prisma/client'
 
 export async function createOrUpdateUser(userId: string) {
-  if (process.env.NODE_ENV === 'test') {
-    return
-  }
-  const [user, overseenBeneficiaryCount] = await Promise.all([
-    UserRepo.prisma.findUniqueOrThrow({
-      select: {
-        id: true,
-        email: true,
-        firstName: true,
-        lastName: true,
-        role: true,
-        created: true,
-        firstAccess: true,
-        lastAccess: true,
-        status: true,
-        structure: {
-          select: {
-            id: true,
-            lastAccess: true,
-            type: true,
-            siret: true,
-            name: true,
-            _count: {
-              select: {
-                beneficiaries: true,
-                socialSupports: true
-              }
-            }
-          }
-        },
-        _count: {
-          select: {
-            createdSocialSupports: true
-          }
-        }
-      },
-      where: { id: userId }
-    }),
-    BeneficiaryRepo.prisma.count({
-      where: {
-        familyFile: {
-          referents: { some: { id: userId } }
-        }
-      }
-    })
-  ])
-  const contact = mapUserToBrevoContact({
-    ...user,
-    _count: { ...user._count, overseenBeneficiaries: overseenBeneficiaryCount }
-  })
-  await createOrUpdateContact(contact)
-  if (user.structure?.id) {
-    // In the future, this shouldn't be necessary anymore,
-    // as it's also done when the user is created, and users can't change
-    // their structureId.
-    // However, until all existing Brevo contacts have been associated with
-    // their structure, this will auto-link the active ones.
-    await linkUserToStructure({
-      userId: user.id,
-      structureId: user.structure.id
-    })
-  }
+  return
+  // if (process.env.NODE_ENV === 'test') {
+  //   return
+  // }
+  // const [user, overseenBeneficiaryCount] = await Promise.all([
+  //   UserRepo.prisma.findUniqueOrThrow({
+  //     select: {
+  //       id: true,
+  //       email: true,
+  //       firstName: true,
+  //       lastName: true,
+  //       role: true,
+  //       created: true,
+  //       firstAccess: true,
+  //       lastAccess: true,
+  //       status: true,
+  //       structure: {
+  //         select: {
+  //           id: true,
+  //           lastAccess: true,
+  //           type: true,
+  //           siret: true,
+  //           name: true,
+  //           _count: {
+  //             select: {
+  //               beneficiaries: true,
+  //               socialSupports: true
+  //             }
+  //           }
+  //         }
+  //       },
+  //       _count: {
+  //         select: {
+  //           createdSocialSupports: true
+  //         }
+  //       }
+  //     },
+  //     where: { id: userId }
+  //   }),
+  //   BeneficiaryRepo.prisma.count({
+  //     where: {
+  //       familyFile: {
+  //         referents: { some: { id: userId } }
+  //       }
+  //     }
+  //   })
+  // ])
+  // const contact = mapUserToBrevoContact({
+  //   ...user,
+  //   _count: { ...user._count, overseenBeneficiaries: overseenBeneficiaryCount }
+  // })
+  // await createOrUpdateContact(contact)
+  // if (user.structure?.id) {
+  //   // In the future, this shouldn't be necessary anymore,
+  //   // as it's also done when the user is created, and users can't change
+  //   // their structureId.
+  //   // However, until all existing Brevo contacts have been associated with
+  //   // their structure, this will auto-link the active ones.
+  //   await linkUserToStructure({
+  //     userId: user.id,
+  //     structureId: user.structure.id
+  //   })
+  // }
 }
 
 export async function createOrUpdateStructure(structureId: string) {
+  return
   if (process.env.NODE_ENV === 'test') {
     return
   }
-  const [structure, deactivatedUserCount, managerCount] = await Promise.all([
-    StructureRepo.prisma.findUniqueOrThrow({
-      select: {
-        id: true,
-        name: true,
-        dpoEmail: true,
-        dpoFirstName: true,
-        dpoLastName: true,
-        lastAccess: true,
-        lastActivity: true,
-        created: true,
-        phone: true,
-        email: true,
-        type: true,
-        _count: {
-          select: {
-            socialSupports: true,
-            beneficiaries: true,
-            users: true
-          }
-        }
-      },
-      where: { id: structureId }
-    }),
-    UserRepo.prisma.count({
-      where: {
-        structureId,
-        status: 'Disabled'
-      }
-    }),
-    UserRepo.prisma.count({
-      where: {
-        structureId,
-        role: 'StructureManager'
-      }
-    })
-  ])
+  // const [structure, deactivatedUserCount, managerCount] = await Promise.all([
+  //   StructureRepo.prisma.findUniqueOrThrow({
+  //     select: {
+  //       id: true,
+  //       name: true,
+  //       dpoEmail: true,
+  //       dpoFirstName: true,
+  //       dpoLastName: true,
+  //       lastAccess: true,
+  //       lastActivity: true,
+  //       created: true,
+  //       phone: true,
+  //       email: true,
+  //       type: true,
+  //       _count: {
+  //         select: {
+  //           socialSupports: true,
+  //           beneficiaries: true,
+  //           users: true
+  //         }
+  //       }
+  //     },
+  //     where: { id: structureId }
+  //   }),
+  //   UserRepo.prisma.count({
+  //     where: {
+  //       structureId,
+  //       status: 'Disabled'
+  //     }
+  //   }),
+  //   UserRepo.prisma.count({
+  //     where: {
+  //       structureId,
+  //       role: 'StructureManager'
+  //     }
+  //   })
+  // ])
 
-  const company = mapStructureToBrevoCompany({
-    ...structure,
-    _count: {
-      ...structure._count,
-      managerUsers: managerCount,
-      deactivatedUsers: deactivatedUserCount
-    }
-  })
-  const result = await getCompanyByStructureId(structureId)
-  if (result) {
-    await updateCompany(result.id, company)
-  } else {
-    const { id } = await createCompany(structure)
-    await updateCompany(id, company)
-  }
+  // const company = mapStructureToBrevoCompany({
+  //   ...structure,
+  //   _count: {
+  //     ...structure._count,
+  //     managerUsers: managerCount,
+  //     deactivatedUsers: deactivatedUserCount
+  //   }
+  // })
+  // const result = await getCompanyByStructureId(structureId)
+  // if (result) {
+  //   await updateCompany(result.id, company)
+  // } else {
+  //   const { id } = await createCompany(structure)
+  //   await updateCompany(id, company)
+  // }
 }
 
 export async function sendStructureEvent({

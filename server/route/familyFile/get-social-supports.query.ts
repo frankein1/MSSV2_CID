@@ -161,10 +161,10 @@ const handler = async ({
           select: {
             id: true,
             status: true,
-            createdBy: { select: { firstName: true, lastName: true } },
+            createdBy: { select: {} },
             date: true,
             beneficiary: {
-              select: { firstName: true, usualName: true }
+              select: {}
             },
             socialSupportType: true,
             subtype: true,

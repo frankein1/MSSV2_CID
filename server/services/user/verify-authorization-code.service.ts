@@ -13,20 +13,20 @@ export async function verifyAuthorizationCode({
   const user = await UserRepo.findUniqueOrThrow(ctx.user, {
     where: { id: ctx.user.id },
     select: {
-      authorizationCode: true,
-      authorizationCodeValidity: true
+      // authorizationCode: true,
+      // authorizationCodeValidity: true
     }
   })
 
-  if (
-    dayjs().isAfter(dayjs(user.authorizationCodeValidity)) ||
-    user.authorizationCode !== input.code
-  ) {
-    throw forbiddenError('Invalid code')
-  }
+  // if (
+  //   dayjs().isAfter(dayjs(user.authorizationCodeValidity)) ||
+  //   user.authorizationCode !== input.code
+  // ) {
+  //   throw forbiddenError('Invalid code')
+  // }
 
-  await UserRepo.prisma.update({
-    where: { id: ctx.user.id },
-    data: { authorizationCode: null, authorizationCodeValidity: null }
-  })
+  // await UserRepo.prisma.update({
+  //   where: { id: ctx.user.id },
+  //   data: { authorizationCode: null, authorizationCodeValidity: null }
+  // })
 }

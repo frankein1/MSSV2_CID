@@ -51,16 +51,16 @@ async function getSocialSupportDetail({
       },
       createdBy: {
         select: {
-          id: true,
-          firstName: true,
-          lastName: true
+          id: true
+          // firstName: true,
+          // lastName: true
         }
       },
       lastUpdatedBy: {
         select: {
-          id: true,
-          firstName: true,
-          lastName: true
+          id: true
+          // firstName: true,
+          // lastName: true
         }
       },
       familyFile: {
@@ -74,11 +74,11 @@ async function getSocialSupportDetail({
       },
       beneficiary: {
         select: {
-          id: true,
-          firstName: true,
-          usualName: true,
-          birthName: true,
-          birthDate: true
+          id: true
+          // firstName: true,
+          // usualName: true,
+          // birthName: true,
+          // birthDate: true
         }
       },
       documents: true,
@@ -180,7 +180,7 @@ async function getSocialSupportDetail({
           medium: true,
           helpRequested: true,
           place: true,
-          thirdPersonName: true,
+          // thirdPersonName: true,
           classified: true,
           firstFollowup: true,
           forwardedToJustice: true,
