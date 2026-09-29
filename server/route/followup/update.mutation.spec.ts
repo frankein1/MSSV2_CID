@@ -823,3 +823,35 @@ describe('Followup - Update - Clear relations', () => {
     ).rejects.toThrow(/veuillez renseigner ce champ/i)
   })
 })
+
+describe('Followup - Update - Subtype denormalization', () => {
+  test('A manager changing the medium keeps the social support subtype in sync', async ({
+    trpc
+  }) => {
+    const followup = track(
+      await createTestFollowup(
+        coursorId,
+        coursorId,
+        fixturesUsers[FixtureUserRole.Referent].id,
+        { medium: FollowupMedium.PlannedInPerson }
+      )
+    )
+
+    await trpc.structureManager.followup.update({
+      ...baseUpdateInput(
+        coursorId,
+        coursorId,
+        followup.id,
+        followup.socialSupportId
+      ),
+      medium: FollowupMedium.UnplannedInPerson
+    })
+
+    const socialSupport = await prismaClient.socialSupport.findUniqueOrThrow({
+      where: { id: followup.socialSupportId },
+      select: { subtype: true }
+    })
+
+    expect(socialSupport.subtype).toBe(FollowupMedium.UnplannedInPerson)
+  })
+})

@@ -1,5 +1,9 @@
 import dayjs from 'dayjs'
-import type { SocialSupportSubject, Prisma } from '@prisma/client'
+import type {
+  FollowupMedium,
+  SocialSupportSubject,
+  Prisma
+} from '@prisma/client'
 import type {
   FollowupFilterInput,
   ExportFollowupsInput
@@ -7,6 +11,15 @@ import type {
 import { FollowupPeriodFilter } from '~~/types/followup'
 import { SortOrder } from '~~/types/table'
 import { FilterFollowupNotFilled } from '~/utils/constants/filters'
+
+/**
+ * A followup's denormalized `social_support.subtype` mirrors its `medium`.
+ * Both create and update derive the value here so the column can't drift from
+ * `followup.medium` (see the `subtype` field in prisma/schema.prisma).
+ */
+export function deriveFollowupSubtype(medium: FollowupMedium): string {
+  return medium
+}
 
 export function prepareSocialSupportSubjectsMutations(
   inputSubjects: string[],
