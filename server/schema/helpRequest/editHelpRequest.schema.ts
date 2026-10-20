@@ -3,8 +3,7 @@ import { createHelpRequestSchemaBase } from './createHelpRequest.schema'
 
 export const editHelpRequestSchema = createHelpRequestSchemaBase
   .extend({
-    id: z.string().uuid(),
-    socialSupportId: z.string().uuid()
+    id: z.string().uuid()
   })
   .omit({
     financialSupport: true

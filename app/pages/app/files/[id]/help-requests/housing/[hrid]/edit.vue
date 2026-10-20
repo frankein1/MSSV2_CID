@@ -127,7 +127,8 @@
           routes.file.AppFile.path(housingHelpRequest.familyFileId, {
             beneficiaryId: housingHelpRequest.beneficiaryId,
             tab: BeneficiaryTab.History,
-            item: housingHelpRequest.socialSupportId
+            item: housingHelpRequestData.value?.housingHelpRequest
+              .fileInstruction.socialSupport.id
           })
         )
       },

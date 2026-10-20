@@ -54,7 +54,6 @@
     validationSchema: toTypedSchema(editFollowupSchema),
     initialValues: {
       id: followup.value.id,
-      socialSupportId: followup.value.socialSupportId,
       beneficiaryId: followup.value.beneficiaryId,
       familyFileId: followup.value.familyFileId,
       medium: followup.value.medium,

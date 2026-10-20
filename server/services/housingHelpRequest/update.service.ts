@@ -93,7 +93,10 @@ export async function update({ input, ctx }: UpdateParams) {
   } = cleanUpdateInput(input)
 
   const { socialSupportRedirections: previousRedirectionIds } =
-    await getSocialSupportWithRedirections(ctx.user, input.socialSupportId)
+    await getSocialSupportWithRedirections(
+      ctx.user,
+      target.fileInstruction.socialSupport.id
+    )
 
   const reasonIds = await resolveRedirectionReasonIds(
     ctx,
@@ -133,7 +136,7 @@ export async function update({ input, ctx }: UpdateParams) {
 
   const updateSocialSupport = () =>
     SocialSupportRepo.update(ctx.user, {
-      where: { id: input.socialSupportId },
+      where: { id: target.fileInstruction.socialSupport.id },
       data: {
         lastUpdatedBy: connect(ctx.user.id),
         status,
@@ -178,7 +181,7 @@ export async function update({ input, ctx }: UpdateParams) {
   const updateFileInstruction = () =>
     FileInstructionRepo.prisma.update({
       where: {
-        socialSupportId: input.socialSupportId
+        socialSupportId: target.fileInstruction.socialSupport.id
       },
       data: {
         examinationDate,

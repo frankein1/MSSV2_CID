@@ -56,11 +56,9 @@ afterEach(async () => {
 const baseUpdateInput = (
   familyFileId: string,
   beneficiaryId: string,
-  followupId: string,
-  socialSupportId: string
+  followupId: string
 ) => ({
   id: followupId,
-  socialSupportId,
   isMinistry: false as const,
   familyFileId,
   beneficiaryId,
@@ -160,12 +158,7 @@ describe('Followup - Update - Authorizations', () => {
     )
 
     const result = await trpc.structureManager.followup.update(
-      baseUpdateInput(
-        coursorId,
-        coursorId,
-        followup.id,
-        followup.socialSupportId
-      )
+      baseUpdateInput(coursorId, coursorId, followup.id)
     )
 
     expect(result).toStrictEqual({ id: followup.socialSupportId })
@@ -181,12 +174,7 @@ describe('Followup - Update - Authorizations', () => {
     )
 
     const result = await trpc.referent.followup.update(
-      baseUpdateInput(
-        coursorId,
-        coursorId,
-        followup.id,
-        followup.socialSupportId
-      )
+      baseUpdateInput(coursorId, coursorId, followup.id)
     )
 
     expect(result).toStrictEqual({ id: followup.socialSupportId })
@@ -201,12 +189,7 @@ describe('Followup - Update - Authorizations', () => {
     )
 
     const result = await trpc.socialWorker.followup.update(
-      baseUpdateInput(
-        apfelmannId,
-        apfelmannId,
-        followup.id,
-        followup.socialSupportId
-      )
+      baseUpdateInput(apfelmannId, apfelmannId, followup.id)
     )
 
     expect(result).toStrictEqual({ id: followup.socialSupportId })
@@ -225,12 +208,7 @@ describe('Followup - Update - Authorizations', () => {
 
     await expect(() =>
       trpc.socialWorker.followup.update(
-        baseUpdateInput(
-          coursorId,
-          coursorId,
-          followup.id,
-          followup.socialSupportId
-        )
+        baseUpdateInput(coursorId, coursorId, followup.id)
       )
     ).rejects.toThrow(/not allowed to access route/i)
   })
@@ -248,12 +226,7 @@ describe('Followup - Update - Authorizations', () => {
 
     await expect(() =>
       trpc.receptionAgent.followup.update(
-        baseUpdateInput(
-          coursorId,
-          coursorId,
-          followup.id,
-          followup.socialSupportId
-        )
+        baseUpdateInput(coursorId, coursorId, followup.id)
       )
     ).rejects.toThrow(/not allowed to access route/i)
   })
@@ -271,12 +244,7 @@ describe('Followup - Update - Authorizations', () => {
 
     await expect(() =>
       trpc.instructor.followup.update(
-        baseUpdateInput(
-          coursorId,
-          coursorId,
-          followup.id,
-          followup.socialSupportId
-        )
+        baseUpdateInput(coursorId, coursorId, followup.id)
       )
     ).rejects.toThrow(/not allowed to access route/i)
   })
@@ -292,12 +260,7 @@ describe('Followup - Update - Authorizations', () => {
 
     await expect(() =>
       trpc.administrator.followup.update(
-        baseUpdateInput(
-          coursorId,
-          coursorId,
-          followup.id,
-          followup.socialSupportId
-        )
+        baseUpdateInput(coursorId, coursorId, followup.id)
       )
     ).rejects.toThrow(/user routes are not available to admins/i)
   })
@@ -315,12 +278,7 @@ describe('Followup - Update - Authorizations', () => {
 
     await expect(() =>
       trpc.structureManagerMinistere.followup.update(
-        baseUpdateInput(
-          coursorId,
-          coursorId,
-          followup.id,
-          followup.socialSupportId
-        )
+        baseUpdateInput(coursorId, coursorId, followup.id)
       )
     ).rejects.toThrow(/followup[\s\S]*?no record/im)
   })
@@ -332,12 +290,7 @@ describe('Followup - Update - Authorizations', () => {
     )
 
     const result = await trpc.socialWorker.followup.update(
-      baseUpdateInput(
-        apfelmannId,
-        apfelmannId,
-        followup.id,
-        followup.socialSupportId
-      )
+      baseUpdateInput(apfelmannId, apfelmannId, followup.id)
     )
 
     expect(result).toStrictEqual({ id: followup.socialSupportId })
@@ -355,12 +308,7 @@ describe('Followup - Update - Authorizations', () => {
     )
 
     const result = await trpc.receptionAgent.followup.update(
-      baseUpdateInput(
-        coursorId,
-        coursorId,
-        followup.id,
-        followup.socialSupportId
-      )
+      baseUpdateInput(coursorId, coursorId, followup.id)
     )
 
     expect(result).toStrictEqual({ id: followup.socialSupportId })
@@ -376,12 +324,7 @@ describe('Followup - Update - Authorizations', () => {
     )
 
     const result = await trpc.instructor.followup.update(
-      baseUpdateInput(
-        coursorId,
-        coursorId,
-        followup.id,
-        followup.socialSupportId
-      )
+      baseUpdateInput(coursorId, coursorId, followup.id)
     )
 
     expect(result).toStrictEqual({ id: followup.socialSupportId })
@@ -400,12 +343,7 @@ describe('Followup - Update - Authorizations', () => {
 
     await expect(() =>
       trpc.structureManager.followup.update({
-        ...baseUpdateInput(
-          coursorId,
-          coursorId,
-          followup.id,
-          followup.socialSupportId
-        ),
+        ...baseUpdateInput(coursorId, coursorId, followup.id),
         privateSynthesis: 'Private synthesis'
       })
     ).rejects.toThrow(/not allowed to access route/i)
@@ -425,12 +363,7 @@ describe('Followup - Update - Authorizations', () => {
     })
 
     const result = await trpc.structureManager.followup.update({
-      ...baseUpdateInput(
-        coursorId,
-        coursorId,
-        followup.id,
-        followup.socialSupportId
-      ),
+      ...baseUpdateInput(coursorId, coursorId, followup.id),
       privateSynthesis: null
     })
 
@@ -453,12 +386,7 @@ describe('Followup - Update - Authorizations', () => {
 
     await expect(() =>
       trpc.structureManager.followup.update({
-        ...baseUpdateInput(
-          coursorId,
-          coursorId,
-          followup.id,
-          followup.socialSupportId
-        ),
+        ...baseUpdateInput(coursorId, coursorId, followup.id),
         privateSynthesis: ''
       })
     ).rejects.toThrow(/not allowed to access route/i)
@@ -476,12 +404,7 @@ describe('Followup - Update - Authorizations', () => {
     )
 
     const result = await trpc.referent.followup.update({
-      ...baseUpdateInput(
-        coursorId,
-        coursorId,
-        followup.id,
-        followup.socialSupportId
-      ),
+      ...baseUpdateInput(coursorId, coursorId, followup.id),
       privateSynthesis: 'Private synthesis'
     })
 
@@ -499,12 +422,7 @@ describe('Followup - Update - Notifications', () => {
     )
 
     await trpc.structureManager.followup.update(
-      baseUpdateInput(
-        coursorId,
-        coursorId,
-        followup.id,
-        followup.socialSupportId
-      )
+      baseUpdateInput(coursorId, coursorId, followup.id)
     )
 
     const notifications = await prismaClient.notification.findMany({
@@ -533,12 +451,7 @@ describe('Followup - Update - Notifications', () => {
     )
 
     await trpc.structureManager.followup.update(
-      baseUpdateInput(
-        coursorId,
-        coursorId,
-        followup.id,
-        followup.socialSupportId
-      )
+      baseUpdateInput(coursorId, coursorId, followup.id)
     )
 
     const notifications = await prismaClient.notification.findMany({
@@ -560,12 +473,7 @@ describe('Followup - Update - Redirections', () => {
     )
 
     await trpc.structureManager.followup.update({
-      ...baseUpdateInput(
-        coursorId,
-        coursorId,
-        followup.id,
-        followup.socialSupportId
-      ),
+      ...baseUpdateInput(coursorId, coursorId, followup.id),
       socialSupportRedirections: [
         {
           type: SocialSupportRedirectionType.Intern,
@@ -599,12 +507,7 @@ describe('Followup - Update - Redirections', () => {
     )
 
     await trpc.structureManager.followup.update({
-      ...baseUpdateInput(
-        coursorId,
-        coursorId,
-        followup.id,
-        followup.socialSupportId
-      ),
+      ...baseUpdateInput(coursorId, coursorId, followup.id),
       socialSupportRedirections: [
         {
           type: SocialSupportRedirectionType.Other,
@@ -642,12 +545,7 @@ describe('Followup - Update - Redirections', () => {
     )
 
     await trpc.structureManager.followup.update({
-      ...baseUpdateInput(
-        coursorId,
-        coursorId,
-        followup.id,
-        followup.socialSupportId
-      ),
+      ...baseUpdateInput(coursorId, coursorId, followup.id),
       socialSupportRedirections: []
     })
 
@@ -684,12 +582,7 @@ describe('Followup - Update - Conditional field mutations', () => {
     )
 
     await trpc.referent.followup.update({
-      ...baseUpdateInput(
-        coursorId,
-        coursorId,
-        followup.id,
-        followup.socialSupportId
-      ),
+      ...baseUpdateInput(coursorId, coursorId, followup.id),
       medium: FollowupMedium.PhoneCall
     })
 
@@ -710,12 +603,7 @@ describe('Followup - Update - Conditional field mutations', () => {
     )
 
     await trpc.referent.followup.update({
-      ...baseUpdateInput(
-        coursorId,
-        coursorId,
-        followup.id,
-        followup.socialSupportId
-      ),
+      ...baseUpdateInput(coursorId, coursorId, followup.id),
       medium: FollowupMedium.Sms
     })
 
@@ -752,12 +640,7 @@ describe('Followup - Update - Conditional field mutations', () => {
     })
 
     await trpc.structureManagerMinistere.followup.update({
-      ...baseUpdateInput(
-        martinId,
-        martinId,
-        followup.id,
-        followup.socialSupportId
-      ),
+      ...baseUpdateInput(martinId, martinId, followup.id),
       isMinistry: true,
       ministerId: newMinister.id
     })
@@ -777,12 +660,7 @@ describe('Followup - Update - Clear relations', () => {
     )
 
     await trpc.structureManager.followup.update({
-      ...baseUpdateInput(
-        coursorId,
-        coursorId,
-        followup.id,
-        followup.socialSupportId
-      ),
+      ...baseUpdateInput(coursorId, coursorId, followup.id),
       prescribingOrganizationId: null,
       prescribingOrganizationContactId: null
     })
@@ -811,12 +689,7 @@ describe('Followup - Update - Clear relations', () => {
 
     await expect(() =>
       trpc.structureManager.followup.update({
-        ...baseUpdateInput(
-          coursorId,
-          coursorId,
-          followup.id,
-          followup.socialSupportId
-        ),
+        ...baseUpdateInput(coursorId, coursorId, followup.id),
         isMinistry: true,
         ministerId: null as unknown as string
       })
@@ -838,12 +711,7 @@ describe('Followup - Update - Subtype denormalization', () => {
     )
 
     await trpc.structureManager.followup.update({
-      ...baseUpdateInput(
-        coursorId,
-        coursorId,
-        followup.id,
-        followup.socialSupportId
-      ),
+      ...baseUpdateInput(coursorId, coursorId, followup.id),
       medium: FollowupMedium.Email
     })
 
@@ -853,5 +721,43 @@ describe('Followup - Update - Subtype denormalization', () => {
     })
 
     expect(socialSupport.subtype).toBe(FollowupMedium.Email)
+  })
+})
+
+describe('Followup - Update - SocialSupport derivation', () => {
+  test('Updating a followup only modifies its own parent social support', async ({
+    trpc
+  }) => {
+    const managerId = fixturesUsers[FixtureUserRole.StructureManager].id
+
+    const followupA = track(
+      await createTestFollowup(coursorId, coursorId, managerId)
+    )
+    const followupB = track(
+      await createTestFollowup(coursorId, coursorId, managerId)
+    )
+
+    const synthesisBefore = 'Original synthesis B'
+    await prismaClient.socialSupport.update({
+      where: { id: followupB.socialSupportId },
+      data: { synthesis: synthesisBefore }
+    })
+
+    await trpc.structureManager.followup.update({
+      ...baseUpdateInput(coursorId, coursorId, followupA.id),
+      synthesis: 'Updated synthesis A'
+    })
+
+    const ssA = await prismaClient.socialSupport.findUniqueOrThrow({
+      where: { id: followupA.socialSupportId },
+      select: { synthesis: true }
+    })
+    expect(ssA.synthesis).toBe('Updated synthesis A')
+
+    const ssB = await prismaClient.socialSupport.findUniqueOrThrow({
+      where: { id: followupB.socialSupportId },
+      select: { synthesis: true }
+    })
+    expect(ssB.synthesis).toBe(synthesisBefore)
   })
 })

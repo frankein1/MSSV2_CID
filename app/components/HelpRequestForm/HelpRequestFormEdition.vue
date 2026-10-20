@@ -57,7 +57,6 @@
     validationSchema: toTypedSchema(editHelpRequestSchema),
     initialValues: {
       id: helpRequest.value.id,
-      socialSupportId: socialSupport.value.id,
       beneficiaryId: socialSupport.value.beneficiary.id,
       familyFileId: socialSupport.value.familyFileId,
       numeroPegase: socialSupport.value.numeroPegase,

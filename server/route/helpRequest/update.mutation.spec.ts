@@ -56,11 +56,9 @@ afterEach(async () => {
 const baseUpdateInput = (
   familyFileId: string,
   beneficiaryId: string,
-  helpRequestId: string,
-  socialSupportId: string
+  helpRequestId: string
 ) => ({
   id: helpRequestId,
-  socialSupportId,
   isMinistry: false as const,
   familyFileId,
   beneficiaryId,
@@ -172,12 +170,7 @@ describe('Help Request - Update - Authorizations', () => {
     )
 
     const result = await trpc.structureManager.helpRequest.update(
-      baseUpdateInput(
-        coursorId,
-        coursorId,
-        helpRequest.id,
-        helpRequest.socialSupportId
-      )
+      baseUpdateInput(coursorId, coursorId, helpRequest.id)
     )
 
     expect(result).toStrictEqual({ id: helpRequest.socialSupportId })
@@ -193,12 +186,7 @@ describe('Help Request - Update - Authorizations', () => {
     )
 
     const result = await trpc.referent.helpRequest.update(
-      baseUpdateInput(
-        coursorId,
-        coursorId,
-        helpRequest.id,
-        helpRequest.socialSupportId
-      )
+      baseUpdateInput(coursorId, coursorId, helpRequest.id)
     )
 
     expect(result).toStrictEqual({ id: helpRequest.socialSupportId })
@@ -213,12 +201,7 @@ describe('Help Request - Update - Authorizations', () => {
     )
 
     const result = await trpc.socialWorker.helpRequest.update(
-      baseUpdateInput(
-        apfelmannId,
-        apfelmannId,
-        helpRequest.id,
-        helpRequest.socialSupportId
-      )
+      baseUpdateInput(apfelmannId, apfelmannId, helpRequest.id)
     )
 
     expect(result).toStrictEqual({ id: helpRequest.socialSupportId })
@@ -237,12 +220,7 @@ describe('Help Request - Update - Authorizations', () => {
 
     await expect(() =>
       trpc.socialWorker.helpRequest.update(
-        baseUpdateInput(
-          coursorId,
-          coursorId,
-          helpRequest.id,
-          helpRequest.socialSupportId
-        )
+        baseUpdateInput(coursorId, coursorId, helpRequest.id)
       )
     ).rejects.toThrow(/not allowed to access route/i)
   })
@@ -258,12 +236,7 @@ describe('Help Request - Update - Authorizations', () => {
 
     await expect(() =>
       trpc.receptionAgent.helpRequest.update(
-        baseUpdateInput(
-          coursorId,
-          coursorId,
-          helpRequest.id,
-          helpRequest.socialSupportId
-        )
+        baseUpdateInput(coursorId, coursorId, helpRequest.id)
       )
     ).rejects.toThrow(/not allowed to access route/i)
   })
@@ -281,12 +254,7 @@ describe('Help Request - Update - Authorizations', () => {
 
     await expect(() =>
       trpc.instructor.helpRequest.update(
-        baseUpdateInput(
-          coursorId,
-          coursorId,
-          helpRequest.id,
-          helpRequest.socialSupportId
-        )
+        baseUpdateInput(coursorId, coursorId, helpRequest.id)
       )
     ).rejects.toThrow(/not allowed to access route/i)
   })
@@ -302,12 +270,7 @@ describe('Help Request - Update - Authorizations', () => {
 
     await expect(() =>
       trpc.administrator.helpRequest.update(
-        baseUpdateInput(
-          coursorId,
-          coursorId,
-          helpRequest.id,
-          helpRequest.socialSupportId
-        )
+        baseUpdateInput(coursorId, coursorId, helpRequest.id)
       )
     ).rejects.toThrow(/user routes are not available to admins/i)
   })
@@ -325,12 +288,7 @@ describe('Help Request - Update - Authorizations', () => {
 
     await expect(() =>
       trpc.structureManagerMinistere.helpRequest.update(
-        baseUpdateInput(
-          coursorId,
-          coursorId,
-          helpRequest.id,
-          helpRequest.socialSupportId
-        )
+        baseUpdateInput(coursorId, coursorId, helpRequest.id)
       )
     ).rejects.toThrow(/helpRequest[\s\S]*?no record/im)
   })
@@ -344,12 +302,7 @@ describe('Help Request - Update - Authorizations', () => {
     )
 
     const result = await trpc.socialWorker.helpRequest.update(
-      baseUpdateInput(
-        apfelmannId,
-        apfelmannId,
-        helpRequest.id,
-        helpRequest.socialSupportId
-      )
+      baseUpdateInput(apfelmannId, apfelmannId, helpRequest.id)
     )
 
     expect(result).toStrictEqual({ id: helpRequest.socialSupportId })
@@ -367,12 +320,7 @@ describe('Help Request - Update - Authorizations', () => {
     )
 
     const result = await trpc.instructor.helpRequest.update(
-      baseUpdateInput(
-        coursorId,
-        coursorId,
-        helpRequest.id,
-        helpRequest.socialSupportId
-      )
+      baseUpdateInput(coursorId, coursorId, helpRequest.id)
     )
 
     expect(result).toStrictEqual({ id: helpRequest.socialSupportId })
@@ -391,12 +339,7 @@ describe('Help Request - Update - Authorizations', () => {
 
     await expect(() =>
       trpc.structureManager.helpRequest.update({
-        ...baseUpdateInput(
-          coursorId,
-          coursorId,
-          helpRequest.id,
-          helpRequest.socialSupportId
-        ),
+        ...baseUpdateInput(coursorId, coursorId, helpRequest.id),
         privateSynthesis: 'Private synthesis'
       })
     ).rejects.toThrow(/not allowed to access route/i)
@@ -416,12 +359,7 @@ describe('Help Request - Update - Authorizations', () => {
     })
 
     const result = await trpc.structureManager.helpRequest.update({
-      ...baseUpdateInput(
-        coursorId,
-        coursorId,
-        helpRequest.id,
-        helpRequest.socialSupportId
-      ),
+      ...baseUpdateInput(coursorId, coursorId, helpRequest.id),
       privateSynthesis: null
     })
 
@@ -444,12 +382,7 @@ describe('Help Request - Update - Authorizations', () => {
 
     await expect(() =>
       trpc.structureManager.helpRequest.update({
-        ...baseUpdateInput(
-          coursorId,
-          coursorId,
-          helpRequest.id,
-          helpRequest.socialSupportId
-        ),
+        ...baseUpdateInput(coursorId, coursorId, helpRequest.id),
         privateSynthesis: ''
       })
     ).rejects.toThrow(/not allowed to access route/i)
@@ -467,12 +400,7 @@ describe('Help Request - Update - Authorizations', () => {
     )
 
     const result = await trpc.referent.helpRequest.update({
-      ...baseUpdateInput(
-        coursorId,
-        coursorId,
-        helpRequest.id,
-        helpRequest.socialSupportId
-      ),
+      ...baseUpdateInput(coursorId, coursorId, helpRequest.id),
       privateSynthesis: 'Private synthesis'
     })
 
@@ -490,12 +418,7 @@ describe('Help Request - Update - Notifications', () => {
     )
 
     await trpc.structureManager.helpRequest.update(
-      baseUpdateInput(
-        coursorId,
-        coursorId,
-        helpRequest.id,
-        helpRequest.socialSupportId
-      )
+      baseUpdateInput(coursorId, coursorId, helpRequest.id)
     )
 
     const notifications = await prismaClient.notification.findMany({
@@ -524,12 +447,7 @@ describe('Help Request - Update - Notifications', () => {
     )
 
     await trpc.structureManager.helpRequest.update(
-      baseUpdateInput(
-        coursorId,
-        coursorId,
-        helpRequest.id,
-        helpRequest.socialSupportId
-      )
+      baseUpdateInput(coursorId, coursorId, helpRequest.id)
     )
 
     const notifications = await prismaClient.notification.findMany({
@@ -553,12 +471,7 @@ describe('Help Request - Update - Redirections', () => {
     )
 
     await trpc.structureManager.helpRequest.update({
-      ...baseUpdateInput(
-        coursorId,
-        coursorId,
-        helpRequest.id,
-        helpRequest.socialSupportId
-      ),
+      ...baseUpdateInput(coursorId, coursorId, helpRequest.id),
       socialSupportRedirections: [
         {
           type: SocialSupportRedirectionType.Intern,
@@ -594,12 +507,7 @@ describe('Help Request - Update - Redirections', () => {
     )
 
     await trpc.structureManager.helpRequest.update({
-      ...baseUpdateInput(
-        coursorId,
-        coursorId,
-        helpRequest.id,
-        helpRequest.socialSupportId
-      ),
+      ...baseUpdateInput(coursorId, coursorId, helpRequest.id),
       socialSupportRedirections: [
         {
           type: SocialSupportRedirectionType.Other,
@@ -637,12 +545,7 @@ describe('Help Request - Update - Redirections', () => {
     )
 
     await trpc.structureManager.helpRequest.update({
-      ...baseUpdateInput(
-        coursorId,
-        coursorId,
-        helpRequest.id,
-        helpRequest.socialSupportId
-      ),
+      ...baseUpdateInput(coursorId, coursorId, helpRequest.id),
       socialSupportRedirections: []
     })
 
@@ -691,12 +594,7 @@ describe('Help Request - Update - Status-dependent field mutations', () => {
     )
 
     await trpc.structureManager.helpRequest.update({
-      ...baseUpdateInput(
-        coursorId,
-        coursorId,
-        helpRequest.id,
-        helpRequest.socialSupportId
-      ),
+      ...baseUpdateInput(coursorId, coursorId, helpRequest.id),
       status: SocialSupportStatus.Accepted,
       externalStructure: 'false',
       askedAmount: 500,
@@ -740,12 +638,7 @@ describe('Help Request - Update - Status-dependent field mutations', () => {
     )
 
     await trpc.structureManager.helpRequest.update({
-      ...baseUpdateInput(
-        coursorId,
-        coursorId,
-        helpRequest.id,
-        helpRequest.socialSupportId
-      ),
+      ...baseUpdateInput(coursorId, coursorId, helpRequest.id),
       status: SocialSupportStatus.Accepted,
       externalStructure: 'true',
       askedAmount: 500,
@@ -786,12 +679,7 @@ describe('Help Request - Update - Status-dependent field mutations', () => {
     )
 
     await trpc.structureManager.helpRequest.update({
-      ...baseUpdateInput(
-        coursorId,
-        coursorId,
-        helpRequest.id,
-        helpRequest.socialSupportId
-      ),
+      ...baseUpdateInput(coursorId, coursorId, helpRequest.id),
       status: SocialSupportStatus.Done,
       askedAmount: 500,
       allocatedAmount: 300,
@@ -824,24 +712,14 @@ describe('Help Request - Update - Status-dependent field mutations', () => {
     )
 
     await trpc.structureManager.helpRequest.update({
-      ...baseUpdateInput(
-        coursorId,
-        coursorId,
-        refused.id,
-        refused.socialSupportId
-      ),
+      ...baseUpdateInput(coursorId, coursorId, refused.id),
       status: SocialSupportStatus.Refused,
       refusalReason: 'IncompleteFile',
       decisionDate: new Date('2026-03-10')
     })
 
     await trpc.structureManager.helpRequest.update({
-      ...baseUpdateInput(
-        coursorId,
-        coursorId,
-        accepted.id,
-        accepted.socialSupportId
-      ),
+      ...baseUpdateInput(coursorId, coursorId, accepted.id),
       status: SocialSupportStatus.Accepted,
       refusalReason: 'IncompleteFile',
       decisionDate: new Date('2026-03-10')
@@ -870,12 +748,7 @@ describe('Help Request - Update - Status-dependent field mutations', () => {
     )
 
     await trpc.structureManager.helpRequest.update({
-      ...baseUpdateInput(
-        coursorId,
-        coursorId,
-        helpRequest.id,
-        helpRequest.socialSupportId
-      ),
+      ...baseUpdateInput(coursorId, coursorId, helpRequest.id),
       status: SocialSupportStatus.Accepted,
       externalStructure: 'true',
       examinationDate: new Date('2026-02-15'),
@@ -905,12 +778,7 @@ describe('Help Request - Update - Status-dependent field mutations', () => {
     )
 
     await trpc.structureManager.helpRequest.update({
-      ...baseUpdateInput(
-        coursorId,
-        coursorId,
-        helpRequest.id,
-        helpRequest.socialSupportId
-      ),
+      ...baseUpdateInput(coursorId, coursorId, helpRequest.id),
       status: SocialSupportStatus.Accepted,
       externalStructure: 'false',
       examinationDate: new Date('2026-02-15'),
@@ -962,12 +830,7 @@ describe('Help Request - Update - Ministry', () => {
     })
 
     await trpc.structureManagerMinistere.helpRequest.update({
-      ...baseUpdateInput(
-        martinId,
-        martinId,
-        helpRequest.id,
-        helpRequest.socialSupportId
-      ),
+      ...baseUpdateInput(martinId, martinId, helpRequest.id),
       isMinistry: true,
       ministerId: newMinister.id
     })
@@ -991,15 +854,48 @@ describe('Help Request - Update - Ministry', () => {
 
     await expect(() =>
       trpc.structureManager.helpRequest.update({
-        ...baseUpdateInput(
-          coursorId,
-          coursorId,
-          helpRequest.id,
-          helpRequest.socialSupportId
-        ),
+        ...baseUpdateInput(coursorId, coursorId, helpRequest.id),
         isMinistry: true,
         ministerId: null as unknown as string
       })
     ).rejects.toThrow(/veuillez renseigner ce champ/i)
+  })
+})
+
+describe('Help Request - Update - SocialSupport derivation', () => {
+  test('Updating a help request only modifies its own parent social support', async ({
+    trpc
+  }) => {
+    const managerId = fixturesUsers[FixtureUserRole.StructureManager].id
+
+    const helpRequestA = track(
+      await createTestHelpRequest(coursorId, coursorId, managerId)
+    )
+    const helpRequestB = track(
+      await createTestHelpRequest(coursorId, coursorId, managerId)
+    )
+
+    const synthesisBefore = 'Original synthesis B'
+    await prismaClient.socialSupport.update({
+      where: { id: helpRequestB.socialSupportId },
+      data: { synthesis: synthesisBefore }
+    })
+
+    await trpc.structureManager.helpRequest.update({
+      ...baseUpdateInput(coursorId, coursorId, helpRequestA.id),
+      synthesis: 'Updated synthesis A'
+    })
+
+    const ssA = await prismaClient.socialSupport.findUniqueOrThrow({
+      where: { id: helpRequestA.socialSupportId },
+      select: { synthesis: true }
+    })
+    expect(ssA.synthesis).toBe('Updated synthesis A')
+
+    const ssB = await prismaClient.socialSupport.findUniqueOrThrow({
+      where: { id: helpRequestB.socialSupportId },
+      select: { synthesis: true }
+    })
+    expect(ssB.synthesis).toBe(synthesisBefore)
   })
 })
