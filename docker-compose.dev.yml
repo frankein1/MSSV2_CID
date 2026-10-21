@@ -1,6 +1,6 @@
 services:
   db:
-    image: postgres:16.11-alpine
+    image: postgres:17.11-alpine
     container_name: monsuivisocial_pg
     environment:
       - POSTGRES_DB=$DB_DATABASE

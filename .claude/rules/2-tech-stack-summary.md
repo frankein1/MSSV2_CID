@@ -29,7 +29,7 @@ paths:
 
 ## Database
 
-- **DBMS**: PostgreSQL 16
+- **DBMS**: PostgreSQL 17
 - **ORM**: Prisma v6 with mode relationship joins
 - **Development**: `docker-compose.dev.yml` for local PostgreSQL, RustFS (S3) and OpenBao
 
