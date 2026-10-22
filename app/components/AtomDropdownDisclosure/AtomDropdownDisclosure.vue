@@ -5,6 +5,8 @@
     :id="CONTAINER_ID"
     class="disclosure"
     :class="{ 'disclosure-right': alignRight }"
+    @keydown="onArrowNavigation"
+    @focusout="onFocusOut"
   >
     <button
       ref="triggerBtn"
@@ -27,6 +29,7 @@
     <ul
       v-show="expanded"
       :id="MENU_ID"
+      ref="menuList"
       class="menu"
       role="list"
     >
@@ -84,6 +87,7 @@
 
   const expanded = ref(false)
   const triggerBtn = ref<HTMLButtonElement | null>(null)
+  const menuList = ref<HTMLUListElement | null>(null)
 
   function toggle() {
     expanded.value = !expanded.value
@@ -110,6 +114,63 @@
     }
   }
 
+  function getFocusableItems(): HTMLElement[] {
+    if (!menuList.value) {
+      return []
+    }
+    return Array.from(
+      menuList.value.querySelectorAll<HTMLElement>(
+        ':scope > li > a, :scope > li > button'
+      )
+    ).filter(item => !item.hasAttribute('disabled'))
+  }
+
+  function onArrowNavigation(event: KeyboardEvent) {
+    if (!expanded.value) {
+      return
+    }
+    const items = getFocusableItems()
+    if (!items.length) {
+      return
+    }
+    const currentIndex = items.indexOf(document.activeElement as HTMLElement)
+    const lastIndex = items.length - 1
+    let nextIndex: number
+    switch (event.key) {
+      case 'ArrowDown':
+      case 'ArrowRight':
+        nextIndex =
+          currentIndex === -1 || currentIndex === lastIndex
+            ? 0
+            : currentIndex + 1
+        break
+      case 'ArrowUp':
+      case 'ArrowLeft':
+        nextIndex = currentIndex <= 0 ? lastIndex : currentIndex - 1
+        break
+      case 'Home':
+        nextIndex = 0
+        break
+      case 'End':
+        nextIndex = lastIndex
+        break
+      default:
+        return
+    }
+    event.preventDefault()
+    items[nextIndex]?.focus()
+  }
+
+  function onFocusOut(event: FocusEvent) {
+    // relatedTarget is null when clicking a non-focusable element (and on Safari,
+    // when clicking a button): that case is handled by onClickOutside
+    const nextFocused = event.relatedTarget as Node | null
+    const container = document.getElementById(CONTAINER_ID)
+    if (nextFocused && container && !container.contains(nextFocused)) {
+      close()
+    }
+  }
+
   function onClickOutside(event: MouseEvent) {
     const container = document.getElementById(CONTAINER_ID)
     if (container && !container.contains(event.target as Node)) {
@@ -119,12 +180,12 @@
 
   onMounted(() => {
     document.addEventListener('keydown', onKeydown)
-    document.addEventListener('click', onClickOutside)
+    document.addEventListener('click', onClickOutside, true)
   })
 
   onBeforeUnmount(() => {
     document.removeEventListener('keydown', onKeydown)
-    document.removeEventListener('click', onClickOutside)
+    document.removeEventListener('click', onClickOutside, true)
   })
 </script>
 
@@ -150,6 +211,11 @@
       .menu {
         right: 0;
         left: unset;
+
+        .fr-btn {
+          justify-content: flex-end;
+          text-align: right;
+        }
       }
     }
   }

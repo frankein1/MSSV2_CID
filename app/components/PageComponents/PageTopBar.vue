@@ -5,11 +5,12 @@
     class="topbar__container"
     tabindex="-1"
   >
-    <AtomDropdown
+    <AtomDropdownDisclosure
       :label="getUserName()"
       :menus="menus"
+      align-right
       class="topbar__menu"
-      dropdown-btn-class="fr-btn--tertiary-no-outline"
+      dropdown-btn-class="fr-btn--sm fr-btn--tertiary-no-outline"
     />
     <client-only>
       <DisconnectHandler />
@@ -55,6 +56,6 @@
   }
 
   .topbar__menu {
-    padding-right: 2em;
+    margin-right: 2em;
   }
 </style>

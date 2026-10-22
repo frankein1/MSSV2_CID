@@ -83,14 +83,9 @@
         <FamilyFileSegmentedControlStory />
       </div>
 
-      <h2 class="fr-col-12">Dropdown</h2>
-      <div class="fr-col-12">
-        <AtomDropdownStory />
-      </div>
-
-      <h2 class="fr-col-12">Menu Disclosure</h2>
+      <h2 class="fr-col-12">Dropdown Disclosure</h2>
       <div class="fr-col-12 fr-mb-5w">
-        <AtomMenuDisclosureStory />
+        <AtomDropdownDisclosureStory />
       </div>
     </div>
   </div>
@@ -113,8 +108,7 @@
   import VeeCityComboboxStory from '~/components/VeeForm/VeeCityCombobox.story.vue'
   import VeeAddressComboboxStory from '~/components/VeeForm/VeeAddressCombobox.story.vue'
   import FollowupsTableStory from '~/components/Followups/FollowupsTable.story.vue'
-  import AtomDropdownStory from '~/components/AtomDropdown/AtomDropdown.story.vue'
-  import AtomMenuDisclosureStory from '~/components/AtomMenuDisclosure/AtomMenuDisclosure.story.vue'
+  import AtomDropdownDisclosureStory from '~/components/AtomDropdownDisclosure/AtomDropdownDisclosure.story.vue'
 
   definePageMeta({
     layout: 'landing'

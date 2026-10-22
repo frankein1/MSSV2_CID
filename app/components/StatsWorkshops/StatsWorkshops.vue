@@ -170,6 +170,7 @@
     if (workshopCount.value?.total != 0) {
       menus.push({
         label: 'En images (.zip)',
+        icon: 'fr-icon-folder-image-line',
         onClick: async () => {
           matomo.trackEvent(
             EventCategory.ExportStats,
@@ -194,6 +195,7 @@
     if (workshopCount.value?.total != 0) {
       menus.push({
         label: 'En tableur (.xlsx)',
+        icon: 'fr-icon-file-excel-line',
         onClick: () => {
           matomo.trackEvent(
             EventCategory.ExportStats,
