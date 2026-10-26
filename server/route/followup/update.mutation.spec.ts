@@ -825,7 +825,7 @@ describe('Followup - Update - Clear relations', () => {
 })
 
 describe('Followup - Update - Subtype denormalization', () => {
-  test('A manager changing the medium keeps the social support subtype in sync', async ({
+  test('An agent changing the medium keeps the social support subtype in sync', async ({
     trpc
   }) => {
     const followup = track(
@@ -844,7 +844,7 @@ describe('Followup - Update - Subtype denormalization', () => {
         followup.id,
         followup.socialSupportId
       ),
-      medium: FollowupMedium.UnplannedInPerson
+      medium: FollowupMedium.Email
     })
 
     const socialSupport = await prismaClient.socialSupport.findUniqueOrThrow({
@@ -852,6 +852,6 @@ describe('Followup - Update - Subtype denormalization', () => {
       select: { subtype: true }
     })
 
-    expect(socialSupport.subtype).toBe(FollowupMedium.UnplannedInPerson)
+    expect(socialSupport.subtype).toBe(FollowupMedium.Email)
   })
 })

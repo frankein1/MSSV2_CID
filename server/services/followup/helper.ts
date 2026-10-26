@@ -14,8 +14,9 @@ import { FilterFollowupNotFilled } from '~/utils/constants/filters'
 
 /**
  * A followup's denormalized `social_support.subtype` mirrors its `medium`.
- * Both create and update derive the value here so the column can't drift from
- * `followup.medium` (see the `subtype` field in prisma/schema.prisma).
+ * The goal is to improve the performance of the rendering of beneficiary history
+ * that shows the followup medium in the tile header.
+ * Subtype has to stay in sync upon create and update.
  */
 export function deriveFollowupSubtype(medium: FollowupMedium): string {
   return medium

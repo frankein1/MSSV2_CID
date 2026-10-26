@@ -126,7 +126,6 @@ export const update = async ({ ctx, input }: UpdateParams) => {
           target.subjects
         ),
         minister: isMinistry && ministerId ? connect(ministerId) : undefined,
-        // keep the denormalized subtype in sync with followup.medium
         subtype: deriveFollowupSubtype(medium),
         date,
         synthesis,
