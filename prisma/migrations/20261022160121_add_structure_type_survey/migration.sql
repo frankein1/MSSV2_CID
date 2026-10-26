@@ -4,18 +4,6 @@ CREATE TYPE "SurveyStructureType" AS ENUM ('AcademieRectorat', 'Association', 'A
 -- CreateEnum
 CREATE TYPE "SurveySocialSupportType" AS ENUM ('InsertionEmploi', 'ProgrammeReussiteEducative', 'LogementHebergementResidence', 'ServiceSocialPersonnel', 'SuiviEtudiant', 'SuiviSocialGeneraliste');
 
--- DropIndex
-DROP INDEX "beneficiary_structure_id_birth_name_normalized_idx";
-
--- DropIndex
-DROP INDEX "beneficiary_structure_id_first_name_normalized_idx";
-
--- DropIndex
-DROP INDEX "beneficiary_structure_id_usual_name_normalized_idx";
-
--- DropIndex
-DROP INDEX "followup_type_id_include_name_idx";
-
 -- CreateTable
 CREATE TABLE "structure_type_survey" (
     "id" UUID NOT NULL,
