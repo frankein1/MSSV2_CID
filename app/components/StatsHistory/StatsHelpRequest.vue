@@ -231,7 +231,7 @@
   } = await trpcClient.stat.getHistoryCounts.useQuery(filters)
 
   const helpRequestCount = computed(
-    () => historyCounts.value?.helpRequests.total || 0
+    () => historyCounts.value?.helpRequests || 0
   )
 
   const helpRequestBeneficiaryCount = computed(
