@@ -35,7 +35,12 @@ export default defineEventHandler(async event => {
           date: 'desc' as const
         }
       },
-      structure: { select: structureContextSelect }
+      structure: {
+        select: {
+          ...structureContextSelect,
+          typeSurvey: { select: { id: true } }
+        }
+      }
     }
   })
 
@@ -73,7 +78,8 @@ export default defineEventHandler(async event => {
     status: user.status,
     structureId: user.structure?.id || null,
     structureType: user.structure?.type || null,
-    CGUHistoryVersion
+    CGUHistoryVersion,
+    structureTypeSurveyFilled: !!user.structure?.typeSurvey
   }
 
   const permissions = getAppContextPermissions({

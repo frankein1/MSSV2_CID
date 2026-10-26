@@ -14,6 +14,7 @@ export type AppContextPermissions = {
   }
   edit: {
     structure: boolean
+    structureTypeSurvey: boolean
     health: {
       nir: boolean
     }
@@ -68,6 +69,7 @@ function getAdminContextPermissions(): AppContextPermissions {
     },
     edit: {
       structure: true,
+      structureTypeSurvey: false,
       health: {
         nir: false
       },
@@ -125,6 +127,7 @@ function getUserContextPermissions(
     },
     edit: {
       structure: manager,
+      structureTypeSurvey: manager,
       health: {
         nir: cias || ccas || city
       },
