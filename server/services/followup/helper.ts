@@ -1,5 +1,9 @@
 import dayjs from 'dayjs'
-import type { SocialSupportSubject, Prisma } from '@prisma/client'
+import type {
+  FollowupMedium,
+  SocialSupportSubject,
+  Prisma
+} from '@prisma/client'
 import type {
   FollowupFilterInput,
   ExportFollowupsInput
@@ -7,6 +11,16 @@ import type {
 import { FollowupPeriodFilter } from '~~/types/followup'
 import { SortOrder } from '~~/types/table'
 import { FilterFollowupNotFilled } from '~/utils/constants/filters'
+
+/**
+ * A followup's denormalized `social_support.subtype` mirrors its `medium`.
+ * The goal is to improve the performance of the rendering of beneficiary history
+ * that shows the followup medium in the tile header.
+ * Subtype has to stay in sync upon create and update.
+ */
+export function deriveFollowupSubtype(medium: FollowupMedium): string {
+  return medium
+}
 
 export function prepareSocialSupportSubjectsMutations(
   inputSubjects: string[],
