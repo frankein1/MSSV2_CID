@@ -1,7 +1,10 @@
 import type { Prisma } from '@prisma/client'
 import { FollowupMedium, NotificationType } from '@prisma/client'
 import { SocialSupportSubjectService } from '../../services'
-import { prepareSocialSupportSubjectsMutations } from './helper'
+import {
+  deriveFollowupSubtype,
+  prepareSocialSupportSubjectsMutations
+} from './helper'
 import {
   FollowupRepo,
   NotificationRepo,
@@ -123,6 +126,7 @@ export const update = async ({ ctx, input }: UpdateParams) => {
           target.subjects
         ),
         minister: isMinistry && ministerId ? connect(ministerId) : undefined,
+        subtype: deriveFollowupSubtype(medium),
         date,
         synthesis,
         synthesisRichText,
