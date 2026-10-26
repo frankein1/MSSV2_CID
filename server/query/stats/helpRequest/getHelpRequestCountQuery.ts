@@ -1,4 +1,3 @@
-import { FileInstructionType } from '@prisma/client'
 import { prepareHelpRequestStatFilters } from '../helpers'
 import { SocialSupportRepo } from '~~/server/database'
 import type { StatFilterInput } from '~~/server/schema'
@@ -11,60 +10,12 @@ export async function getHelpRequestCountQuery(
   const { socialSupportType: socialSupportTypeFilter, ...filters } =
     prepareHelpRequestStatFilters(input)
 
-  const [total, financial, other, external] = await Promise.all([
-    SocialSupportRepo.count(user, {
-      where: {
-        ...filters,
-        socialSupportType: socialSupportTypeFilter || {
-          in: ['HelpRequest', 'HelpRequestHousing']
-        }
+  return await SocialSupportRepo.count(user, {
+    where: {
+      ...filters,
+      socialSupportType: socialSupportTypeFilter || {
+        in: ['HelpRequest', 'HelpRequestHousing']
       }
-    }),
-    input.helpRequestSubject === FileInstructionType.Financial ||
-    !input.helpRequestSubject
-      ? SocialSupportRepo.count(user, {
-          where: {
-            ...filters,
-            socialSupportType: socialSupportTypeFilter || 'HelpRequest',
-            fileInstruction: { helpRequest: { financialSupport: true } }
-          }
-        })
-      : 0,
-    input.helpRequestSubject === FileInstructionType.Other ||
-    !input.helpRequestSubject
-      ? SocialSupportRepo.count(user, {
-          where: {
-            ...filters,
-            socialSupportType: socialSupportTypeFilter || 'HelpRequest',
-            fileInstruction: { helpRequest: { financialSupport: false } }
-          }
-        })
-      : 0,
-    SocialSupportRepo.count(user, {
-      where: {
-        ...filters,
-        socialSupportType: socialSupportTypeFilter || {
-          in: ['HelpRequest', 'HelpRequestHousing']
-        },
-        fileInstruction: {
-          externalStructure: true,
-          ...(!input.helpRequestSubject
-            ? {}
-            : {
-                helpRequest: {
-                  financialSupport:
-                    input.helpRequestSubject === FileInstructionType.Financial
-                }
-              })
-        }
-      }
-    })
-  ])
-
-  return {
-    total,
-    [FileInstructionType.Financial]: financial,
-    [FileInstructionType.Other]: other,
-    external
-  }
+    }
+  })
 }

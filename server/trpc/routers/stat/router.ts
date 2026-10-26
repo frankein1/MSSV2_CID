@@ -139,9 +139,6 @@ export const statRouter = router({
   exportFollowupStats: protectedProcedure
     .input(routes.exportFollowupStatsQuery.inputValidation)
     .mutation(routes.exportFollowupStatsQuery.execute),
-  getHelpRequestBeneficiaryNumber: protectedProcedure
-    .input(routes.getHelpRequestBeneficiaryNumberQ.inputValidation)
-    .query(routes.getHelpRequestBeneficiaryNumberQ.execute),
   getWorkshopNameStats: protectedProcedure
     .input(routes.getWorkshopNameStatsQuery.inputValidation)
     .query(routes.getWorkshopNameStatsQuery.execute),
