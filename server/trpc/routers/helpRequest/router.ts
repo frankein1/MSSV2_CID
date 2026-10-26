@@ -10,8 +10,5 @@ export const helpRequestRouter = router({
     .query(routes.getOne.execute),
   update: protectedProcedure
     .input(routes.update.inputValidation)
-    .mutation(routes.update.execute),
-  delete: protectedProcedure
-    .input(routes.remove.inputValidation)
-    .mutation(routes.remove.execute)
+    .mutation(routes.update.execute)
 })
