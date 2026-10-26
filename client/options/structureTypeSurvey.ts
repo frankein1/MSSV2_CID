@@ -16,7 +16,7 @@ export const surveyStructureTypeKeys = buildKeys({
   [SurveyStructureType.Crous]: 'CROUS',
   [SurveyStructureType.Departement]: 'Département / CD',
   [SurveyStructureType.Epci]: 'EPCI / Intercommunalité',
-  [SurveyStructureType.Ept]: 'Etablissement Public Territorial (EPT)',
+  [SurveyStructureType.Ept]: 'Établissement Public Territorial (EPT)',
   [SurveyStructureType.GroupementInteretPublic]: 'Groupement d’Intérêt Public',
   [SurveyStructureType.Hopital]: 'Hôpital',
   [SurveyStructureType.Ministere]: 'Ministère',
