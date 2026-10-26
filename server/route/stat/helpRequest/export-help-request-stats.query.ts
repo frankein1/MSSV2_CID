@@ -147,11 +147,11 @@ const handler = async ({
       ? fileInstructionTypeKeys.byKey[item.subject]
       : STATS_NULL_LABEL,
     number: item._count,
-    percent: toRatio(item._count, helpRequestCount.total)
+    percent: toRatio(item._count, helpRequestCount)
   }))
   instructionTypeRows.push({
     label: 'Total',
-    number: helpRequestCount.total,
+    number: helpRequestCount,
     percent: 1
   })
   addStatsWorksheet(workbook, "Thématique d'instruction", instructionTypeRows)
@@ -163,11 +163,11 @@ const handler = async ({
     .map(item => ({
       label: item.name || STATS_NULL_LABEL,
       number: item._count.socialSupports,
-      percent: toRatio(item._count.socialSupports, helpRequestCount.total)
+      percent: toRatio(item._count.socialSupports, helpRequestCount)
     }))
   subjectRows.push({
     label: 'Total',
-    number: helpRequestCount.total,
+    number: helpRequestCount,
     percent: 1
   })
   addStatsWorksheet(workbook, "Objet d'accompagnement", subjectRows)
@@ -180,11 +180,11 @@ const handler = async ({
   const helpRequestStatusRows: StatsRow[] = helpRequestStatusData.map(item => ({
     label: socialSupportStatusKeys.byKey[item.status] || STATS_NULL_LABEL,
     number: item._count,
-    percent: toRatio(item._count, helpRequestCount.total)
+    percent: toRatio(item._count, helpRequestCount)
   }))
   helpRequestStatusRows.push({
     label: 'Total',
-    number: helpRequestCount.total,
+    number: helpRequestCount,
     percent: 1
   })
   addStatsWorksheet(workbook, 'Statuts', helpRequestStatusRows)
@@ -199,14 +199,12 @@ const handler = async ({
       item => ({
         label: item.minister || STATS_NULL_LABEL,
         number: item._count ?? null,
-        percent: item._count
-          ? toRatio(item._count, helpRequestCount.total)
-          : null
+        percent: item._count ? toRatio(item._count, helpRequestCount) : null
       })
     )
     helpRequestMinistreRows.push({
       label: 'Total',
-      number: helpRequestCount.total,
+      number: helpRequestCount,
       percent: 1
     })
     addStatsWorksheet(workbook, 'Ministres', helpRequestMinistreRows)
@@ -373,7 +371,7 @@ const handler = async ({
     {
       label: 'Instructions de dossiers avec au moins une réorientation',
       number: redirectionsBase,
-      percent: toRatio(redirectionsBase, helpRequestCount.total)
+      percent: toRatio(redirectionsBase, helpRequestCount)
     },
     {
       label: 'Redirections avec partenaire renseigné',
@@ -416,12 +414,12 @@ const handler = async ({
     {
       label: 'Instructions de dossiers avec au moins un motif de réorientation',
       number: redirectionReasonsBase,
-      percent: toRatio(redirectionReasonsBase, helpRequestCount.total)
+      percent: toRatio(redirectionReasonsBase, helpRequestCount)
     },
     ...helpRequestRedirectionReasonsData.reasons.map(reason => ({
       label: reason.name,
       number: reason._count,
-      percent: toRatio(reason._count, helpRequestCount.total)
+      percent: toRatio(reason._count, helpRequestCount)
     }))
   ]
   addStatsWorksheet(workbook, 'Motifs de réorientation', redirectionReasonsRows)
