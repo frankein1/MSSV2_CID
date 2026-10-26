@@ -127,7 +127,7 @@ function getUserContextPermissions(
     },
     edit: {
       structure: manager,
-      structureTypeSurvey: manager,
+      structureTypeSurvey: manager && !ministryAgent,
       health: {
         nir: cias || ccas || city
       },

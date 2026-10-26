@@ -119,6 +119,14 @@ describe('Structure - Submit Survey - Authorizations', () => {
     ).rejects.toThrow(/not allowed to access route/i)
   })
 
+  test('A StructureManager of a Ministere structure cannot submit the structure type survey', async ({
+    trpc
+  }) => {
+    await expect(() =>
+      trpc.structureManagerMinistere.structure.submitStructureTypeSurvey(input)
+    ).rejects.toThrow(/not allowed to access route/i)
+  })
+
   test('An Administrator cannot submit the structure type survey', async ({
     trpc
   }) => {

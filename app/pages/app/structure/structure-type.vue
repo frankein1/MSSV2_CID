@@ -28,8 +28,13 @@
     dsfrDefault: true,
     middleware: [
       function () {
-        // Only structure managers whose structure has not answered yet can access the survey
-        if (!useAuthState().mustFillStructureTypeSurvey()) {
+        // Only users allowed to answer, whose structure has not answered yet, can access the survey
+        const { application } = usePermissions()
+        const { user } = useAuthState()
+        if (
+          !application.value.edit.structureTypeSurvey ||
+          user.value?.structureTypeSurveyFilled
+        ) {
           return navigateTo(useHomePage(), { replace: true })
         }
       }

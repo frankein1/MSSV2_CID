@@ -64,11 +64,6 @@ export function useAuthState() {
     }
   }
 
-  /** Structure managers must fill the structure type survey before accessing the app */
-  function mustFillStructureTypeSurvey() {
-    return isStructureManager() && !user.value?.structureTypeSurveyFilled
-  }
-
   return {
     user,
     isAuthenticated,
@@ -79,7 +74,6 @@ export function useAuthState() {
     isReceptionAgent,
     getUserName,
     getUserId,
-    hasAcceptedCgu,
-    mustFillStructureTypeSurvey
+    hasAcceptedCgu
   }
 }
