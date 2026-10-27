@@ -1,5 +1,6 @@
 import { describe, expect } from 'vitest'
 import type { inferProcedureInput, inferProcedureOutput } from '@trpc/server'
+import { FileInstructionType } from '@prisma/client'
 import { test } from '~~/test/server/test-utils'
 
 import type { AppRouter } from '~~/server/trpc/routers'
@@ -48,5 +49,22 @@ describe('Statistics - File Instructions - Prescribing Organization', () => {
       await trpc.referent.stat.getHelpRequestPrescribingOrganizationStats(input)
 
     expect(parseStats(stats)).toEqual({ 'Non renseigné': 4 })
+  })
+
+  test('should only include housing help requests when filtering on that subject', async ({
+    trpc
+  }) => {
+    const input: Input = { helpRequestSubject: FileInstructionType.Housing }
+
+    const stats =
+      await trpc.structureManager.stat.getHelpRequestPrescribingOrganizationStats(
+        input
+      )
+
+    expect(parseStats(stats)).toEqual({
+      'CAF 26': 1,
+      'Mairie de Valence': 2,
+      'Non renseigné': 3
+    })
   })
 })
