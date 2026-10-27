@@ -14,11 +14,11 @@ HTTP/tRPC Request → Middleware (Auth validation) → tRPC Procedure → Route 
 2. **tRPC Procedure Level**: access scope gate — defined in `server/trpc/createRouter.ts`
 3. **Route Handlers**: role and resource ownership checks via `securityCheck`
 4. **Repository Pattern**: automatic data filtering by structure via **Constraints** (`server/database/constraints/`)
-5. **Audit Logging**: automatic mutation tracking (CREATE, UPDATE, DELETE)
+5. **Audit Logging**: UserActivity rows written by `createRoute` for routes declaring `auditLog`
 
 ### tRPC Procedures
 
-Four procedure types, from least to most restrictive:
+Two procedure types (`server/trpc/createRouter.ts`):
 
 | Procedure            | Who passes                                                       | Context provided      |
 | -------------------- | ---------------------------------------------------------------- | --------------------- |
@@ -86,7 +86,7 @@ const securityCheck = async (ctx: SecurityRuleContext, input: Input) => {
 ### Route pattern
 
 Routes are created via `createQuery` / `createMutation` factories (`server/route/createRoute.ts`).
-Files follow the naming convention `[action].[query|mutation].ts` (e.g. `create.mutation.ts`, `get-one.query.ts`).
+Files follow the naming convention `[action].[query|mutation].ts`. kebab-case (`delete-document.mutation.ts`) preferred, camelCase (`getOne.query.ts`) is older convention.
 
 ```ts
 // server/route/followup/create.mutation.ts
@@ -122,12 +122,12 @@ Router composition in `/server/trpc/routers/index.ts` aggregates domain routers.
 
 ### Constraints (`server/database/constraints/`)
 
-Each entity has a matching `*Constraints.ts` file that builds Prisma `where` clauses scoped by the user's structure and role. Repositories consume these automatically — route handlers don't use constraints directly. When creating a new entity with a repository, create a matching Constraints file in `server/database/constraints/`.
+Each structure-scoped entity has a matching `*Constraints.ts` file that builds Prisma `where` clauses scoped by the user's structure and role. Repositories (`server/database/repository/`) consume these automatically — route handlers don't use constraints directly. When creating a new entity with a repository, create a matching Constraints file in `server/database/constraints/`.
 
 ### ORM conventions
 
 - Do not use Prisma `include`, use `select`
-- No direct SQL queries except in `scheduler/db-anonymizer`
+- No direct SQL queries except in `scheduler/db-anonymizer` (and the `SELECT 1` of `server/api/health-check.ts`)
 - Performance: avoid large joins, large data fetches (rather paginate)
 - Performance: make use of `relationLoadStrategy: "query"` if necessary
 - Batch operations: enforce limits in the Zod schema with `.min()` / `.max()`. In services, use `$transaction` or chunked queries — avoid unbounded `Promise.all` over individual DB calls

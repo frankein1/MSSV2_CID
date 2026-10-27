@@ -1,6 +1,6 @@
 ---
 paths:
-  - ./**/*.vue
+  - '**/*.vue'
 ---
 
 # Accessibility
@@ -28,7 +28,7 @@ Must be RGAA compliant (https://accessibilite.numerique.gouv.fr/methode/criteres
 
 - Maintain a strict heading hierarchy — never skip levels (e.g. `<h2>` → `<h4>`)
 - Use heading tags (`<h1>`–`<h6>`) for section titles, not `<p class="fr-text--bold">` — screen readers rely on headings for page navigation
-- In content components rendered inside `BeneficiaryInfoSection` (which uses `aria-level="4"`), sub-section titles should use `<h5>`
+- In content components rendered inside `BeneficiaryInfoSection` (`app/components/BeneficiaryDetails/`, uses `aria-level="4"`), sub-section titles should use `<h5>`
 - Apply DSFR typographic classes (`fr-h5`, `fr-h6`, etc.) to control visual size independently of the semantic level when needed
 
 ## Focus management on dynamically revealed form fields
@@ -64,5 +64,5 @@ The composable waits for `nextTick`, finds the **last** element matching `sectio
 ## Automatic testing
 
 - End to end playwright tests for a11y validation with Axe plugin tool
-- Test files in folder /e2e/\*
+- Test files in `e2e/` (a11y checks in `e2e/a11y.spec.ts`)
 - Run E2E tests via `pnpm test:e2e`

@@ -1,10 +1,11 @@
 ---
 paths:
-  - components/**
-  - pages/**
-  - composables/**
-  - layouts/**
-  - plugins/**
+  - app/components/**
+  - app/pages/**
+  - app/composables/**
+  - app/layouts/**
+  - app/plugins/**
+  - app/middleware/**
 ---
 
 ## Frontend Architecture
@@ -21,13 +22,7 @@ paths:
 
 ### DSFR Components
 
-Components are organized in folders related to domain e.g.:
-
-- BeneficiaryAddForm
-- FamilyFileBudget
-- HelpRequestForm
-- StatBeneficiaries
-- Workshop
+Components are organized in domain folders under `app/components/` (e.g. `BeneficiaryDetails/`, `FamilyFileBudget/`, `HelpRequestForm/`, `StatsBar/`, `Workshop/`). `pathPrefix: false`: components are auto-imported by file name, without the folder prefix, so file names must be unique and carry the domain prefix (`Beneficiary*`, `Stats*`, `Workshop*`, …)
 
 Prefer vue-dsfr rather than direct DSFR html when possible:
 
@@ -62,5 +57,5 @@ Two mechanisms for authorization decisions in components and pages — never che
 ### Routing
 
 - File-based routing via Nuxt pages directory
-- Type-safe route helpers in utilities
+- Type-safe route helpers in `app/utils/routes/` (`routes`, `apiRoutes`) — never hardcode paths
 - CGU acceptance enforcement via middleware
