@@ -82,13 +82,15 @@ test.afterEach(async () => {
 })
 
 test.describe('Structure survey as Structure Manager', () => {
-  test('should display the survey without landing menu and let the manager skip it', async ({
+  test('should display the survey on app load and let the manager skip it', async ({
     page,
     context
   }) => {
     await authenticateAs(context, managerId)
 
-    await gotoHydrated(page, '/app/structure/structure-type')
+    // Loading the dashboard (e.g. right after login) proposes the survey
+    await gotoHydrated(page, '/app/overview')
+    await expect(page).toHaveURL(/app\/structure\/structure-type/)
     await expect(
       page.getByRole('heading', { name: 'Informations sur votre structure' })
     ).toBeVisible()
@@ -106,6 +108,17 @@ test.describe('Structure survey as Structure Manager', () => {
     // The survey does not block access to the app
     await page.getByRole('link', { name: 'Tableau de bord' }).click()
     await expect(page).toHaveURL(/app\/overview/)
+  })
+
+  test('should not propose the survey when the app is loaded on another page', async ({
+    page,
+    context
+  }) => {
+    await authenticateAs(context, managerId)
+
+    await page.goto('/app/structure')
+    await expect(page).toHaveURL(/app\/structure/)
+    await expect(page).not.toHaveURL(/structure-type/)
   })
 
   test('should require a free text type when "Autre" is selected', async ({
@@ -141,6 +154,9 @@ test.describe('Structure survey as Structure Manager', () => {
     await selectSocialSupportType(page, 'Suivi social généraliste')
     await page.getByRole('button', { name: 'Enregistrer vos réponses' }).click()
 
+    await expect(page).toHaveURL(/app\/overview/)
+
+    await page.goto('/app/overview')
     await expect(page).toHaveURL(/app\/overview/)
 
     await page.goto('/app/structure/structure-type')

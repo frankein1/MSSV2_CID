@@ -12,7 +12,7 @@
   })
 
   definePageMeta({
-    middleware: ['auth', 'cgu']
+    middleware: ['auth', 'cgu', 'structure-type-survey']
   })
 
   onMounted(() => {

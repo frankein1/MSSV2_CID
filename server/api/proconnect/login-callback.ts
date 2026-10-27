@@ -17,7 +17,6 @@ import { forbidden, unauthorized } from '~/utils/api/errors'
 import { cookieOptions } from '~/utils/cookie'
 import { routes } from '~/utils/routes'
 import { isSafeRedirectUrl } from '~/utils/isSafeRedirectUrl'
-import { getAppContextPermissions } from '~~/server/security'
 import jwksClient from 'jwks-rsa'
 
 const { verify, decode } = pkg
@@ -272,7 +271,6 @@ export default defineEventHandler(async event => {
   // After successful login:
   // - redirect to specified url if exist
   // - redirect to admin panel if admin
-  // - redirect to structure type survey if not filled yet (the user can skip it)
   // - redirect to user panel otherwise
   // Fetching user information and permissions will be executed on first page loading with auth plugin
   if (validatedRedirectUrl) {
@@ -281,14 +279,6 @@ export default defineEventHandler(async event => {
 
   if (user.role === 'Administrator') {
     return sendRedirect(event, routes.admin.AdminOverview.path())
-  }
-
-  if (
-    getAppContextPermissions({ user, structure: user.structure }).edit
-      .structureTypeSurvey &&
-    !user.structure?.typeSurvey
-  ) {
-    return sendRedirect(event, routes.structure.AppStructureTypeSurvey.path())
   }
 
   return sendRedirect(event, routes.user.AppOverview.path())
@@ -325,7 +315,7 @@ async function updateEmail(userId: string, email: string) {
   })
 }
 
-const userSelect = {
+const userSelect: { select: Prisma.UserSelect } = {
   select: {
     id: true,
     email: true,
@@ -336,12 +326,11 @@ const userSelect = {
     structure: {
       select: {
         ...structureContextSelect,
-        disabled: true,
-        typeSurvey: { select: { id: true } }
+        disabled: true
       }
     }
   }
-} satisfies { select: Prisma.UserSelect }
+}
 
 async function getAccount({ sub }: { sub: string }) {
   return await prismaClient.account.findUnique({

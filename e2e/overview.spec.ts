@@ -1,5 +1,7 @@
 import type { Page } from '@playwright/test'
 import { test, expect } from '@playwright/test'
+import { fixturesUsers, FixtureUserRole } from '~~/prisma/fixtures'
+import { prismaClient } from '~~/server/prisma'
 
 async function validateHeadings(page: Page) {
   await expect(page).toHaveTitle(/Tableau de bord/)
@@ -42,6 +44,42 @@ async function validateTopbarMenu(page: Page, expected: string[]) {
 
 test.describe('Homepage as authenticated Structure Manager', () => {
   test.use({ storageState: 'playwright/.auth/structure-manager.json' })
+
+  // The structure type survey is proposed when loading the dashboard: fill it beforehand
+  let createdSurveyId: string | null = null
+
+  test.beforeAll(async () => {
+    const { structureId } = await prismaClient.user.findUniqueOrThrow({
+      where: { id: fixturesUsers[FixtureUserRole.StructureManager].id },
+      select: { structureId: true }
+    })
+    if (!structureId) {
+      throw new Error('Structure manager fixture has no structure')
+    }
+    const survey = await prismaClient.structureTypeSurvey.findUnique({
+      where: { structureId },
+      select: { id: true }
+    })
+    if (!survey) {
+      const created = await prismaClient.structureTypeSurvey.create({
+        data: {
+          structureId,
+          structureType: 'Ccas',
+          socialSupportTypes: ['SuiviSocialGeneraliste']
+        },
+        select: { id: true }
+      })
+      createdSurveyId = created.id
+    }
+  })
+
+  test.afterAll(async () => {
+    if (createdSurveyId) {
+      await prismaClient.structureTypeSurvey.delete({
+        where: { id: createdSurveyId }
+      })
+    }
+  })
 
   test('should have title, legal mentions and settings menu', async ({
     page
