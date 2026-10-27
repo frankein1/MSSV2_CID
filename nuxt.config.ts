@@ -95,7 +95,8 @@ export default defineNuxtConfig({
     '@/assets/style/tab.scss',
     '@/assets/style/stats.scss',
     '@/assets/style/form.scss',
-    '@/assets/style/menu.scss'
+    '@/assets/style/menu.scss',
+    '@/assets/style/dsfr-default.scss'
   ],
 
   // Modules: https://v3.nuxtjs.org/api/configuration/nuxt.config#modules

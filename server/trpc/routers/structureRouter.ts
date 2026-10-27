@@ -8,6 +8,9 @@ export const structureRouter = router({
   updateStructureInfo: protectedProcedure
     .input(structureRoutes.updateStructureInfo.inputValidation)
     .mutation(structureRoutes.updateStructureInfo.execute),
+  submitStructureTypeSurvey: protectedProcedure
+    .input(structureRoutes.submitStructureTypeSurvey.inputValidation)
+    .mutation(structureRoutes.submitStructureTypeSurvey.execute),
   findSocialSupportSubject: protectedProcedure
     .input(structureRoutes.findSocialSupportSubject.inputValidation)
     .query(structureRoutes.findSocialSupportSubject.execute),

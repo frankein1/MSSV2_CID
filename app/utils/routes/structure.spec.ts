@@ -14,6 +14,12 @@ describe('structure routes', () => {
     expect(routes.AppStructureUsers.path()).toBe('/app/structure/users')
   })
 
+  test('AppStructureTypeSurvey path returns /app/structure/structure-type', () => {
+    expect(routes.AppStructureTypeSurvey.path()).toBe(
+      '/app/structure/structure-type'
+    )
+  })
+
   test('AppStructureInfo path returns /app/structure/info', () => {
     expect(routes.AppStructureInfo.path()).toBe('/app/structure/info')
   })

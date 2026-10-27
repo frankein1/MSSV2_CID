@@ -57,5 +57,10 @@ export const routes = {
     name: 'AppStructureDora',
     title: `Rechercher un acteur du territoire sur DORA`,
     path: () => `${StructureRoute}/dora`
+  },
+  AppStructureTypeSurvey: {
+    name: 'AppStructureTypeSurvey',
+    title: 'Informations sur votre structure',
+    path: () => `${StructureRoute}/structure-type`
   }
 } as const

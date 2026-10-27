@@ -10,6 +10,7 @@ export const defaultPermissions = (): AppContextPermissions => ({
   },
   edit: {
     structure: false,
+    structureTypeSurvey: false,
     health: { nir: false },
     beneficiary: { referent: false }
   },

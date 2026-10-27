@@ -61,6 +61,19 @@ const configStructure: Record<
   dpo_last_name: false
 }
 
+const configStructureTypeSurvey: Record<
+  SnakeCase<keyof typeof Prisma.StructureTypeSurveyScalarFieldEnum>,
+  boolean
+> = {
+  id: true,
+  structure_id: true,
+  structure_type: true,
+  structure_type_other: true,
+  social_support_types: true,
+  filled_by_id: true,
+  created: true
+}
+
 // Adaptation needed because of typo in column name
 type SocialSupportSubjectColumnName =
   | Exclude<
@@ -851,6 +864,7 @@ const configDataEducationSchool: Record<
 export const CONFIG = {
   user: configUser,
   structure: configStructure,
+  structure_type_survey: configStructureTypeSurvey,
   family_file: configFamilyFile,
   followup_type: configSubject,
   beneficiary: configBeneficiary,

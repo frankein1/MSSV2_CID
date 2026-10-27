@@ -12,6 +12,7 @@ export type UserProfile = {
   structureId: string | null
   structureType: StructureType | null
   CGUHistoryVersion: string | null
+  structureTypeSurveyFilled: boolean
 }
 
 export function useAuthState() {

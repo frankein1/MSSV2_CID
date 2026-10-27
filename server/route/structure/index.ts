@@ -5,6 +5,7 @@ import { getActiveOrUsedSocialSupportSubjects } from './getActiveOrUsedSocialSup
 import { getSocialSupportSubjects } from './getSocialSupportSubjects.query'
 import { getStructure } from './getStructure.query'
 import { makeInactiveSocialSupportSubject } from './makeInactiveSocialSupportSubject.mutation'
+import { submitStructureTypeSurvey } from './submitStructureTypeSurvey.mutation'
 import { updateStructureInfo } from './updateStructureInfo.mutation'
 import { updateStructureSubject } from './updateSocialSupportSubject.mutation'
 import { updateSocialSupportSubjects } from './updateSocialSupportSubjects.mutation'
@@ -16,6 +17,7 @@ export const structureRoutes = {
   getSocialSupportSubjects,
   getStructure,
   makeInactiveSocialSupportSubject,
+  submitStructureTypeSurvey,
   updateStructureInfo,
   updateStructureSubject,
   updateSocialSupportSubjects
