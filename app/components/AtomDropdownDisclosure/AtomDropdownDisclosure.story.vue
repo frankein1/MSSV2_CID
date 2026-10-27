@@ -3,14 +3,14 @@
     <h3>Menu Disclosure</h3>
 
     <h4>Par défaut</h4>
-    <AtomMenuDisclosure
+    <AtomDropdownDisclosure
       label="Jeanne TESTEUSE"
       :menus="menus"
     />
 
     <h4>Aligné à droite</h4>
     <div style="display: flex; justify-content: flex-end">
-      <AtomMenuDisclosure
+      <AtomDropdownDisclosure
         label="Actions"
         :menus="menus"
         align-right
@@ -18,28 +18,28 @@
     </div>
 
     <h4>Avec icône</h4>
-    <AtomMenuDisclosure
+    <AtomDropdownDisclosure
       label="Jeanne TESTEUSE"
       :menus="menus"
       icon="fr-icon-account-circle-line"
     />
 
     <h4>Chargement</h4>
-    <AtomMenuDisclosure
+    <AtomDropdownDisclosure
       label="Chargement…"
       :menus="menus"
       loading
     />
 
     <h4>Avec classe personnalisée</h4>
-    <AtomMenuDisclosure
+    <AtomDropdownDisclosure
       label="Secondaire"
       :menus="menus"
       dropdown-btn-class="fr-btn--tertiary-no-outline"
     />
 
     <h4>Avec action onClick</h4>
-    <AtomMenuDisclosure
+    <AtomDropdownDisclosure
       label="Actions"
       :menus="menusWithActions"
     />

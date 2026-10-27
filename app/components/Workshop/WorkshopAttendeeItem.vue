@@ -33,10 +33,11 @@
           </span>
         </template>
       </p>
-      <AtomDropdown
+      <AtomDropdownDisclosure
         label="Options"
         :menus="menus"
-        dropdown-btn-class="fr-btn fr-btn--sm fr-btn--tertiary-no-outline fr-btn--icon-right icon-more-fill"
+        icon="fr-icon-more-fill"
+        dropdown-btn-class="fr-btn--sm fr-btn--tertiary-no-outline"
         :align-right="true"
       />
     </div>
@@ -359,9 +360,8 @@
   }
 
   // icons
-  :deep(.icon-more-fill::after) {
+  :deep(.fr-icon-more-fill::after) {
     transform: rotate(90deg);
-    mask-image: url("data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20width='24'%20height='24'%3e%3cpath%20d='M5%2010c-1.1%200-2%20.9-2%202s.9%202%202%202%202-.9%202-2-.9-2-2-2Zm14%200c-1.1%200-2%20.9-2%202s.9%202%202%202%202-.9%202-2-.9-2-2-2Zm-7%200c-1.1%200-2%20.9-2%202s.9%202%202%202%202-.9%202-2-.9-2-2-2Z'/%3e%3c/svg%3e") !important;
   }
 
   .ri-cake-line {

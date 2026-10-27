@@ -7,14 +7,12 @@
         <slot name="title"></slot>
       </div>
     </div>
-    <AtomDropdown
+    <AtomDropdownDisclosure
       v-if="menus.length > 0"
       label="Exporter les statistiques"
-      icon="fr-icon-download-fill"
       :menus="menus"
-      class="stats-dropdown"
       dropdown-btn-class="fr-btn--tertiary-no-outline"
-      align-right
+      :align-right="true"
     />
   </div>
 </template>

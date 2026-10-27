@@ -33,7 +33,7 @@
               <p class="results-count">
                 {{ beneficiariesCount }} bénéficiaire(s)
               </p>
-              <AtomMenuDisclosure
+              <AtomDropdownDisclosure
                 dropdown-btn-class="fr-btn--tertiary-no-outline"
                 label="Options"
                 icon="fr-icon-more-line"
@@ -228,6 +228,10 @@
 
   .action {
     grid-area: action;
+  }
+
+  .results-container :deep(.fr-icon-more-line::after) {
+    transform: rotate(90deg);
   }
 
   /* stylelint-disable selector-class-pattern */
