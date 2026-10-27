@@ -1,0 +1,26 @@
+// Restores the DSFR defaults overridden by Mon Suivi Social (main.scss, button.scss)
+// for pages that must display the DSFR without the Mon Suivi Social theme
+.dsfr-default {
+  // Same declarations as @gouvfr/dsfr core.css
+  --background-action-high-blue-france: var(--blue-france-sun-113-625);
+  --background-action-high-blue-france-hover: var(
+    --blue-france-sun-113-625-hover
+  );
+  --background-action-high-blue-france-active: var(
+    --blue-france-sun-113-625-active
+  );
+  --background-active-blue-france: var(--blue-france-sun-113-625);
+  --border-action-high-blue-france: var(--blue-france-sun-113-625);
+  --border-active-blue-france: var(--blue-france-sun-113-625);
+  --text-action-high-blue-france: var(--blue-france-sun-113-625);
+
+  .fr-btn,
+  .fr-btns-group--lg .fr-btn {
+    border-radius: 0;
+  }
+
+  .fr-link:hover {
+    background-color: var(--hover-tint);
+    text-decoration-thickness: auto;
+  }
+}

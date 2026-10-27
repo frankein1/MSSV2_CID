@@ -119,6 +119,7 @@ model User {
   createdRedirectionReasons        RedirectionReason[]
   createdSupportProgramNames       SupportProgramName[]
   createdSupportProgramExitReasons SupportProgramExitReason[]
+  filledStructureTypeSurveys       StructureTypeSurvey[]
 
   @@map("user")
 }
@@ -173,8 +174,59 @@ model Structure {
   RedirectionReasons        RedirectionReason[]
   supportProgramNames       SupportProgramName[]
   supportProgramExitReasons SupportProgramExitReason[]
+  typeSurvey                StructureTypeSurvey?
 
   @@map("structure")
+}
+
+enum SurveyStructureType {
+  AcademieRectorat
+  Association
+  Aci
+  CaisseDesEcoles
+  Ccas
+  Cdas
+  CentreDeGestion
+  CentreSocial
+  Cias
+  Commune
+  Crous
+  Departement
+  Epci
+  Ept
+  GroupementInteretPublic
+  Hopital
+  Ministere
+  Musee
+  Prefecture
+  RegieAutonome
+  Sdis
+  Universite
+  Autre
+}
+
+enum SurveySocialSupportType {
+  InsertionEmploi
+  ProgrammeReussiteEducative
+  LogementHebergementResidence
+  ServiceSocialPersonnel
+  SuiviEtudiant
+  SuiviSocialGeneraliste
+}
+
+/// Temporary data collected from structure managers, to be analysed then migrated and dropped
+model StructureTypeSurvey {
+  id                 String                    @id @default(uuid()) @db.Uuid
+  structure          Structure                 @relation(fields: [structureId], references: [id], onDelete: Cascade)
+  structureId        String                    @unique @map("structure_id") @db.Uuid
+  structureType      SurveyStructureType       @map("structure_type")
+  structureTypeOther String?                   @map("structure_type_other")
+  socialSupportTypes SurveySocialSupportType[] @map("social_support_types")
+  filledBy           User?                     @relation(fields: [filledById], references: [id], onDelete: SetNull)
+  filledById         String?                   @map("filled_by_id") @db.Uuid
+  created            DateTime                  @default(now())
+
+  @@map("structure_type_survey")
 }
 
 enum DocumentType {

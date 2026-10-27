@@ -42,5 +42,18 @@ export function useAuth() {
     state.user.value.CGUHistoryVersion = version
   }
 
-  return { logout, refreshToken, getSession, setCGUVersion }
+  function setStructureTypeSurveyFilled() {
+    if (!state.user.value) {
+      return
+    }
+    state.user.value.structureTypeSurveyFilled = true
+  }
+
+  return {
+    logout,
+    refreshToken,
+    getSession,
+    setCGUVersion,
+    setStructureTypeSurveyFilled
+  }
 }
