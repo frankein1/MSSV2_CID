@@ -7,15 +7,7 @@ export async function getHelpRequestCountQuery(
   user: SecurityRuleGrantee,
   input: StatFilterInput
 ) {
-  const { socialSupportType: socialSupportTypeFilter, ...filters } =
-    prepareHelpRequestStatFilters(input)
-
   return await SocialSupportRepo.count(user, {
-    where: {
-      ...filters,
-      socialSupportType: socialSupportTypeFilter || {
-        in: ['HelpRequest', 'HelpRequestHousing']
-      }
-    }
+    where: prepareHelpRequestStatFilters(input)
   })
 }
