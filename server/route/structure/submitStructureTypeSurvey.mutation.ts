@@ -1,5 +1,5 @@
 import { TRPCError } from '@trpc/server'
-import { UserActivityObject, UserActivityType } from '@prisma/client'
+import { Prisma, UserActivityObject, UserActivityType } from '@prisma/client'
 import { createMutation } from '~~/server/route'
 import type { ProtectedAppContext } from '~~/server/trpc'
 import type { SubmitStructureTypeSurveyInput } from '~~/server/schema'
@@ -15,23 +15,36 @@ const handler = async ({
   input: SubmitStructureTypeSurveyInput
   ctx: ProtectedAppContext
 }) => {
+  const alreadySubmittedError = new TRPCError({
+    code: 'CONFLICT',
+    message: `Survey already submitted for structure`
+  })
+
   const existingSurveyCount = await StructureTypeSurveyRepo.count(ctx.user, {})
   // The survey can only be submitted once per structure
   if (existingSurveyCount > 0) {
-    throw new TRPCError({
-      code: 'CONFLICT',
-      message: `Survey already submitted for structure ${ctx.structure.id}`
-    })
+    throw alreadySubmittedError
   }
 
-  return StructureTypeSurveyRepo.prisma.create({
-    data: {
-      ...input,
-      structureId: ctx.structure.id,
-      filledById: ctx.user.id
-    },
-    select: { id: true }
-  })
+  try {
+    return await StructureTypeSurveyRepo.prisma.create({
+      data: {
+        ...input,
+        structureId: ctx.structure.id,
+        filledById: ctx.user.id
+      },
+      select: { id: true }
+    })
+  } catch (error) {
+    // Concurrent submissions: the unique constraint on structureId rejects the second one
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === 'P2002'
+    ) {
+      throw alreadySubmittedError
+    }
+    throw error
+  }
 }
 
 const securityCheck = (ctx: SecurityRuleContext) =>
@@ -42,7 +55,7 @@ export const submitStructureTypeSurvey = createMutation({
   inputValidation: submitStructureTypeSurveySchema,
   securityCheck,
   auditLog: {
-    key: 'structure.typeSurvey.submit',
+    key: 'structure.submit-structure-type-survey',
     target: UserActivityObject.Structure,
     targetId: ({ ctx }) => ctx.structure.id,
     action: UserActivityType.CREATE
