@@ -1,5 +1,6 @@
+import { escapeIdentifier } from 'pg'
 import type { Client } from 'pg'
-import { ANONYMIZED_DATABASE_URL } from '../db'
+import { ANONYMIZED_DATABASE_URL, TARGET_SCHEMA } from '../db'
 import { createSQLQueriesForEnums } from './enum'
 import { createSQLQueriesForTablesSchemas } from './table-schema'
 import { restoreAnonymizedDataWithPsql } from './table-data'
@@ -54,8 +55,16 @@ export async function createDatabaseSchemaAndRestoreDataToTarget(
   target: Client,
   q: Queries
 ) {
+  // Column types are written without schema (e.g. "BeneficiaryContractType"), so PostgreSQL
+  // resolves them through search_path, which defaults to public. Without SET LOCAL search_path TO, target tables
+  // would use the source enums instead of the copies created just above, and any migration
+  // dropping or recreating a public enum would fail on the dependency.
+  // - LOCAL: only applies until COMMIT, the rest of the job uses qualified table names
+  // - built-in types (uuid, text…) still resolve, pg_catalog is always searched first
+  // - enum array types (e.g. "_BeneficiaryActivityStatus") are created in the same schema as their enum
+  // - in production the target schema is public, so behavior is unchanged
   await target.query(
-    `BEGIN;${q.enums.join(';\n')};${q.schema.join(';\n')};COMMIT;`
+    `BEGIN;SET LOCAL search_path TO ${escapeIdentifier(TARGET_SCHEMA)};${q.enums.join(';\n')};${q.schema.join(';\n')};COMMIT;`
   )
 
   await restoreAnonymizedDataWithPsql(ANONYMIZED_DATABASE_URL as string)
