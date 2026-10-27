@@ -10,7 +10,7 @@
 1. [Frontend Architecture](.claude/rules/6-frontend-architecture.md)
 1. [External Integrations](.claude/rules/7-external-integrations.md)
 1. [Accessibility](.claude/rules/8-accessibility.md)
-1. [Testing](.claude/rules/9-testing.md)
+1. [Testing](.claude/rules/9-testing-general.md)
 1. [Testing: Frontend](.claude/rules/10-testing-frontend.md)
 1. [Testing: Backend](.claude/rules/11-testing-backend.md)
 1. [Scheduled Jobs](.claude/rules/12-scheduled-jobs.md)
@@ -37,18 +37,21 @@ Conventions that are not discoverable from `ls`
 ```
 server/
 ├── api/          REST (OAuth callbacks, document uploads, external integrations)
-├── trpc/         Non-REST endpoints
-├── scheduler/    Legacy Scheduled jobs
+├── trpc/         Non-REST endpoints (procedures + routers wiring)
+├── route/        Route definitions (`createQuery`/`createMutation`): input schema, securityCheck, handler, audit log
+├── security/     Permission system (`permissions/`), structure-scoped validators, security rule types
+├── services/     Business logic called by route handlers, one folder per domain
 ├── query/        Statistics/reporting queries
 └── database/     Prisma repositories + authorization constraints
 
 <root>
 ├── client/       Shared static data (classes, colors, labels, options)
+├── scheduler/    Scheduled jobs (croner), see rule 12
 ├── types/        Types shared across server + client (single-side types stay in their bucket)
 └── test/         Integration-test setup, fixtures, tRPC harness (unit tests sit next to source)
 
 app/
-└── components/   Flat dir; prefixes (Atom*, Beneficiary*, Admin*, Stats*, …) mark domain grouping
+└── components/   Prefixes (Atom*, Beneficiary*, Admin*, Stats*, …) mark domain grouping
 ```
 
 ---

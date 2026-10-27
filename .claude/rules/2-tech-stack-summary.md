@@ -11,17 +11,17 @@ paths:
 
 - **Framework**: Nuxt 4 with Vue 3 Composition API
 - **Language**: TypeScript v5 (strict mode, noUncheckedIndexedAccess)
-- **Design System**: DSFR (French government design system) v1.14
+- **Design System**: DSFR (French government design system)
 - **UI Components**: @gouvminint/vue-dsfr (based on DSFR) v8
 - **Form Validation**: VeeValidate v4 + Zod v3
 - **Rich Text**: TipTap editor v3
-- **Charts**: Chart.js integration
+- **Charts**: Chart.js v4
 - **Styling**: CSS with SCSS preprocessor
-- **Testing**: Vitest v3 (unit and integration tests), Playwright v1 (E2E tests)
+- **Testing**: Vitest v4 (unit and integration tests), Playwright v1 (E2E tests)
 
 ## Backend
 
-- **Runtime**: Node.js v24+
+- **Runtime**: Node.js (exact version pinned in `package.json` `engines`)
 - **Framework**: Nuxt SSR Rendering with tRPC v11 for type-safe RPC APIs
 - **Type Safety**: Full TypeScript with strict compiler options
 - **Validation**: Zod schemas for input/output validation
@@ -31,7 +31,7 @@ paths:
 
 - **DBMS**: PostgreSQL 16
 - **ORM**: Prisma v6 with mode relationship joins
-- **Development**: Docker Compose for local PostgreSQL
+- **Development**: `docker-compose.dev.yml` for local PostgreSQL, RustFS (S3) and OpenBao
 
 ## Authentication & Security
 
@@ -43,9 +43,12 @@ paths:
 
 ## External Integrations
 
-- **Email**: Brevo v3 for template-based email delivery
+- **Email**: SMTP via nodemailer, queued in the `Email` table and sent by the scheduler
+- **CRM**: Brevo API v3 (contacts/companies sync for users and structures)
 - **Appointments**: RDV Service Public OAuth for external appointment booking
-- **Data Directory**: Data Inclusion API for structure/organization metadata (WIP)
+- **Data Directory**: Data Inclusion API, imported weekly, used to prefill partner organizations
+- **Schools**: Data Education API, imported weekly (DataEducationSchool)
+- **Analytics**: Metabase (statistics on an anonymized DB copy)
 
 ## Document Management
 
@@ -57,7 +60,7 @@ paths:
 ## Development Tools
 
 - **Linting**: ESLint + Prettier formatting
-- **Formatting**: stylelint for CSS/SCSS
+- **Style linting**: stylelint for CSS/SCSS
 - **Pre-commit Hooks**: Husky + lint-staged + talisman
 - **CI/CD**: GitLab CI/CD with automated testing and deployment
 - **Release Management**: commit-and-tag-version automation
