@@ -21,7 +21,7 @@ export interface Queries {
  * 1. Create SQL queries for all enums
  * 2. Create SQL queries for table schemas
  * 3. Create SQL queries to read table data from anonymized csv dumps and restore it to target db
- * 4. CreateSQL queries for restoring indexes (only primary keys and foreign keys)
+ * 4. Create SQL queries for restoring indexes (all indexes on kept tables and columns) and foreign keys
  */
 export async function createQueriesForTargetDatabaseSchema(
   source: Client
@@ -49,7 +49,7 @@ export async function createQueriesForTargetDatabaseSchema(
  * - enums
  * - table structure (columns with db types)
  * - table data
- * - primary keys and foreign keys for selected tables
+ * - indexes (primary keys, unique and performance indexes) and foreign keys for selected tables
  */
 export async function createDatabaseSchemaAndRestoreDataToTarget(
   target: Client,
@@ -69,15 +69,35 @@ export async function createDatabaseSchemaAndRestoreDataToTarget(
 
   await restoreAnonymizedDataWithPsql(ANONYMIZED_DATABASE_URL as string)
 
-  await target.query(`BEGIN;${q.indexes.join(';\n')};COMMIT;`)
+  // Run each index separately so one failing index does not abort the others
+  await runEachAndLogFailures('restore-indexes', target, q.indexes)
 
   // Foreign keys are useful for metabase auto joins
   // See https://www.metabase.com/docs/latest/databases/sync-scan#how-database-syncs-work
-  for (const query of q.foreignKeys) {
+  await runEachAndLogFailures('restore-foreign-keys', target, q.foreignKeys)
+}
+
+/** Run each query on its own, then log every failure and a summary line */
+async function runEachAndLogFailures(
+  step: string,
+  target: Client,
+  queries: string[]
+) {
+  const failed: { query: string; error: string }[] = []
+
+  for (const query of queries) {
     try {
       await target.query(`${query};`)
     } catch (e: unknown) {
-      console.error(`foreign key restore: ${e}`)
+      const error = e instanceof Error ? e.message : String(e)
+      failed.push({ query, error })
     }
   }
+
+  failed.forEach(f =>
+    console.error(`db-anonymized::${step}: error ${f.query}: ${f.error}`)
+  )
+  console.log(
+    `db-anonymized::${step}: ${queries.length - failed.length} restored, ${failed.length} failed`
+  )
 }

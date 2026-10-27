@@ -2,18 +2,13 @@ import { escapeIdentifier } from 'pg'
 import type { Client } from 'pg'
 import { z } from 'zod'
 import { TARGET_SCHEMA, SOURCE_SCHEMA } from '../db'
-import { includeTable } from '../utils'
-import { CONFIG, type TableName } from '../config'
+import { includeColumn, includeTable } from '../utils'
 
 /** Check if the column is included in the target anonymized DB */
 function columnIsIncluded<
   T extends { table_name: string; column_name: string }
 >(row: T) {
-  return (
-    Object.keys(CONFIG).includes(row.table_name) &&
-    // @ts-expect-error Because of typescript rule noUncheckedIndexedAccess and row.column_name is not typed, accessing row.column_name gives a ts error
-    Boolean(CONFIG[row.table_name as TableName][row.column_name])
-  )
+  return includeColumn(row.table_name, row.column_name)
 }
 
 /** Order the table columns same as the source table in DB */

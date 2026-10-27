@@ -3,6 +3,12 @@ import type { TableName } from './config'
 
 export const includeTable = (name: string) => Object.keys(CONFIG).includes(name)
 
+/** Check if the column is kept in the target anonymized DB (PII columns are not) */
+export const includeColumn = (tableName: string, columnName: string) =>
+  includeTable(tableName) &&
+  // @ts-expect-error Because of typescript rule noUncheckedIndexedAccess and columnName is not typed, accessing columnName gives a ts error
+  Boolean(CONFIG[tableName as TableName][columnName])
+
 /** List of columns names that are kept in the target table (removing PII columns) */
 export const getFilteredColumnNames = (tableName: TableName) =>
   Object.keys(CONFIG[tableName]).filter(columnName => {
