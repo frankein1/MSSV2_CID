@@ -1,7 +1,7 @@
 import { escapeIdentifier, type Client } from 'pg'
 import { z } from 'zod'
 import { SOURCE_SCHEMA, TARGET_SCHEMA } from '../db'
-import { includeTable } from '../utils'
+import { includeColumn, includeTable } from '../utils'
 
 /** Index definition can be directly applied. Only schema name needs to be updated */
 const sqlCreateIndex = (row: { indexdef: string }) =>
@@ -12,15 +12,29 @@ export async function createSQLQueriesForIndexes(source: Client) {
     rows: z.array(
       z.object({
         tablename: z.string(),
-        indexdef: z.string()
+        indexdef: z.string(),
+        columns: z.array(z.string())
       })
     )
   })
 
-  // Filter on PRIMARY KEY
-  // HYPOTHESIS, no PII are indexed
+  // Recreate every index of the schema (primary keys, unique and plain
+  // performance indexes).
+  // `columns` lists the index key columns (pg_index.indkey).
+  // Edge case for partial indexes: columns that appear only in the WHERE clause (stored in indpred) aren't in indkey either.
+  // They won't be listed.
   const res = await source.query(
-    'SELECT tablename,indexdef FROM pg_indexes join pg_constraint pc on indexname = pc.conname where schemaname = $1',
+    `SELECT i.tablename, i.indexdef,
+      ARRAY(
+        SELECT a.attname::text
+        FROM unnest(ix.indkey) AS k(attnum)
+        JOIN pg_attribute a ON a.attrelid = ix.indrelid AND a.attnum = k.attnum
+      ) AS columns
+    FROM pg_indexes i
+    JOIN pg_namespace n ON n.nspname = i.schemaname
+    JOIN pg_class ic ON ic.relname = i.indexname AND ic.relnamespace = n.oid
+    JOIN pg_index ix ON ix.indexrelid = ic.oid
+    WHERE i.schemaname = $1`,
     [SOURCE_SCHEMA]
   )
 
@@ -31,8 +45,14 @@ export async function createSQLQueriesForIndexes(source: Client) {
     )
   }
 
+  // Filter out an index on an excluded table or on a dropped PII
+  // column (e.g. user.email) cannot be built and is skipped.
   const output = validated.data.rows
-    .filter(({ tablename }) => includeTable(tablename))
+    .filter(
+      ({ tablename, columns }) =>
+        includeTable(tablename) &&
+        columns.every(column => includeColumn(tablename, column))
+    )
     .map(sqlCreateIndex)
 
   return output
@@ -57,6 +77,7 @@ export async function createSQLQueriesForForeignKeys(source: Client) {
     rows: z.array(
       z.object({
         tablename: z.string(),
+        reftable: z.string(),
         conname: z.string(),
         condef: z.string()
       })
@@ -66,7 +87,13 @@ export async function createSQLQueriesForForeignKeys(source: Client) {
   // Filter on  FOREIGN KEY
   // HYPOTHESIS, no PII are indexed
   const res = await source.query(
-    "SELECT pc.conrelid::regclass as tablename,pc.conname,pg_get_constraintdef(pc.oid) as condef FROM pg_constraint pc JOIN pg_catalog.pg_namespace nsp ON nsp.oid = pc.connamespace where nsp.nspname = $1 and pc.contype = 'f'",
+    `SELECT tc.relname AS tablename, rc.relname AS reftable, pc.conname,
+      pg_get_constraintdef(pc.oid) AS condef
+    FROM pg_constraint pc
+    JOIN pg_catalog.pg_namespace nsp ON nsp.oid = pc.connamespace
+    JOIN pg_catalog.pg_class tc ON tc.oid = pc.conrelid
+    JOIN pg_catalog.pg_class rc ON rc.oid = pc.confrelid
+    WHERE nsp.nspname = $1 AND pc.contype = 'f'`,
     [SOURCE_SCHEMA]
   )
 
@@ -77,8 +104,12 @@ export async function createSQLQueriesForForeignKeys(source: Client) {
     )
   }
 
+  // Both ends must be kept: a foreign key to an excluded table (e.g. comment) cannot be built
   const output = validated.data.rows
-    .filter(({ tablename }) => includeTable(tablename))
+    .filter(
+      ({ tablename, reftable }) =>
+        includeTable(tablename) && includeTable(reftable)
+    )
     .map(sqlCreateForeignKey)
 
   return output
