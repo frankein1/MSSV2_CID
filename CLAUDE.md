@@ -14,6 +14,7 @@
 1. [Testing: Frontend](.claude/rules/10-testing-frontend.md)
 1. [Testing: Backend](.claude/rules/11-testing-backend.md)
 1. [Scheduled Jobs](.claude/rules/12-scheduled-jobs.md)
+1. [Testing: Stats](.claude/rules/13-testing-stats.md)
 
 ---
 
