@@ -1,7 +1,6 @@
 ---
 paths:
   - scheduler/**
-  - server/scheduler/**
 ---
 
 # Scheduled Jobs
@@ -14,3 +13,5 @@ When adding or modifying a job, update both:
 
 - `scheduler/jobs.ts` — job definition and JSDoc
 - `scheduler/index.ts` — cron schedule registration
+
+One-off / manual jobs (e.g. `rotateKEK`, `documentS3Migration`) are defined in `jobs.ts` but not registered in `index.ts`; run them with `scheduler/_caller.ts <jobName>`.
