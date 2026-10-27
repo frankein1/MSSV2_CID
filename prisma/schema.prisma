@@ -457,6 +457,8 @@ model SocialSupport {
   @@index(fields: [structureId, familyFileId], map: "social_support_structure_id_family_file_id_idx")
   @@index(fields: [beneficiaryId], map: "social_support_beneficiary_id_idx")
   @@index(fields: [supportProgramId], map: "social_support_support_program_id_idx")
+  // For stat counts that filter by social support type.
+  @@index(fields: [structureId, socialSupportType], map: "social_support_structure_id_social_support_type_idx")
   @@map("social_support")
 }
 
