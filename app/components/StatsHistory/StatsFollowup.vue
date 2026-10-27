@@ -235,7 +235,7 @@
     data: historyCounts,
     error,
     status
-  } = await trpcClient.stat.getHistoryCounts.useQuery(filters)
+  } = await trpcClient.stat.getFollowupCountStats.useQuery(filters)
 
   const followupCount = computed(() => historyCounts.value?.followups || 0)
 

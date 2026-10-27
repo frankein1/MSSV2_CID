@@ -228,7 +228,7 @@
     data: historyCounts,
     error,
     status
-  } = await trpcClient.stat.getHistoryCounts.useQuery(filters)
+  } = await trpcClient.stat.getHelpRequestCountStats.useQuery(filters)
 
   const helpRequestCount = computed(
     () => historyCounts.value?.helpRequests || 0
