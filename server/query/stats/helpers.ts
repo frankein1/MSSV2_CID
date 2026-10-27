@@ -230,27 +230,27 @@ export function prepareSocialSupportStatFilters(filters: StatFilterInput) {
   return socialSupport
 }
 
-export function prepareHelpRequestStatFilters(
-  filters: StatFilterInput,
-  externalStructure?: boolean
-) {
+export function prepareHelpRequestStatFilters(filters: StatFilterInput) {
   const socialSupport = prepareSocialSupportStatFilters(filters)
-  socialSupport.fileInstruction = externalStructure
-    ? { externalStructure: true }
-    : {}
-  socialSupport.fileInstruction.helpRequest = {}
 
+  // Only the financial/other facets filter on the file instruction. Every
+  // help request social support has one, so an empty `fileInstruction`
+  // filter would only force a costly existence join on file_instruction.
   switch (filters.helpRequestSubject) {
     case FileInstructionType.Housing:
       socialSupport.socialSupportType = 'HelpRequestHousing'
       break
     case FileInstructionType.Financial:
       socialSupport.socialSupportType = 'HelpRequest'
-      socialSupport.fileInstruction.helpRequest = { financialSupport: true }
+      socialSupport.fileInstruction = {
+        helpRequest: { financialSupport: true }
+      }
       break
     case FileInstructionType.Other:
       socialSupport.socialSupportType = 'HelpRequest'
-      socialSupport.fileInstruction.helpRequest = { financialSupport: false }
+      socialSupport.fileInstruction = {
+        helpRequest: { financialSupport: false }
+      }
       break
     default:
       socialSupport.socialSupportType = {
