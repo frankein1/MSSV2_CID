@@ -14,6 +14,7 @@
           <StructureAdminInfoForm
             :validate="onAddStructure"
             :cancel-path="routes.admin.AdminStructures.path()"
+            :is-submitting="status === 'pending'"
           />
         </div>
       </div>
@@ -31,7 +32,7 @@
   const snackbar = useSnackbar()
 
   const router = trpcClient.admin
-  const { mutate, error } = router.createStructure.useMutation()
+  const { mutate, error, status } = router.createStructure.useMutation()
   const onAddStructure = async (input: CreateStructureInput) => {
     const structureCreated = await mutate(input)
     if (error.value || !structureCreated) {

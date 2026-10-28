@@ -25,6 +25,7 @@
             :structure="data.structure"
             :validate="onUpdateStructure"
             :cancel-path="routes.admin.AdminStructure.path(structureId)"
+            :is-submitting="status === 'pending'"
           />
         </div>
       </div>
@@ -49,8 +50,11 @@
   )
 
   const router = trpcClient.admin
-  const { mutate, error: updateError } =
-    router.updateStructureInfo.useMutation()
+  const {
+    mutate,
+    error: updateError,
+    status
+  } = router.updateStructureInfo.useMutation()
   const onUpdateStructure = async (input: StructureAdminInfoInput) => {
     const structureUpdated = await mutate({ ...input, id: structureId })
     if (updateError.value || !structureUpdated) {

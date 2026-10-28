@@ -195,6 +195,8 @@
         <button
           class="fr-btn"
           type="submit"
+          :disabled="isSubmitting"
+          :data-submitting="isSubmitting"
         >
           Valider
         </button>
@@ -227,6 +229,7 @@
       | ((values: CreateStructureInput) => void)
       | ((values: StructureAdminInfoInput) => void)
     cancelPath: string
+    isSubmitting: boolean
   }>()
 
   const form = useTemplateRef('form')
