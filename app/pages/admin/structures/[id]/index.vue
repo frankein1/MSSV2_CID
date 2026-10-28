@@ -18,23 +18,23 @@
       :alert-type="AlertType.Error"
       message="Les informations de votre structure n'ont pas pu être chargées."
     />
-    <div v-else-if="data">
+    <div v-else-if="structure && users && socialSupportSubjects">
       <StructureAdminInfo
-        :structure="data.structure"
+        :structure="structure"
         @disable="disableStructureOpenModal"
         @toggle-rdv="toggleRdvspIntegration"
       />
 
       <StructureAdminUsers
         class="fr-mb-5w"
-        :structure-id="data.structure.id"
-        :users="data.users"
+        :structure-id="structure.id"
+        :users="users"
       />
       <div class="feature-section bg-color-white">
         <h2 class="fr-h4">Objets d'accompagnements</h2>
         <SocialSupportSubjects
           class="fr-mb-5w"
-          :subjects="data.socialSupportSubjects"
+          :subjects="socialSupportSubjects"
           :edit-path="routes.admin.AdminStructureSubjects.path(structureId)"
           @refresh="refresh"
         />
@@ -49,6 +49,7 @@
   import { routes } from '~/utils/routes'
   import type { AdminStructureInfo } from '~/components/Structure/types'
   import { hasCompletedDeactivationWarnings } from '~/utils/structure'
+  const trpcClient = useTrpcClient()
 
   const title = routes.structure.AppStructure.title
 
@@ -61,7 +62,13 @@
 
   /* Get strcuture */
   const { data, pending, error, refresh } =
-    await useTrpcClient().admin.getStructure.useQuery({ id: structureId })
+    await trpcClient.admin.getStructure.useQuery({ id: structureId })
+
+  const structure = computed(() => data.value?.structure)
+  const users = computed(() => data.value?.users)
+  const socialSupportSubjects = computed(
+    () => data.value?.socialSupportSubjects
+  )
 
   /* Disable structure buton action */
   function disableStructureOpenModal() {

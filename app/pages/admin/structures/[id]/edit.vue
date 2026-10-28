@@ -45,9 +45,8 @@
   const trpcClient = useTrpcClient()
   const snackbar = useSnackbar()
 
-  const { data, pending, error } = await trpcClient.admin.getStructure.useQuery(
-    { id: structureId }
-  )
+  const { data, pending, error, refresh } =
+    await trpcClient.admin.getStructure.useQuery({ id: structureId })
 
   const router = trpcClient.admin
   const {
@@ -64,6 +63,9 @@
       return
     }
     snackbar.success('Les informations de la structure ont été mises à jour.')
+    // The details page shares this query key and reuses its cached data
+    // instead of fetching again, so it must be refreshed before redirecting
+    await refresh()
     navigateTo(routes.admin.AdminStructure.path(structureId))
   }
 </script>
