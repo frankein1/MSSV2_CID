@@ -23,8 +23,7 @@ export async function getFollowupSubjectsStatsQuery(
           socialSupports: where
         }
       }
-    },
-    orderBy: [{ socialSupports: { _count: 'desc' } }]
+    }
   })
 
   return res.sort((a, b) => b._count.socialSupports - a._count.socialSupports)
