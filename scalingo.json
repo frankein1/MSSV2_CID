@@ -1,0 +1,38 @@
+{
+  "env": {
+    "NUXT_PUBLIC_APP_URL": { "generator": "url" },
+    "NUXT_DOCUMENT_USE_S3_STORAGE": { "value": "false" },
+
+    "NUXT_READONLY_DATABASE_URL": { "value": null },
+    "NUXT_ANONYMIZED_DATABASE_URL": { "value": null },
+
+    "NUXT_EMAIL_SMTP_HOST": { "value": null },
+    "NUXT_EMAIL_SMTP_USER": { "value": null },
+    "NUXT_EMAIL_SMTP_PASSWORD": { "value": null },
+
+    "NUXT_S3_ACCESS_KEY_ID": { "value": null },
+    "NUXT_S3_SECRET_ACCESS_KEY": { "value": null },
+    "NUXT_S3_REGION": { "value": null },
+    "NUXT_S3_BUCKET": { "value": null },
+    "NUXT_S3_ENDPOINT": { "value": null },
+
+    "NUXT_KMS_ACCESS_KEY_ID": { "value": null },
+    "NUXT_KMS_SECRET_KEY": { "value": null },
+    "NUXT_KMS_ORGANIZATION_ID": { "value": null },
+    "NUXT_KMS_PROJECT_ID": { "value": null },
+    "NUXT_KMS_REGION": { "value": null },
+    "NUXT_KMS_API_URL": { "value": null },
+    "NUXT_KMS_KEY_ID": { "value": null },
+
+    "NUXT_AUTH_PROCONNECT_ISSUER_URL": { "value": null },
+    "NUXT_AUTH_PROCONNECT_CLIENT_ID": { "value": null },
+    "NUXT_AUTH_PROCONNECT_CLIENT_SECRET": { "value": null },
+
+    "NUXT_DATA_INCLUSION_API_URL": { "value": null },
+    "NUXT_DATA_INCLUSION_API_TOKEN": { "value": null },
+    "NUXT_PUBLIC_DATA_INCLUSION_TOKEN": { "value": null },
+
+    "NUXT_PUBLIC_SENTRY_DSN": { "value": null },
+    "NUXT_PUBLIC_MATOMO_HOST": { "value": null }
+  }
+}
