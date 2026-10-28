@@ -107,9 +107,7 @@
       </div>
 
       <div class="fr-col-12 fr-mt-1w">
-        <h2 class="fr-mb-0 fr-text--lg grey">
-          Informations statistiques&nbsp;:
-        </h2>
+        <h2 class="fr-mb-0 fr-text--lg grey">Données statistiques&nbsp;:</h2>
       </div>
 
       <div class="fr-col-12">
@@ -117,7 +115,7 @@
           name="typeSurvey.structureType"
           label="Type de structure"
           :options="withEmptyValue(surveyStructureTypeKeys.options)"
-          :required="isCreation"
+          :required="isTypeSurveyRequired"
         />
       </div>
 
@@ -140,7 +138,7 @@
           :options="surveySocialSupportTypeKeys.options"
           :is-searchable="true"
           :dropdown-over="false"
-          :required="isCreation"
+          :required="isTypeSurveyRequired"
         />
       </div>
 
@@ -220,7 +218,8 @@
   } from '~~/server/schema'
   import {
     createStructureSchema,
-    structureAdminInfoSchema
+    editStructureWithTypeSurveySchema,
+    editStructureWithoutTypeSurveySchema
   } from '~~/server/schema'
 
   const props = defineProps<{
@@ -234,14 +233,21 @@
 
   const form = useTemplateRef('form')
 
-  // The type survey is only mandatory when creating a structure
   const isCreation = !props.structure
+
+  // The type survey is mandatory when creating a structure, and cannot be
+  // emptied once it has been filled in
+  const isTypeSurveyRequired = isCreation || !!props.structure?.typeSurvey
+
+  const validationSchema = isCreation
+    ? createStructureSchema
+    : isTypeSurveyRequired
+      ? editStructureWithTypeSurveySchema
+      : editStructureWithoutTypeSurveySchema
 
   const { handleSubmit, setFieldValue, values } =
     useForm<StructureAdminInfoInput>({
-      validationSchema: toTypedSchema(
-        isCreation ? createStructureSchema : structureAdminInfoSchema
-      ),
+      validationSchema: toTypedSchema(validationSchema),
       initialValues: {
         ...props.structure,
         typeSurvey: props.structure?.typeSurvey ?? { socialSupportTypes: [] },

@@ -75,20 +75,31 @@ const isEmptyTypeSurvey = (value: unknown) => {
   )
 }
 
-// The type survey is optional when editing a structure, but must be complete once started.
-// The form always sends a survey object, so an empty one is treated as missing.
-export const structureAdminInfoSchema = structureAdminInfoBaseSchema.extend({
-  typeSurvey: z.preprocess(
-    value => (isEmptyTypeSurvey(value) ? undefined : value),
-    submitStructureTypeSurveySchema.optional()
-  )
-})
+// Editing a structure without a type survey: the survey is optional, but must be
+// complete once started. The form always sends a survey object, so an empty one
+// is treated as missing.
+export const editStructureWithoutTypeSurveySchema =
+  structureAdminInfoBaseSchema.extend({
+    typeSurvey: z.preprocess(
+      value => (isEmptyTypeSurvey(value) ? undefined : value),
+      submitStructureTypeSurveySchema.optional()
+    )
+  })
 
-export type StructureAdminInfoInput = z.infer<typeof structureAdminInfoSchema>
+// Editing a structure that already has a type survey: it cannot be emptied
+export const editStructureWithTypeSurveySchema =
+  structureAdminInfoBaseSchema.extend({
+    typeSurvey: submitStructureTypeSurveySchema
+  })
 
-export const editStructureAdminInfoSchema = structureAdminInfoSchema.extend({
-  id: z.string().uuid()
-})
+export type StructureAdminInfoInput = z.infer<
+  typeof editStructureWithoutTypeSurveySchema
+>
+
+export const editStructureAdminInfoSchema =
+  editStructureWithoutTypeSurveySchema.extend({
+    id: z.string().uuid()
+  })
 
 export type EditStructureAdminInfoInput = z.infer<
   typeof editStructureAdminInfoSchema
