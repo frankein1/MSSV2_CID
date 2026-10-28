@@ -1,41 +1,33 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
-  <div
-    v-if="error"
-    class="feature-section"
-  >
-    <AtomAlert
-      :alert-type="AlertType.Error"
-      message="La liste des synthèses d'entretien n'a pas pu être chargée."
-    />
-  </div>
-  <template v-else>
-    <section class="feature-section fr-mb-3w">
-      <h3 class="fr-sr-only">Filtres</h3>
-      <FollowupsFilters v-model:filters="filters" />
-    </section>
-    <section class="feature-section">
-      <h3 class="fr-sr-only">Liste des synthèses d'entretien</h3>
+  <section class="feature-section fr-mb-3w">
+    <h3 class="fr-sr-only">Filtres</h3>
+    <FollowupsFilters v-model:filters="filters" />
+  </section>
+  <section class="feature-section">
+    <h3 class="fr-sr-only">Liste des synthèses d'entretien</h3>
 
-      <div class="fr-mb-2w results-container">
-        <p class="fr-hint-text results-count">
-          {{ followupsCount }} synthèse(s) d'entretien
-        </p>
-        <ExportDataButton
-          v-if="application.export.history"
-          :is-downloading="isDownloading"
-          :has-filters="true"
-          :export="exportFollowups"
-        />
-      </div>
-      <div v-if="pending">
-        <AtomLoader class="fr-mx-auto" />
-      </div>
-      <template v-else>
+    <AtomLazyComponent
+      :pending="isLoading"
+      :error="!!error"
+      message="La liste des synthèses d'entretien n'a pas pu être chargée."
+    >
+      <template v-if="!isLoading">
+        <div class="fr-mb-2w results-container">
+          <p class="fr-hint-text results-count">
+            {{ followupsCount }} synthèse(s) d'entretien
+          </p>
+          <ExportDataButton
+            v-if="application.export.history"
+            :is-downloading="isDownloading"
+            :has-filters="true"
+            :export="exportFollowups"
+          />
+        </div>
         <FollowupsTable
           v-model:sort="orderBy"
           :items="pageItems"
-          :pending="pending"
+          :pending="isLoading"
         />
         <AtomPagination
           class="fr-mt-4w"
@@ -45,12 +37,11 @@
           @change-page="updatePagination($event)"
         />
       </template>
-    </section>
-  </template>
+    </AtomLazyComponent>
+  </section>
 </template>
 
 <script setup lang="ts">
-  import { AlertType } from '~/utils/constants/alert'
   import {
     FAILED_DOWNLOAD_ERROR_MESSAGE,
     INVALID_CODE_ERROR_MESSAGE,
@@ -95,11 +86,21 @@
     perPage: perPage.value
   }))
 
+  // Lazy and client-only: the page renders immediately instead of waiting for
+  // this query, which can be slow for structures with thousands of followups
   const {
     data: pageData,
-    pending,
+    status,
     error
-  } = await trpcClient.followup.getPage.useQuery(queryInput)
+  } = trpcClient.followup.getPage.useQuery(queryInput, {
+    lazy: true,
+    server: false
+  })
+
+  // 'idle' covers the server render, where the query is not run
+  const isLoading = computed(
+    () => status.value === 'idle' || status.value === 'pending'
+  )
 
   const followupsCount = computed(() => pageData.value?.count || 0)
 
