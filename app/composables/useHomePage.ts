@@ -1,11 +1,6 @@
-import { useAuthState } from './useAuthState'
 import { routes } from '~/utils/routes'
 
+// Review app (Pilotage territorial): the panel is the only home page
 export function useHomePage() {
-  const admin = useAuthState().isAdmin()
-  if (admin) {
-    return routes.admin.AdminOverview.path()
-  }
-
-  return routes.user.AppOverview.path()
+  return routes.crossStructure.PilotageTerritorial.path()
 }

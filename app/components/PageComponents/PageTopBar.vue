@@ -12,37 +12,24 @@
       class="topbar__menu"
       dropdown-btn-class="fr-btn--sm fr-btn--tertiary-no-outline"
     />
-    <client-only>
-      <DisconnectHandler />
-    </client-only>
   </nav>
 </template>
 
 <script lang="ts" setup>
-  import { routes, apiRoutes } from '~/utils/routes'
+  import { routes } from '~/utils/routes'
   import type { MenuItem } from '~~/types/menu'
 
-  const { isAuthenticated, getUserName } = useAuthState()
+  const { getUserName } = useAuthState()
 
-  const menus = computed(() => {
-    const menus: MenuItem[] = [
-      {
-        label: 'Configuration',
-        to: routes.structure.AppStructureUsers.path(),
-        icon: 'fr-icon-settings-4-line'
-      }
-    ]
-
-    if (isAuthenticated()) {
-      menus.push({
-        label: 'Déconnexion',
-        href: apiRoutes.proConnect.ApiLogout.path(),
-        icon: 'fr-icon-logout-box-r-line'
-      })
+  // Review app (Pilotage territorial): no logout entry and no
+  // DisconnectHandler, since ProConnect logout is broken without an Account
+  const menus: MenuItem[] = [
+    {
+      label: 'Configuration',
+      to: routes.structure.AppStructureUsers.path(),
+      icon: 'fr-icon-settings-4-line'
     }
-
-    return menus
-  })
+  ]
 </script>
 
 <style lang="scss" scoped>
