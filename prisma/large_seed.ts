@@ -199,12 +199,12 @@ const partnerOrganizationNames = [
 ]
 
 const socialSupportSubjectNames = [
-  'médiation scolaire',
-  'soutien administratif',
-  'accès aux droits fondamentaux',
-  'accompagnement vie quotidienne',
-  'point famille',
-  'passage en EPS'
+  'Médiation scolaire',
+  'Soutien administratif',
+  'Accès aux droits fondamentaux',
+  'Accompagnement vie quotidienne',
+  'Point famille',
+  'Passage en EPS'
 ]
 
 // Every structure runs the Dispositif PRE (the only one with a lifecycle) and
@@ -215,9 +215,9 @@ const preSupportProgramNameInput = {
 }
 
 const interventionAxisNameInputs = [
-  { name: 'soutien à la parentalité', hasLifecycle: false },
-  { name: 'accès aux soins', hasLifecycle: false },
-  { name: 'accès aux loisirs', hasLifecycle: false }
+  { name: 'Soutien à la parentalité', hasLifecycle: false },
+  { name: 'Accès aux soins', hasLifecycle: false },
+  { name: 'Accès aux loisirs', hasLifecycle: false }
 ]
 
 const redirectionReasonNames = [

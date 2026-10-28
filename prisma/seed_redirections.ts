@@ -25,11 +25,11 @@ const FRANCE_TRAVAIL_ID =
 const MAIRIE_VALENCE_ID =
   fixturesPartnerOrganizations[FixturePartnerOrganization.MairieValence].id
 
-const RR0 = fixturesRedirectionReasons[0]!.id // Accès aux droits
-const RR1 = fixturesRedirectionReasons[1]!.id // Aide alimentaire d'urgence
-const RR2 = fixturesRedirectionReasons[2]!.id // Insertion professionnelle
-const RR3 = fixturesRedirectionReasons[3]!.id // Prévention expulsion locative
-const RR4 = fixturesRedirectionReasons[4]!.id // Soutien à la parentalité
+const RR0 = fixturesRedirectionReasons[0]!.id // Hors compétence
+const RR1 = fixturesRedirectionReasons[1]!.id // Besoin d’un suivi spécialisé
+const RR2 = fixturesRedirectionReasons[2]!.id // Demande du bénéficiaire
+const RR3 = fixturesRedirectionReasons[3]!.id // Délai de prise en charge trop long
+const RR4 = fixturesRedirectionReasons[4]!.id // Orientation vers le droit commun
 
 function ben(key: FixtureBeneficiary) {
   return {

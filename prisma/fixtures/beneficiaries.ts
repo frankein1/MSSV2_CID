@@ -49,10 +49,10 @@ export const fixturesBeneficiaries = [
     usualName: 'TEARLE',
     birthName: 'FIRTH',
     firstName: 'Måns',
-    city: 'Dijon',
-    zipcode: '21000',
-    street: '10 Rue Berbisey, 21000 Dijon',
-    department: "Côte-d'Or",
+    city: 'Bourbon-Lancy',
+    zipcode: '71140',
+    street: '10 Grande Rue, 71140 Bourbon-Lancy',
+    department: 'Saône-et-Loire',
     region: 'Bourgogne-Franche-Comté',
     mobility: 'BikeOrEquivalent',
     socioProfessionalCategory: 'Employed',
@@ -72,7 +72,7 @@ export const fixturesBeneficiaries = [
     deathDate: new Date('2017-08-29'),
     gender: 'Female',
     email: 'jwedderburn7@businesswire.com',
-    city: 'Lyon',
+    city: 'Bourbon-Lancy',
     mobility: 'PublicTransport'
   },
   {
@@ -96,7 +96,7 @@ export const fixturesBeneficiaries = [
     structureId: fixtureStructures[0].id,
     status: 'Active',
     birthDate: new Date('1978-11-22'),
-    city: 'Lyon',
+    city: 'Bourbon-Lancy',
     mobility: 'VehicleWithoutPermit',
     employer: 'Boulangerie Saint-Jean'
   },
@@ -113,8 +113,8 @@ export const fixturesBeneficiaries = [
     birthDate: new Date('1995-04-01'),
     gender: 'Female',
     email: 'lridewood0@de.vu',
-    city: 'Dijon',
-    department: "Côte-d'Or",
+    city: 'Bourbon-Lancy',
+    department: 'Saône-et-Loire',
     region: 'Bourgogne-Franche-Comté',
     employer: 'La Poste'
   },
@@ -168,11 +168,11 @@ export const fixturesBeneficiaries = [
     firstName: 'Mélia',
     birthDate: new Date('1990-01-15'),
     gender: 'Female',
-    city: 'Paris',
+    city: 'Bourbon-Lancy',
     mobility: 'PermitWithVehicle',
     familySituation: 'Single',
-    department: 'Val-de-Marne',
-    region: 'Île-de-France',
+    department: 'Saône-et-Loire',
+    region: 'Bourgogne-Franche-Comté',
     employer: 'Assistance Publique - Hôpitaux de Paris'
   },
   {
@@ -247,7 +247,7 @@ export const fixturesBeneficiaries = [
     firstName: 'Jean',
     birthDate: new Date('1988-05-20'),
     gender: 'Male',
-    city: 'Paris',
+    city: 'Mâcon',
     accommodationZone: 'France',
     employer: "Ministère de l'Intérieur"
   },
@@ -261,7 +261,7 @@ export const fixturesBeneficiaries = [
     firstName: 'Marie',
     birthDate: new Date('1975-12-03'),
     gender: 'Female',
-    city: 'Lyon',
+    city: 'Mâcon',
     accommodationZone: 'Europe',
     employer: 'Ministère de la Justice'
   },
@@ -288,13 +288,13 @@ export const fixturesBeneficiaries = [
     firstName: 'Noham',
     birthDate: new Date('2016-05-12'),
     gender: 'Male',
-    city: 'Lyon',
-    department: 'Rhône',
-    region: 'Auvergne-Rhône-Alpes',
+    city: 'Bourbon-Lancy',
+    department: 'Saône-et-Loire',
+    region: 'Bourgogne-Franche-Comté',
     schoolClass: 'CM1',
     schoolUai:
       fixturesDataEducationSchools[FixtureDataEducationSchool.SchLyon2]?.uai,
-    qpv: true
+    qpv: false
   },
   {
     id: 'f6a7b8c9-d0e1-2345-f012-456789012345',
@@ -306,13 +306,13 @@ export const fixturesBeneficiaries = [
     firstName: 'Léon',
     birthDate: new Date('2019-03-10'),
     gender: 'Male',
-    city: 'Lyon',
-    department: 'Rhône',
-    region: 'Auvergne-Rhône-Alpes',
+    city: 'Bourbon-Lancy',
+    department: 'Saône-et-Loire',
+    region: 'Bourgogne-Franche-Comté',
     schoolClass: 'CE1',
     schoolUai:
       fixturesDataEducationSchools[FixtureDataEducationSchool.SchLyon2]?.uai,
-    qpv: true
+    qpv: false
   },
   {
     id: 'e5f6a7b8-c9d0-1234-ef01-345678901234',
@@ -324,8 +324,8 @@ export const fixturesBeneficiaries = [
     firstName: 'Emy',
     birthDate: new Date('2015-02-10'),
     gender: 'Female',
-    city: 'Dijon',
-    department: "Côte-d'Or",
+    city: 'Bourbon-Lancy',
+    department: 'Saône-et-Loire',
     region: 'Bourgogne-Franche-Comté',
     schoolClass: 'CM2',
     schoolUai:
@@ -344,14 +344,14 @@ export const fixturesBeneficiaries = [
     firstName: 'Yanis',
     birthDate: new Date('2021-04-18'),
     gender: 'Male',
-    city: 'Marseille',
-    department: 'Bouches-du-Rhône',
-    region: "Provence-Alpes-Côte d'Azur",
+    city: 'Bourbon-Lancy',
+    department: 'Saône-et-Loire',
+    region: 'Bourgogne-Franche-Comté',
     socioProfessionalCategory: 'Student',
     schoolClass: 'GrandeSection',
     schoolUai:
       fixturesDataEducationSchools[FixtureDataEducationSchool.Marseille]?.uai,
-    qpv: true
+    qpv: false
   },
   {
     id: 'b8c9d0e1-f2a3-4567-b123-678901234567',
@@ -363,9 +363,9 @@ export const fixturesBeneficiaries = [
     firstName: 'Chloé',
     birthDate: new Date('2020-02-14'),
     gender: 'Female',
-    city: 'Toulouse',
-    department: 'Haute-Garonne',
-    region: 'Occitanie',
+    city: 'Bourbon-Lancy',
+    department: 'Saône-et-Loire',
+    region: 'Bourgogne-Franche-Comté',
     socioProfessionalCategory: 'Student',
     schoolClass: 'CP',
     schoolUai:
@@ -382,9 +382,9 @@ export const fixturesBeneficiaries = [
     firstName: 'Nathan',
     birthDate: new Date('2016-03-22'),
     gender: 'Male',
-    city: 'Bordeaux',
-    department: 'Gironde',
-    region: 'Nouvelle-Aquitaine',
+    city: 'Bourbon-Lancy',
+    department: 'Saône-et-Loire',
+    region: 'Bourgogne-Franche-Comté',
     socioProfessionalCategory: 'Student',
     schoolClass: 'CM2',
     schoolUai:
@@ -401,14 +401,14 @@ export const fixturesBeneficiaries = [
     firstName: 'Inès',
     birthDate: new Date('2015-05-30'),
     gender: 'Female',
-    city: 'Lille',
-    department: 'Nord',
-    region: 'Hauts-de-France',
+    city: 'Bourbon-Lancy',
+    department: 'Saône-et-Loire',
+    region: 'Bourgogne-Franche-Comté',
     socioProfessionalCategory: 'Student',
     schoolClass: 'Sixieme',
     schoolUai:
       fixturesDataEducationSchools[FixtureDataEducationSchool.Lille]?.uai,
-    qpv: true
+    qpv: false
   },
   {
     id: 'e1f2a3b4-c5d6-7890-e456-901234567890',
@@ -420,9 +420,9 @@ export const fixturesBeneficiaries = [
     firstName: 'Lucas',
     birthDate: new Date('2012-01-10'),
     gender: 'Male',
-    city: 'Nantes',
-    department: 'Loire-Atlantique',
-    region: 'Pays de la Loire',
+    city: 'Bourbon-Lancy',
+    department: 'Saône-et-Loire',
+    region: 'Bourgogne-Franche-Comté',
     socioProfessionalCategory: 'Student',
     schoolClass: 'Troisieme',
     schoolUai:
@@ -439,9 +439,9 @@ export const fixturesBeneficiaries = [
     firstName: 'Camille',
     birthDate: new Date('2011-06-02'),
     gender: 'Female',
-    city: 'Strasbourg',
-    department: 'Bas-Rhin',
-    region: 'Grand Est',
+    city: 'Bourbon-Lancy',
+    department: 'Saône-et-Loire',
+    region: 'Bourgogne-Franche-Comté',
     socioProfessionalCategory: 'Student',
     schoolClass: 'SecondeGenerale',
     schoolUai:
@@ -458,14 +458,14 @@ export const fixturesBeneficiaries = [
     firstName: 'Enzo',
     birthDate: new Date('2011-02-25'),
     gender: 'Male',
-    city: 'Rennes',
-    department: 'Ille-et-Vilaine',
-    region: 'Bretagne',
+    city: 'Bourbon-Lancy',
+    department: 'Saône-et-Loire',
+    region: 'Bourgogne-Franche-Comté',
     socioProfessionalCategory: 'Student',
     schoolClass: 'SecondePro',
     schoolUai:
       fixturesDataEducationSchools[FixtureDataEducationSchool.Rennes]?.uai,
-    qpv: true
+    qpv: false
   },
   // Beneficiary in same school
   {
@@ -478,14 +478,14 @@ export const fixturesBeneficiaries = [
     firstName: 'Manon',
     birthDate: new Date('2016-04-14'),
     gender: 'Female',
-    city: 'Nice',
-    department: 'Alpes-Maritimes',
-    region: "Provence-Alpes-Côte d'Azur",
+    city: 'Bourbon-Lancy',
+    department: 'Saône-et-Loire',
+    region: 'Bourgogne-Franche-Comté',
     socioProfessionalCategory: 'Student',
     schoolClass: 'CM2',
     schoolUai:
       fixturesDataEducationSchools[FixtureDataEducationSchool.Nice]?.uai,
-    qpv: true
+    qpv: false
   },
   // --- Siblings sharing the same family file, city and school ---
   {
@@ -498,9 +498,9 @@ export const fixturesBeneficiaries = [
     firstName: 'Léa',
     birthDate: new Date('2016-03-15'),
     gender: 'Female',
-    city: 'Nice',
-    department: 'Alpes-Maritimes',
-    region: "Provence-Alpes-Côte d'Azur",
+    city: 'Bourbon-Lancy',
+    department: 'Saône-et-Loire',
+    region: 'Bourgogne-Franche-Comté',
     socioProfessionalCategory: 'Student',
     schoolClass: 'CM2',
     schoolUai:
@@ -517,9 +517,9 @@ export const fixturesBeneficiaries = [
     firstName: 'Hugo',
     birthDate: new Date('2019-04-20'),
     gender: 'Male',
-    city: 'Nice',
-    department: 'Alpes-Maritimes',
-    region: "Provence-Alpes-Côte d'Azur",
+    city: 'Bourbon-Lancy',
+    department: 'Saône-et-Loire',
+    region: 'Bourgogne-Franche-Comté',
     socioProfessionalCategory: 'Student',
     schoolClass: 'CE1',
     schoolUai:
