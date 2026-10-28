@@ -4,11 +4,6 @@ import { useAuthState } from './useAuthState'
 export function useAuth() {
   const state = useAuthState()
   const { application, reset } = usePermissions()
-  const {
-    public: {
-      auth: { cookieKey }
-    }
-  } = useRuntimeConfig()
 
   function logout() {
     state.user.value = null
@@ -20,10 +15,8 @@ export function useAuth() {
   }
 
   async function getSession() {
-    // During SSR, no need to call /api/auth/get-session if no session cookie
-    if (useRequestEvent() && !useCookie(cookieKey).value) {
-      return
-    }
+    // Review app only: no early return on a missing session cookie during SSR,
+    // the server bypass ignores the cookie and always yields the persona.
     // The in-process SSR call bypasses nginx: forward x-real-ip so the rate
     // limiter keys it on the client instead of a bucket shared by every render
     const session = await $fetch('/api/auth/get-session', {
