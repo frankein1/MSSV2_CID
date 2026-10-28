@@ -41,7 +41,7 @@
   const trpcClient = useTrpcClient()
 
   const { data, error, status } =
-    await trpcClient.stat.getFollowupSubjectStats.useQuery(
+    await trpcClient.crossStructureStat.getFollowupSubjectStats.useQuery(
       toRef(() => props.filters)
     )
 

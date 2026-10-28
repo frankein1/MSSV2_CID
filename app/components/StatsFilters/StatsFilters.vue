@@ -1,22 +1,7 @@
 <template>
   <section class="feature-section">
     <h3 class="fr-sr-only">Filtres</h3>
-    <AtomLoader
-      v-if="
-        !socialSupportSubjectOptions ||
-        !beneficiariesCitiesOptions ||
-        !beneficiariesEmployersOptions ||
-        !beneficiariesSchoolsOptions
-      "
-      class="fr-mx-auto"
-    />
-    <AtomAlert
-      v-if="isMinistry && ministersError"
-      :alert-type="AlertType.Error"
-      message="La liste des ministres n'a pas pu être chargée."
-    />
     <AtomFilters
-      v-else
       :filters="statsFilters"
       :default-values="defaultValues"
       :expanded-by-default="true"
@@ -28,13 +13,8 @@
 
 <script setup lang="ts">
   import {
-    fileInstructionTypeFilterKeys,
-    fileInstructionTypePictos,
-    beneficiaryStatusKeys,
     periodKeys,
     ageGroupKeys,
-    ministereDepartmentServiceAcKeys,
-    ministereStructureKeys,
     yesNoOptions,
     AgeGroup
   } from '~~/client/options'
@@ -44,36 +24,29 @@
   import type { StatFilterInput } from '~~/server/schema'
   import type { FilterProp } from '~~/types/filter'
   import { StatPeriodFilter } from '~~/types/stat'
-  import {
-    beneficiaryFieldLabels,
-    helpRequestFieldLabels
-  } from '~~/client/labels'
-  import { formatMinisterName } from '~/utils/minister'
-  import { AlertType } from '~/utils/constants/alert'
+  import { beneficiaryFieldLabels } from '~~/client/labels'
   import { EventCategory, StatFilterEventAction } from '~~/types/matomo'
 
-  const { application } = usePermissions()
-  const trpcClient = useTrpcClient()
-  const isMinistry = computed(() => application.value.module.ministere)
+  // Review app only: cross-structure statistics panel filters
+  // (period, structures, subjects, city, dispositifs, age group, QPV, school)
 
   const props = withDefaults(
     defineProps<{
-      socialSupportSubjectOptions: Options
-      beneficiariesCitiesOptions: Options
-      beneficiariesEmployersOptions: Options
-      beneficiariesSchoolsOptions: Options
-      agentOptions: Options
+      structureOptions?: Options
+      socialSupportSubjectOptions?: Options
+      beneficiariesCitiesOptions?: Options
+      beneficiariesSchoolsOptions?: Options
       supportProgramNameOptions?: Options
       filters: StatFilterInput
       validationSchema?: any
-      isHelpRequest?: boolean
-      isHistory?: boolean
     }>(),
     {
-      isHelpRequest: false,
-      isHistory: false,
-      validationSchema: undefined,
-      supportProgramNameOptions: () => []
+      structureOptions: () => [],
+      socialSupportSubjectOptions: () => [],
+      beneficiariesCitiesOptions: () => [],
+      beneficiariesSchoolsOptions: () => [],
+      supportProgramNameOptions: () => [],
+      validationSchema: undefined
     }
   )
 
@@ -81,51 +54,15 @@
     'update:filters': [filters: StatFilterInput]
   }>()
 
-  const defaultValues = computed<StatFilterInput | undefined>(() => {
-    if (props.isHelpRequest) {
-      return { helpRequestSubject: '' }
-    }
-    return undefined
-  })
+  // Every structure selected on arrival, same result as none selected
+  const defaultValues = computed<StatFilterInput>(() => ({
+    structureIds: props.structureOptions.map(({ value }) => value)
+  }))
 
   const maxAlwaysExpandedNb = 4
 
-  const agentOptionsWithEmptyValue = computed(() => [
-    { value: '', label: '' },
-    ...props.agentOptions
-  ])
-
-  // get Minister list from DB
-  const { data: ministers, error: ministersError } = isMinistry.value
-    ? await trpcClient.minister.getMinisters.useQuery()
-    : { data: null, error: null }
-
-  const ministerOptions = computed(() => {
-    if (!ministers?.value) {
-      return null
-    }
-    return ministers.value.map(minister => ({
-      label: formatMinisterName(minister),
-      value: minister.id
-    }))
-  })
-
   const statsFilters = computed(() => {
     const statsFilters: FilterProp[] = [
-      {
-        name: 'helpRequestSubject',
-        label: "Thématique d'instruction",
-        options: withEmptyValue(
-          fileInstructionTypeFilterKeys.options,
-          'Toutes'
-        ),
-        type: FilterType.Radio,
-        alwaysExpanded: true,
-        pictos: fileInstructionTypePictos,
-        disabled: !props.isHelpRequest,
-        matomoEventCategory: EventCategory.StatFilter,
-        matomoEventAction: StatFilterEventAction.HelpRequestSubject
-      },
       {
         name: 'period',
         label: 'Période',
@@ -154,6 +91,15 @@
       )
     }
 
+    if (props.structureOptions.length) {
+      statsFilters.push({
+        name: 'structureIds',
+        label: 'Structures',
+        options: props.structureOptions,
+        type: FilterType.SelectMultiple,
+        alwaysExpanded: statsFilters.length < maxAlwaysExpandedNb
+      })
+    }
     if (props.socialSupportSubjectOptions.length) {
       statsFilters.push({
         name: 'socialSupportSubjects',
@@ -161,7 +107,6 @@
         options: props.socialSupportSubjectOptions,
         type: FilterType.SelectMultiple,
         alwaysExpanded: statsFilters.length < maxAlwaysExpandedNb,
-        disabled: props.filters.helpRequestSubject === 'Housing',
         matomoEventCategory: EventCategory.StatFilter,
         matomoEventAction: StatFilterEventAction.SocialSupportSubject
       })
@@ -177,7 +122,7 @@
         matomoEventAction: StatFilterEventAction.City
       })
     }
-    if (props.supportProgramNameOptions?.length) {
+    if (props.supportProgramNameOptions.length) {
       statsFilters.push({
         name: 'supportProgramNameIds',
         label: "Dispositif ou axe d'intervention",
@@ -186,68 +131,6 @@
         alwaysExpanded: statsFilters.length < maxAlwaysExpandedNb,
         matomoEventCategory: EventCategory.StatFilter,
         matomoEventAction: StatFilterEventAction.SupportProgram
-      })
-    }
-    if (application.value.module.statsByReferent && !props.isHistory) {
-      statsFilters.push({
-        name: 'referent',
-        label: 'Référent',
-        options: agentOptionsWithEmptyValue.value,
-        type: FilterType.SelectOne,
-        alwaysExpanded: statsFilters.length < maxAlwaysExpandedNb,
-        matomoEventCategory: EventCategory.StatFilter,
-        matomoEventAction: StatFilterEventAction.Referent
-      })
-    }
-    if (props.isHistory) {
-      statsFilters.push({
-        name: 'createdById',
-        label: 'Agent',
-        options: props.agentOptions,
-        type: FilterType.SelectMultiple,
-        alwaysExpanded: statsFilters.length < maxAlwaysExpandedNb,
-        matomoEventCategory: EventCategory.StatFilter,
-        matomoEventAction: StatFilterEventAction.Agent
-      })
-    }
-    statsFilters.push({
-      name: 'beneficiaryStatus',
-      label: 'Statut du bénéficiaire',
-      options: withEmptyValue(beneficiaryStatusKeys.options),
-      type: FilterType.SelectOne,
-      alwaysExpanded: statsFilters.length < maxAlwaysExpandedNb,
-      matomoEventCategory: EventCategory.StatFilter,
-      matomoEventAction: StatFilterEventAction.BeneficiaryStatus
-    })
-    if (application.value.module.ministere && ministerOptions.value != null) {
-      if (ministerOptions.value != null) {
-        statsFilters.push({
-          name: 'ministerId',
-          label: helpRequestFieldLabels.minister,
-          options: ministerOptions.value,
-          type: FilterType.SelectMultiple,
-          alwaysExpanded: statsFilters.length < maxAlwaysExpandedNb,
-          matomoEventCategory: EventCategory.StatFilter,
-          matomoEventAction: StatFilterEventAction.Minister
-        })
-      }
-      statsFilters.push({
-        name: 'ministereDepartementServiceAc',
-        label: beneficiaryFieldLabels.ministereDepartementServiceAc,
-        options: withEmptyValue(ministereDepartmentServiceAcKeys.options),
-        type: FilterType.SelectOne,
-        alwaysExpanded: statsFilters.length < maxAlwaysExpandedNb,
-        matomoEventCategory: EventCategory.StatFilter,
-        matomoEventAction: StatFilterEventAction.MinistryDepartementServiceAc
-      })
-      statsFilters.push({
-        name: 'ministereStructure',
-        label: beneficiaryFieldLabels.ministereStructure,
-        options: withEmptyValue(ministereStructureKeys.options),
-        type: FilterType.SelectOne,
-        alwaysExpanded: statsFilters.length < maxAlwaysExpandedNb,
-        matomoEventCategory: EventCategory.StatFilter,
-        matomoEventAction: StatFilterEventAction.MinistryStructure
       })
     }
     statsFilters.push({
@@ -289,18 +172,6 @@
       matomoEventCategory: EventCategory.StatFilter,
       matomoEventAction: StatFilterEventAction.QPV
     })
-
-    if (props.beneficiariesEmployersOptions.length) {
-      statsFilters.push({
-        name: 'employers',
-        label: beneficiaryFieldLabels.employer,
-        options: props.beneficiariesEmployersOptions,
-        type: FilterType.SelectMultiple,
-        alwaysExpanded: statsFilters.length < maxAlwaysExpandedNb,
-        matomoEventCategory: EventCategory.StatFilter,
-        matomoEventAction: StatFilterEventAction.Employer
-      })
-    }
 
     if (props.beneficiariesSchoolsOptions.length) {
       statsFilters.push({
