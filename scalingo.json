@@ -24,9 +24,20 @@
     "NUXT_KMS_API_URL": { "value": null },
     "NUXT_KMS_KEY_ID": { "value": null },
 
-    "NUXT_AUTH_PROCONNECT_ISSUER_URL": { "value": null },
-    "NUXT_AUTH_PROCONNECT_CLIENT_ID": { "value": null },
-    "NUXT_AUTH_PROCONNECT_CLIENT_SECRET": { "value": null },
+    "NUXT_AUTH_JWT_KEY": { "generator": "secret" },
+    "NUXT_AUTH_SESSION_SECRET": { "generator": "secret" },
+
+    "NUXT_BREVO_API_KEY": { "value": null },
+
+    "NUXT_AUTH_PROCONNECT_ISSUER_URL": {
+      "value": "https://review-app-unused.invalid"
+    },
+    "NUXT_AUTH_PROCONNECT_CLIENT_ID": { "value": "review-app-unused" },
+    "NUXT_AUTH_PROCONNECT_CLIENT_SECRET": { "value": "review-app-unused" },
+
+    "NUXT_RDVSP_ISSUER": { "value": null },
+    "NUXT_RDVSP_CLIENT_ID": { "value": null },
+    "NUXT_RDVSP_CLIENT_SECRET": { "value": null },
 
     "NUXT_DATA_INCLUSION_API_URL": { "value": null },
     "NUXT_DATA_INCLUSION_API_TOKEN": { "value": null },
