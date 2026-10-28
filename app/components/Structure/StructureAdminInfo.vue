@@ -1,10 +1,16 @@
 <template>
   <div class="feature-section bg-color-white structure-info">
-    <h2 class="fr-h4">Informations sur la structure</h2>
+    <h2 class="fr-h4">Informations sur la structure – {{ structure.name }}</h2>
 
     <div class="fr-grid-row fr-grid-row--gutters">
       <div class="fr-col-12 fr-col-lg-6">
         <ul class="information-list">
+          <li>
+            <span class="fr-text--bold">
+              {{ structureFieldLabels.name }}&nbsp;:
+            </span>
+            {{ structure.name }}
+          </li>
           <li>
             <span class="fr-text--bold">
               {{ structureFieldLabels.type }}&nbsp;:
@@ -28,12 +34,6 @@
               {{ structureFieldLabels.siret }}&nbsp;:
             </span>
             {{ structure.siret }}
-          </li>
-          <li>
-            <span class="fr-text--bold">
-              {{ structureFieldLabels.name }}&nbsp;:
-            </span>
-            {{ structure.name }}
           </li>
           <li>
             <span class="fr-text--bold">
@@ -88,7 +88,6 @@
 
       <div class="fr-col-12 fr-col-lg-6">
         <h3 class="fr-text--lg fr-mb-3v grey">Données enregistrées</h3>
-
         <ul class="information-list">
           <li>
             <span class="fr-text--bold">Utilisateurs&nbsp;:</span>
@@ -101,6 +100,25 @@
           <li>
             <span class="fr-text--bold">Accompagnements&nbsp;:</span>
             {{ structure._count.socialSupports }}
+          </li>
+        </ul>
+
+        <hr class="fr-my-4v fr-py-1v" />
+        <h3 class="fr-text--lg fr-mb-3v grey">Données statistiques</h3>
+        <ul class="information-list">
+          <li>
+            <span class="fr-text--bold">Type de structure&nbsp;:</span>
+            {{ surveyStructureType }}
+          </li>
+          <li v-if="structure.typeSurvey?.structureTypeOther">
+            <span class="fr-text--bold">Autre type de structure&nbsp;:</span>
+            {{ structure.typeSurvey.structureTypeOther }}
+          </li>
+          <li>
+            <span class="fr-text--bold"
+              >Types de suivi réalisés dans Mon Suivi Social&nbsp;:</span
+            >
+            {{ surveySocialSupportTypes }}
           </li>
         </ul>
       </div>
@@ -117,16 +135,12 @@
       >
         Désactiver
       </button>
-      <button
+      <NuxtLink
         class="fr-btn fr-btn--icon-left fr-icon-edit-line"
-        data-fr-opened="false"
-        aria-controls="global-modal"
-        title="Modifier"
-        aria-label="Modifier"
-        @click="emit('edit')"
+        :to="routes.admin.AdminStructureEdit.path(structure.id)"
       >
         Modifier
-      </button>
+      </NuxtLink>
     </div>
   </div>
 
@@ -145,15 +159,29 @@
 
 <script setup lang="ts">
   import type { AdminStructureInfo } from './types'
+  import { routes } from '~/utils/routes'
   import { structureFieldLabels } from '~~/client/labels'
-  import { structureTypeKeys } from '~~/client/options'
+  import {
+    structureTypeKeys,
+    surveySocialSupportTypeKeys,
+    surveyStructureTypeKeys
+  } from '~~/client/options'
 
-  defineProps<{
+  const props = defineProps<{
     structure: AdminStructureInfo
   }>()
 
+  const surveyStructureType = computed(() =>
+    surveyStructureTypeKeys.value(props.structure.typeSurvey?.structureType)
+  )
+
+  const surveySocialSupportTypes = computed(() =>
+    props.structure.typeSurvey?.socialSupportTypes
+      .map(type => surveySocialSupportTypeKeys.value(type))
+      .join(', ')
+  )
+
   const emit = defineEmits<{
-    edit: []
     disable: []
     toggleRdv: [value: boolean]
   }>()

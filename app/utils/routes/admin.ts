@@ -21,10 +21,21 @@ export const routes = {
     title: 'Structures',
     path: () => `${AdminRoute}/structures`
   },
+  AdminStructureAdd: {
+    name: 'AdminStructureAdd',
+    title: 'Ajouter une structure',
+    path: () => `${AdminRoute}/structures/add`
+  },
   AdminStructure: {
     name: 'AdminStructure',
     title: 'Structure',
     path: (structureId: string) => `${AdminRoute}/structures/${structureId}`
+  },
+  AdminStructureEdit: {
+    name: 'AdminStructureEdit',
+    title: 'Modifier les informations de la structure',
+    path: (structureId: string) =>
+      `${AdminRoute}/structures/${structureId}/edit`
   },
   AdminStructureSubjects: {
     name: 'AdminStructureSubjects',

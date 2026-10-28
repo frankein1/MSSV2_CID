@@ -15,8 +15,9 @@ import {
   validZipcode,
   validEmailMessage
 } from '~/utils/zod'
+import { submitStructureTypeSurveySchema } from './structureTypeSurvey.schema'
 
-export const createStructureSchema = z.object({
+const structureAdminInfoBaseSchema = z.object({
   type: requiredNativeEnum(StructureType),
   inhabitantsNumber: stringConstraint
     .max(50, maxStringLengthMessage(50))
@@ -47,9 +48,43 @@ export const createStructureSchema = z.object({
   dpoEmail: z.string(errorMessages).email(validEmailMessage)
 })
 
+// The type survey is mandatory when an administrator creates a structure
+export const createStructureSchema = structureAdminInfoBaseSchema.extend({
+  typeSurvey: submitStructureTypeSurveySchema
+})
+
 export type CreateStructureInput = z.infer<typeof createStructureSchema>
 
-export const editStructureAdminInfoSchema = createStructureSchema.extend({
+type TypeSurveyFormValues = {
+  structureType?: string | null
+  structureTypeOther?: string | null
+  socialSupportTypes?: string[] | null
+}
+
+const isEmptyTypeSurvey = (value: unknown) => {
+  if (!value) {
+    return true
+  }
+  const survey = value as TypeSurveyFormValues
+  return (
+    !survey.structureType &&
+    !survey.structureTypeOther &&
+    !survey.socialSupportTypes?.length
+  )
+}
+
+// The type survey is optional when editing a structure, but must be complete once started.
+// The form always sends a survey object, so an empty one is treated as missing.
+export const structureAdminInfoSchema = structureAdminInfoBaseSchema.extend({
+  typeSurvey: z.preprocess(
+    value => (isEmptyTypeSurvey(value) ? undefined : value),
+    submitStructureTypeSurveySchema.optional()
+  )
+})
+
+export type StructureAdminInfoInput = z.infer<typeof structureAdminInfoSchema>
+
+export const editStructureAdminInfoSchema = structureAdminInfoSchema.extend({
   id: z.string().uuid()
 })
 

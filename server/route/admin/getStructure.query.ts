@@ -29,6 +29,13 @@ const adminHandler = async ({
       dpoFirstName: true,
       dpoLastName: true,
       dpoEmail: true,
+      typeSurvey: {
+        select: {
+          structureType: true,
+          structureTypeOther: true,
+          socialSupportTypes: true
+        }
+      },
       externalRdvspActive: true,
       created: true,
       lastAccess: true,

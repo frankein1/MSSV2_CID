@@ -36,16 +36,12 @@
       </div>
 
       <div class="fr-col-12 fr-col-lg-4 fr-col-xl-3">
-        <button
+        <NuxtLink
           class="fr-btn fr-btn--icon-left fr-icon-add-line"
-          data-fr-opened="false"
-          aria-controls="global-modal"
-          title="Ajouter une structure"
-          aria-label="Ajouter une structure"
-          @click="onCreateStructure"
+          :to="routes.admin.AdminStructureAdd.path()"
         >
-          Ajouter une structure
-        </button>
+          {{ routes.admin.AdminStructureAdd.title }}
+        </NuxtLink>
       </div>
     </div>
     <StructureTableAdmin
@@ -55,17 +51,11 @@
   </PageContainer>
 </template>
 <script lang="ts" setup>
-  import StructureAdminInfoForm from '~/components/Structure/StructureAdminInfoForm.vue'
-  import type { CreateStructureInput } from '~~/server/schema'
   import { routes } from '~/utils/routes'
 
   const trpcClient = useTrpcClient()
 
-  const snackbar = useSnackbar()
-  const modal = useModal()
-
   const search = ref<string>()
-  const isSubmitting = ref(false)
 
   const queryInput = computed(() => ({
     search: search.value
@@ -80,26 +70,5 @@
     const input = event.target as HTMLInputElement
     const value = input.value.trim()
     search.value = value
-  }
-
-  const onCreateStructure = () => {
-    modal.open(StructureAdminInfoForm, {
-      title: "Création d'une structure",
-      structure: undefined,
-      validate: addStructure
-    })
-  }
-
-  // Create structure mutation
-  const { mutate, error } = useTrpcClient().admin.createStructure.useMutation()
-
-  async function addStructure(structure: CreateStructureInput) {
-    const res = await mutate(structure)
-    if (error.value || !res) {
-      snackbar.error("L'ajout de la structure a échoué.")
-      return
-    }
-    modal.close()
-    navigateTo(routes.admin.AdminStructure.path(res.id))
   }
 </script>

@@ -11,17 +11,24 @@ import { createEmailSubject } from '~~/server/email/createEmailSubject'
 import { createOrUpdateStructure } from '~~/server/integrations/brevo/service'
 
 const adminHandler = async ({
-  ctx: _ctx,
+  ctx,
   input
 }: {
   ctx: AdminContext
   input: CreateStructureInput
 }) => {
   const keys = Object.keys(DefaultSocialSupportSubject)
+  const { typeSurvey, ...structure } = input
 
   const createdStructure = await StructureRepo.prisma.create({
     data: {
-      ...input,
+      ...structure,
+      typeSurvey: {
+        create: {
+          ...typeSurvey,
+          filledById: ctx.user.id
+        }
+      },
       socialSupportSubjects: {
         createMany: {
           data: keys.map(key => ({

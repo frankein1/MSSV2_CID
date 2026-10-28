@@ -1,5 +1,11 @@
 <template>
   <PageContainer class="fr-p-5w">
+    <NuxtLink
+      :to="routes.admin.AdminMinisters.path()"
+      class="fr-btn fr-btn--tertiary-no-outline fr-icon-arrow-left-line fr-btn--icon-left fr-mb-6v"
+    >
+      {{ routes.admin.AdminMinisters.title }}
+    </NuxtLink>
     <PageTitle :title="routes.admin.AdminMinisterAdd.title" />
 
     <div class="fr-grid-row fr-grid-row--gutters">

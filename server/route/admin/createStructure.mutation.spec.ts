@@ -7,7 +7,8 @@ mockNuxtImport('useRuntimeConfig', () => {
   return () => ({
     app: { baseURL: '/' },
     public: { email: { from: 'mss@example.com' } },
-    document: { useS3Storage: true }
+    document: { useS3Storage: true },
+    logs: { activateRequestLogging: false }
   })
 })
 
@@ -40,7 +41,11 @@ const validInput = {
   email: 'create-structure-spec@test.com',
   dpoFirstName: 'Jean',
   dpoLastName: 'Dupont',
-  dpoEmail: 'dpo-spec@test.com'
+  dpoEmail: 'dpo-spec@test.com',
+  typeSurvey: {
+    structureType: 'Ccas' as const,
+    socialSupportTypes: ['SuiviSocialGeneraliste' as const]
+  }
 }
 
 describe('Admin - Create Structure - Authorizations', () => {
@@ -72,5 +77,47 @@ describe('Admin - Create Structure - Happy path', () => {
       where: { ownedByStructureId: result.id }
     })
     expect(subjects.length).toBeGreaterThan(0)
+
+    const survey = await prismaClient.structureTypeSurvey.findUniqueOrThrow({
+      where: { structureId: result.id }
+    })
+    expect(survey.structureType).toBe('Ccas')
+    expect(survey.socialSupportTypes).toEqual(['SuiviSocialGeneraliste'])
+    expect(survey.structureTypeOther).toBeNull()
+  })
+})
+
+describe('Admin - Create Structure - Validation', () => {
+  test('The type survey is required', async ({ trpc }) => {
+    const { typeSurvey: _typeSurvey, ...inputWithoutSurvey } = validInput
+    await expect(() =>
+      trpc.administrator.admin.createStructure(
+        // @ts-expect-error typeSurvey is deliberately missing
+        inputWithoutSurvey
+      )
+    ).rejects.toThrow(/typeSurvey/)
+  })
+
+  test('At least one social support type is required', async ({ trpc }) => {
+    await expect(() =>
+      trpc.administrator.admin.createStructure({
+        ...validInput,
+        typeSurvey: { structureType: 'Ccas', socialSupportTypes: [] }
+      })
+    ).rejects.toThrow(/socialSupportTypes/)
+  })
+
+  test('structureTypeOther is required when the structure type is Autre', async ({
+    trpc
+  }) => {
+    await expect(() =>
+      trpc.administrator.admin.createStructure({
+        ...validInput,
+        typeSurvey: {
+          structureType: 'Autre',
+          socialSupportTypes: ['SuiviSocialGeneraliste']
+        }
+      })
+    ).rejects.toThrow(/structureTypeOther/)
   })
 })

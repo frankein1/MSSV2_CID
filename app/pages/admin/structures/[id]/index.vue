@@ -1,5 +1,11 @@
 <template>
   <PageContainer class="fr-p-5w">
+    <NuxtLink
+      :to="routes.admin.AdminStructures.path()"
+      class="fr-btn fr-btn--tertiary-no-outline fr-icon-arrow-left-line fr-btn--icon-left fr-mb-6v"
+    >
+      {{ routes.admin.AdminStructures.title }}
+    </NuxtLink>
     <PageTitle :title="title" />
 
     <AtomLoader
@@ -15,7 +21,6 @@
     <div v-else-if="data">
       <StructureAdminInfo
         :structure="data.structure"
-        @edit="editAdminInfo"
         @disable="disableStructureOpenModal"
         @toggle-rdv="toggleRdvspIntegration"
       />
@@ -39,8 +44,6 @@
 </template>
 
 <script lang="ts" setup>
-  import StructureAdminInfoForm from '~/components/Structure/StructureAdminInfoForm.vue'
-  import type { CreateStructureInput } from '~~/server/schema'
   import { AlertType } from '~/utils/constants/alert'
   import StructureDisableModal from '~/components/Structure/StructureDisableModal.vue'
   import { routes } from '~/utils/routes'
@@ -114,42 +117,6 @@
     modal.close()
     snackbar.success('Structure désactivée.')
     navigateTo(routes.admin.AdminStructures.path())
-  }
-
-  async function editAdminInfo() {
-    if (!data || !data.value) {
-      return
-    }
-
-    modal.open(StructureAdminInfoForm, {
-      title: 'Modifier les informations de la structure',
-      structure: data.value.structure,
-      validate: updateInfo
-    })
-  }
-
-  /** Update structure
-   * see server/route/admin/updateStructureInfo.mutation.ts
-   */
-  const { mutate: updateStructureMutate, error: updateStructureError } =
-    useTrpcClient().admin.updateStructureInfo.useMutation()
-
-  async function updateInfo(values: CreateStructureInput) {
-    const res = await updateStructureMutate({
-      id: structureId,
-      ...values
-    })
-    if (updateStructureError.value || !res) {
-      snackbar.error(
-        'La modification des informations de votre structure a échoué.'
-      )
-      return
-    }
-    modal.close()
-    refresh()
-    snackbar.success(
-      'Les informations de votre structure ont été mises à jour.'
-    )
   }
 
   /** Toggle structure RDVSP service
