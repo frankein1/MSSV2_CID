@@ -59,6 +59,8 @@ const statFilterSchema = z
     ministereStructure: z.nativeEnum(BeneficiaryMinistereStructure).nullish(),
     createdById: z.array(z.string().uuid()).nullish(),
     supportProgramNameIds: z.array(z.string().uuid()).nullish(),
+    // Review app only: cross-structure statistics panel filter
+    structureIds: z.array(z.string().uuid()).nullish(),
     beneficiaryStatus: z.nativeEnum(BeneficiaryStatus).nullish(),
     qpv: kindOfBooleanSchema(),
     ageGroup: z.nativeEnum(AgeGroup).nullish(),
@@ -135,7 +137,9 @@ const supportProgramStatFilterSchema = z.object({
       }
       return dayjs(v).hour(23).minute(59).second(59).toDate()
     }),
-  supportProgramNameIds: z.array(z.string().uuid()).nullish()
+  supportProgramNameIds: z.array(z.string().uuid()).nullish(),
+  // Review app only: cross-structure statistics panel filter
+  structureIds: z.array(z.string().uuid()).nullish()
 })
 
 type SupportProgramStatFilterInput = z.infer<

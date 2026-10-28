@@ -2,7 +2,7 @@ import picocolors from 'picocolors'
 import { initTRPC, TRPCError } from '@trpc/server'
 import superjson from 'superjson'
 import type { H3Event } from 'h3'
-import { UserRole } from '@prisma/client'
+import { StructureType, UserRole } from '@prisma/client'
 import type {
   SecurityRuleGrantee,
   SecurityRuleStructure
@@ -127,6 +127,31 @@ const adminMiddleware = loggingMiddleware.unstable_pipe(({ ctx, next }) => {
   })
 })
 
+/**
+ * Review app only: the Cross-Structure Observer reads the statistics of every
+ * structure. The user is rewritten to an admin inside this procedure only, so
+ * the constraints return every structure; nothing is stored as admin.
+ *
+ * `structure` is a placeholder: `createRoute.execute` refuses a context
+ * without one, and the reused stat handlers only read `ctx.user`. Any handler
+ * reading `ctx.structure` would get this placeholder, so only wire handlers
+ * that never read it.
+ */
+const crossStructureMiddleware = loggingMiddleware.unstable_pipe(
+  ({ ctx, next }) => {
+    return next({
+      ctx: {
+        user: { ...ctx.user, role: UserRole.Administrator, structureId: null },
+        structure: {
+          id: '',
+          type: StructureType.Ccas,
+          externalRdvspActive: false
+        }
+      }
+    })
+  }
+)
+
 // FIXME: There is no way to infer the context type of protectedProcedure
 export type AuthContext = {
   event: H3Event
@@ -142,6 +167,12 @@ export const protectedProcedure = t.procedure.use(structureMiddleware)
 export type ProtectedAppContext = AuthContext & {
   structure: SecurityRuleStructure
 }
+
+/**
+ * Cross-structure statistics procedure (review app only)
+ */
+
+export const crossStructureProcedure = t.procedure.use(crossStructureMiddleware)
 
 /**
  * Admin procedure

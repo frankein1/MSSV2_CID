@@ -7,6 +7,7 @@ export {
 export {
   protectedProcedure,
   adminProcedure,
+  crossStructureProcedure,
   router,
   type ProtectedAppContext,
   type AuthContext,

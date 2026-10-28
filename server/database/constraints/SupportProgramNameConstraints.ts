@@ -7,11 +7,8 @@ import { isAdmin } from '~~/server/security/rules/helpers'
 const get = (user: SecurityRuleGrantee) => {
   const where: Prisma.SupportProgramNameWhereInput = {}
   if (isAdmin(user)) {
-    throw new TRPCError({
-      code: 'NOT_IMPLEMENTED',
-      message:
-        'support-program-name-constraints: create not implemented for admin'
-    })
+    // Review app only: crossStructureProcedure runs as an admin to read every structure
+    return where
   }
 
   if (!user.structureId) {
