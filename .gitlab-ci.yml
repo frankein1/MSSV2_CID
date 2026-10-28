@@ -9,6 +9,8 @@ include:
   - template: Jobs/SAST.gitlab-ci.yml
 
 variables:
+  # Deactivate Dependency-Scanning.v2 in MR pipelines
+  AST_ENABLE_MR_PIPELINES: 'false'
   # To be synced with engines.node constraint in package.json
   NODE_VERSION: 24.22.1
   NODE_SHA: 6c172a9ab6718f7b801fb5a7bd486af2ee5e32758086a04b84fcce2aa77095e6
