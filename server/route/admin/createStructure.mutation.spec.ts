@@ -111,7 +111,7 @@ describe('Admin - Create Structure - Validation', () => {
         // @ts-expect-error typeSurvey is deliberately missing
         inputWithoutSurvey
       )
-    ).rejects.toThrow(/typeSurvey/)
+    ).rejects.toThrow(/typeSurvey/i)
   })
 
   test('At least one social support type is required', async ({ trpc }) => {
@@ -120,7 +120,7 @@ describe('Admin - Create Structure - Validation', () => {
         ...validInput,
         typeSurvey: { structureType: 'Ccas', socialSupportTypes: [] }
       })
-    ).rejects.toThrow(/socialSupportTypes/)
+    ).rejects.toThrow(/socialSupportTypes/i)
   })
 
   test('structureTypeOther is required when the structure type is Autre', async ({
@@ -134,6 +134,6 @@ describe('Admin - Create Structure - Validation', () => {
           socialSupportTypes: ['SuiviSocialGeneraliste']
         }
       })
-    ).rejects.toThrow(/structureTypeOther/)
+    ).rejects.toThrow(/structureTypeOther/i)
   })
 })
