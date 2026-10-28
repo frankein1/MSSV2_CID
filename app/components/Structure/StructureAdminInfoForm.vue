@@ -37,10 +37,20 @@
 
       <div class="fr-col-12">
         <VeeInput
+          class="fr-mb-2v"
           name="siret"
           :label="structureFieldLabels.siret"
           required
         />
+        <NuxtLink
+          class="fr-link"
+          target="_blank"
+          rel="noopener"
+          title="Annuaire des entreprises - nouvelle fenêtre"
+          href="https://annuaire-entreprises.data.gouv.fr/"
+        >
+          Annuaire des entreprises
+        </NuxtLink>
       </div>
       <div class="fr-col-12">
         <VeeInput
@@ -232,6 +242,9 @@
       initialValues: {
         ...props.structure,
         typeSurvey: props.structure?.typeSurvey ?? { socialSupportTypes: [] },
+        inhabitantsNumber: props.structure?.inhabitantsNumber || undefined,
+        inseeCode: props.structure?.inseeCode || undefined,
+        siret: props.structure?.siret || undefined,
         dpoEmail: props.structure?.dpoEmail || undefined,
         dpoFirstName: props.structure?.dpoFirstName || undefined,
         dpoLastName: props.structure?.dpoLastName || undefined

@@ -4,7 +4,6 @@ import {
   requiredNativeEnum,
   stringConstraint,
   siretConstraint,
-  stringOrEmpty,
   phoneConstraint,
   validationCodeConstraint
 } from '../helpers.schema'
@@ -13,17 +12,20 @@ import {
   minStringLengthMessage,
   maxStringLengthMessage,
   validZipcode,
-  validEmailMessage
+  validEmailMessage,
+  requiredErrorMessage
 } from '~/utils/zod'
 import { submitStructureTypeSurveySchema } from './structureTypeSurvey.schema'
 
 const structureAdminInfoBaseSchema = z.object({
   type: requiredNativeEnum(StructureType),
   inhabitantsNumber: stringConstraint
-    .max(50, maxStringLengthMessage(50))
-    .nullish(),
-  inseeCode: stringConstraint.max(50, maxStringLengthMessage(50)).nullish(),
-  siret: stringOrEmpty(siretConstraint),
+    .min(1, requiredErrorMessage)
+    .max(50, maxStringLengthMessage(50)),
+  inseeCode: stringConstraint
+    .min(1, requiredErrorMessage)
+    .max(50, maxStringLengthMessage(50)),
+  siret: siretConstraint,
   name: stringConstraint
     .max(50, maxStringLengthMessage(50))
     .min(2, minStringLengthMessage(2)),

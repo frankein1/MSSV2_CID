@@ -39,6 +39,9 @@ const validInput = {
   address: '1 rue de Test',
   phone: '01 00 00 00 00',
   email: 'create-structure-spec@test.com',
+  inhabitantsNumber: '1000',
+  inseeCode: '75056',
+  siret: '12345678901234',
   dpoFirstName: 'Jean',
   dpoLastName: 'Dupont',
   dpoEmail: 'dpo-spec@test.com',
@@ -88,6 +91,19 @@ describe('Admin - Create Structure - Happy path', () => {
 })
 
 describe('Admin - Create Structure - Validation', () => {
+  test('An administrator cannot create a structure without inhabitants number, INSEE code or SIRET', async ({
+    trpc
+  }) => {
+    await expect(() =>
+      trpc.administrator.admin.createStructure({
+        ...validInput,
+        inhabitantsNumber: '',
+        inseeCode: '',
+        siret: ''
+      })
+    ).rejects.toThrow(/inhabitantsNumber[\s\S]*inseeCode[\s\S]*siret/i)
+  })
+
   test('The type survey is required', async ({ trpc }) => {
     const { typeSurvey: _typeSurvey, ...inputWithoutSurvey } = validInput
     await expect(() =>
