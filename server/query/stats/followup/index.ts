@@ -10,3 +10,5 @@ export { getFollowupBeneficiaryNumberQuery } from './getFollowupBeneficiaryNumbe
 export { getFollowupDurationStatsQuery } from './getFollowupDurationStatsQuery'
 export { getFollowupMeanTimeStatsQuery } from './getFollowupMeanTimeStatsQuery'
 export { getFollowupRedirectionReasonsStatsQuery } from './getFollowupRedirectionReasonsStatsQuery'
+export { getFirstFollowupCountQuery } from './getFirstFollowupCountQuery'
+export { getWalkInSessionFollowupCountQuery } from './getWalkInSessionFollowupCountQuery'

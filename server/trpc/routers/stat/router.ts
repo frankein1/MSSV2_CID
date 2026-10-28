@@ -91,9 +91,12 @@ export const statRouter = router({
   getFileInstructionTypeStats: protectedProcedure
     .input(routes.getFileInstructionTypeStatsQ.inputValidation)
     .query(routes.getFileInstructionTypeStatsQ.execute),
-  getHistoryCounts: protectedProcedure
-    .input(routes.getHistoryCountsQuery.inputValidation)
-    .query(routes.getHistoryCountsQuery.execute),
+  getFollowupCountStats: protectedProcedure
+    .input(routes.getFollowupCountStatsQuery.inputValidation)
+    .query(routes.getFollowupCountStatsQuery.execute),
+  getHelpRequestCountStats: protectedProcedure
+    .input(routes.getHelpRequestCountStatsQuery.inputValidation)
+    .query(routes.getHelpRequestCountStatsQuery.execute),
   getMobilityStats: protectedProcedure
     .input(routes.getMobilityStatsQ.inputValidation)
     .query(routes.getMobilityStatsQ.execute),
