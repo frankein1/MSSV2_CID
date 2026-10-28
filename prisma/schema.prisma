@@ -564,6 +564,10 @@ model Followup {
   socialSupportId String        @unique @map("social_support_id") @db.Uuid
   socialSupport   SocialSupport @relation(fields: [socialSupportId], references: [id], onDelete: Cascade)
 
+  // Commented in this schema because Prisma does not support filtered or partial indexes
+  // Applied in 20261027205912_add_followup_stats_partial_indexes
+  // @@index([socialSupportId], where: { firstFollowup: true })
+  // @@index([socialSupportId], where: { isDuringWalkInSession: true })
   @@map("followup")
 }
 
