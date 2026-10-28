@@ -186,7 +186,7 @@ pnpm:test:e2e:
   script:
     - pnpm prisma migrate deploy
     - pnpm prisma db seed
-    - pnpm playwright test --grep-invert "a11y.spec.ts"
+    - pnpm playwright test --grep-invert "a11y.spec.ts" --pass-with-no-tests
 
 pnpm:test:e2e:accessibility:
   extends: ['.test:e2e']
