@@ -57,3 +57,18 @@ export const fixtureStructures = [
   Prisma.StructureCreateManyInput,
   Prisma.StructureCreateManyInput
 ]
+
+export const fixturesStructureTypeSurveys = [
+  {
+    id: 'b6f0d7e2-3c41-4a8e-9f52-1d7c6a9e4b10',
+    structureId: fixtureStructures[FixtureStructure.Test].id,
+    structureType: 'Ccas',
+    socialSupportTypes: ['SuiviSocialGeneraliste']
+  },
+  {
+    id: 'e2a94c18-7b6d-4f35-8c09-5a3e1f8d2c74',
+    structureId: fixtureStructures[FixtureStructure.Ministère].id,
+    structureType: 'Ministere',
+    socialSupportTypes: ['ServiceSocialPersonnel']
+  }
+] satisfies Prisma.StructureTypeSurveyCreateManyInput[]

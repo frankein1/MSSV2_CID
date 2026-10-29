@@ -1,4 +1,8 @@
-export { fixtureStructures, FixtureStructure } from './structures'
+export {
+  fixtureStructures,
+  fixturesStructureTypeSurveys,
+  FixtureStructure
+} from './structures'
 export { fixturesSocialSupportSubjects } from './socialSupportSubjects'
 export { fixturesUsers, fixturesCGUHistory, FixtureUserRole } from './users'
 export { fixturesBeneficiaries, FixtureBeneficiary } from './beneficiaries'
