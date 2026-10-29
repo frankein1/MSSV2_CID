@@ -1,7 +1,7 @@
 import { DefaultSocialSupportSubject, UserActivityType } from '@prisma/client'
 import { createMutation } from '~~/server/route'
 import type { CreateStructureInput } from '~~/server/schema'
-import { createStructureSchema } from '~~/server/schema'
+import { structureAdminInfoWithTypeSurveySchema } from '~~/server/schema'
 import type { AdminContext } from '~~/server/trpc'
 import { StructureRepo } from '~~/server/database'
 import { createEmail } from '~~/server/query'
@@ -62,7 +62,7 @@ const adminHandler = async ({
 }
 
 export const createStructure = createMutation({
-  inputValidation: createStructureSchema,
+  inputValidation: structureAdminInfoWithTypeSurveySchema,
   adminHandler,
   auditLog: {
     key: 'admin.structure.create',

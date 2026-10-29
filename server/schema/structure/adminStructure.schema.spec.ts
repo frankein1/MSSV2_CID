@@ -1,7 +1,6 @@
 import { describe, test, expect } from 'vitest'
 import {
-  createStructureSchema,
-  editStructureWithTypeSurveySchema,
+  structureAdminInfoWithTypeSurveySchema,
   editStructureWithoutTypeSurveySchema
 } from './adminStructure.schema'
 
@@ -33,9 +32,9 @@ const getIssuePaths = (result: {
   error?: { issues: { path: (string | number)[] }[] }
 }) => result.error?.issues.map(issue => issue.path.join('.')) ?? []
 
-describe('Admin Structure Schema - Type survey on creation', () => {
+describe('Admin Structure Schema - Type survey on creation or edition with existing survey', () => {
   test('Schema accepts a filled in type survey', () => {
-    const result = createStructureSchema.safeParse({
+    const result = structureAdminInfoWithTypeSurveySchema.safeParse({
       ...validBase,
       typeSurvey: filledTypeSurvey
     })
@@ -43,7 +42,7 @@ describe('Admin Structure Schema - Type survey on creation', () => {
   })
 
   test('Schema rejects an empty type survey', () => {
-    const result = createStructureSchema.safeParse({
+    const result = structureAdminInfoWithTypeSurveySchema.safeParse({
       ...validBase,
       typeSurvey: emptyTypeSurvey
     })
@@ -70,26 +69,5 @@ describe('Admin Structure Schema - Type survey on edition without existing surve
       typeSurvey: { structureType: 'Ccas', socialSupportTypes: [] }
     })
     expect(getIssuePaths(result)).toEqual(['typeSurvey.socialSupportTypes'])
-  })
-})
-
-describe('Admin Structure Schema - Type survey on edition with existing survey', () => {
-  test('Schema accepts a filled in type survey', () => {
-    const result = editStructureWithTypeSurveySchema.safeParse({
-      ...validBase,
-      typeSurvey: filledTypeSurvey
-    })
-    expect(result.success).toBe(true)
-  })
-
-  test('Schema rejects an emptied type survey', () => {
-    const result = editStructureWithTypeSurveySchema.safeParse({
-      ...validBase,
-      typeSurvey: emptyTypeSurvey
-    })
-    expect(getIssuePaths(result)).toEqual([
-      'typeSurvey.structureType',
-      'typeSurvey.socialSupportTypes'
-    ])
   })
 })

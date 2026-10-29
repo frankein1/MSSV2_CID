@@ -217,8 +217,7 @@
     StructureAdminInfoInput
   } from '~~/server/schema'
   import {
-    createStructureSchema,
-    editStructureWithTypeSurveySchema,
+    structureAdminInfoWithTypeSurveySchema,
     editStructureWithoutTypeSurveySchema
   } from '~~/server/schema'
 
@@ -239,11 +238,9 @@
   // emptied once it has been filled in
   const isTypeSurveyRequired = isCreation || !!props.structure?.typeSurvey
 
-  const validationSchema = isCreation
-    ? createStructureSchema
-    : isTypeSurveyRequired
-      ? editStructureWithTypeSurveySchema
-      : editStructureWithoutTypeSurveySchema
+  const validationSchema = isTypeSurveyRequired
+    ? structureAdminInfoWithTypeSurveySchema
+    : editStructureWithoutTypeSurveySchema
 
   const { handleSubmit, setFieldValue, values } =
     useForm<StructureAdminInfoInput>({
@@ -261,7 +258,7 @@
     })
 
   const { onSubmit } = useCatchFormErrors(handleSubmit, values =>
-    // In creation, createStructureSchema guarantees the type survey is filled in
+    // In creation, structureAdminInfoWithTypeSurveySchema guarantees the type survey is filled in
     props.validate(values as CreateStructureInput)
   )
 

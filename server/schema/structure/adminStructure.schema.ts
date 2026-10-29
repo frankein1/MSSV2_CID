@@ -50,12 +50,16 @@ const structureAdminInfoBaseSchema = z.object({
   dpoEmail: z.string(errorMessages).email(validEmailMessage)
 })
 
-// The type survey is mandatory when an administrator creates a structure
-export const createStructureSchema = structureAdminInfoBaseSchema.extend({
-  typeSurvey: submitStructureTypeSurveySchema
-})
+// The type survey is mandatory when an administrator creates a structure, and
+// cannot be emptied when editing a structure that already has one
+export const structureAdminInfoWithTypeSurveySchema =
+  structureAdminInfoBaseSchema.extend({
+    typeSurvey: submitStructureTypeSurveySchema
+  })
 
-export type CreateStructureInput = z.infer<typeof createStructureSchema>
+export type CreateStructureInput = z.infer<
+  typeof structureAdminInfoWithTypeSurveySchema
+>
 
 type TypeSurveyFormValues = {
   structureType?: string | null
@@ -84,12 +88,6 @@ export const editStructureWithoutTypeSurveySchema =
       value => (isEmptyTypeSurvey(value) ? undefined : value),
       submitStructureTypeSurveySchema.optional()
     )
-  })
-
-// Editing a structure that already has a type survey: it cannot be emptied
-export const editStructureWithTypeSurveySchema =
-  structureAdminInfoBaseSchema.extend({
-    typeSurvey: submitStructureTypeSurveySchema
   })
 
 export type StructureAdminInfoInput = z.infer<
