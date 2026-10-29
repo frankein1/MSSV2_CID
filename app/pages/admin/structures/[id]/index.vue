@@ -1,5 +1,11 @@
 <template>
   <PageContainer class="fr-p-5w">
+    <NuxtLink
+      :to="routes.admin.AdminStructures.path()"
+      class="fr-btn fr-btn--tertiary-no-outline fr-icon-arrow-left-line fr-btn--icon-left fr-mb-6v"
+    >
+      {{ routes.admin.AdminStructures.title }}
+    </NuxtLink>
     <PageTitle :title="title" />
 
     <AtomLoader
@@ -12,24 +18,23 @@
       :alert-type="AlertType.Error"
       message="Les informations de votre structure n'ont pas pu être chargées."
     />
-    <div v-else-if="data">
+    <div v-else-if="structure && users && socialSupportSubjects">
       <StructureAdminInfo
-        :structure="data.structure"
-        @edit="editAdminInfo"
+        :structure="structure"
         @disable="disableStructureOpenModal"
         @toggle-rdv="toggleRdvspIntegration"
       />
 
       <StructureAdminUsers
         class="fr-mb-5w"
-        :structure-id="data.structure.id"
-        :users="data.users"
+        :structure-id="structure.id"
+        :users="users"
       />
       <div class="feature-section bg-color-white">
         <h2 class="fr-h4">Objets d'accompagnements</h2>
         <SocialSupportSubjects
           class="fr-mb-5w"
-          :subjects="data.socialSupportSubjects"
+          :subjects="socialSupportSubjects"
           :edit-path="routes.admin.AdminStructureSubjects.path(structureId)"
           @refresh="refresh"
         />
@@ -39,13 +44,12 @@
 </template>
 
 <script lang="ts" setup>
-  import StructureAdminInfoForm from '~/components/Structure/StructureAdminInfoForm.vue'
-  import type { CreateStructureInput } from '~~/server/schema'
   import { AlertType } from '~/utils/constants/alert'
   import StructureDisableModal from '~/components/Structure/StructureDisableModal.vue'
   import { routes } from '~/utils/routes'
   import type { AdminStructureInfo } from '~/components/Structure/types'
   import { hasCompletedDeactivationWarnings } from '~/utils/structure'
+  const trpcClient = useTrpcClient()
 
   const title = routes.structure.AppStructure.title
 
@@ -58,7 +62,13 @@
 
   /* Get strcuture */
   const { data, pending, error, refresh } =
-    await useTrpcClient().admin.getStructure.useQuery({ id: structureId })
+    await trpcClient.admin.getStructure.useQuery({ id: structureId })
+
+  const structure = computed(() => data.value?.structure)
+  const users = computed(() => data.value?.users)
+  const socialSupportSubjects = computed(
+    () => data.value?.socialSupportSubjects
+  )
 
   /* Disable structure buton action */
   function disableStructureOpenModal() {
@@ -114,42 +124,6 @@
     modal.close()
     snackbar.success('Structure désactivée.')
     navigateTo(routes.admin.AdminStructures.path())
-  }
-
-  async function editAdminInfo() {
-    if (!data || !data.value) {
-      return
-    }
-
-    modal.open(StructureAdminInfoForm, {
-      title: 'Modifier les informations de la structure',
-      structure: data.value.structure,
-      validate: updateInfo
-    })
-  }
-
-  /** Update structure
-   * see server/route/admin/updateStructureInfo.mutation.ts
-   */
-  const { mutate: updateStructureMutate, error: updateStructureError } =
-    useTrpcClient().admin.updateStructureInfo.useMutation()
-
-  async function updateInfo(values: CreateStructureInput) {
-    const res = await updateStructureMutate({
-      id: structureId,
-      ...values
-    })
-    if (updateStructureError.value || !res) {
-      snackbar.error(
-        'La modification des informations de votre structure a échoué.'
-      )
-      return
-    }
-    modal.close()
-    refresh()
-    snackbar.success(
-      'Les informations de votre structure ont été mises à jour.'
-    )
   }
 
   /** Toggle structure RDVSP service

@@ -34,6 +34,16 @@ describe('admin routes', () => {
     expect(routes.AdminUsers.path()).toBe('/admin/users')
   })
 
+  test('AdminStructureAdd path returns /admin/structures/add', () => {
+    expect(routes.AdminStructureAdd.path()).toBe('/admin/structures/add')
+  })
+
+  test('AdminStructureEdit path returns /admin/structures/:structureId/edit', () => {
+    expect(routes.AdminStructureEdit.path('structure-1')).toBe(
+      '/admin/structures/structure-1/edit'
+    )
+  })
+
   test('AdminUsersAdd path returns /admin/users/add', () => {
     expect(routes.AdminUsersAdd.path()).toBe('/admin/users/add')
   })

@@ -7,7 +7,8 @@ mockNuxtImport('useRuntimeConfig', () => {
   return () => ({
     app: { baseURL: '/' },
     public: { email: { from: 'mss@example.com' } },
-    document: { useS3Storage: true }
+    document: { useS3Storage: true },
+    logs: { activateRequestLogging: false }
   })
 })
 
@@ -38,9 +39,16 @@ const validInput = {
   address: '1 rue de Test',
   phone: '01 00 00 00 00',
   email: 'create-structure-spec@test.com',
+  inhabitantsNumber: '1000',
+  inseeCode: '75056',
+  siret: '12345678901234',
   dpoFirstName: 'Jean',
   dpoLastName: 'Dupont',
-  dpoEmail: 'dpo-spec@test.com'
+  dpoEmail: 'dpo-spec@test.com',
+  typeSurvey: {
+    structureType: 'Ccas' as const,
+    socialSupportTypes: ['SuiviSocialGeneraliste' as const]
+  }
 }
 
 describe('Admin - Create Structure - Authorizations', () => {
@@ -72,5 +80,60 @@ describe('Admin - Create Structure - Happy path', () => {
       where: { ownedByStructureId: result.id }
     })
     expect(subjects.length).toBeGreaterThan(0)
+
+    const survey = await prismaClient.structureTypeSurvey.findUniqueOrThrow({
+      where: { structureId: result.id }
+    })
+    expect(survey.structureType).toBe('Ccas')
+    expect(survey.socialSupportTypes).toEqual(['SuiviSocialGeneraliste'])
+    expect(survey.structureTypeOther).toBeNull()
+  })
+})
+
+describe('Admin - Create Structure - Validation', () => {
+  test('An administrator cannot create a structure without inhabitants number, INSEE code or SIRET', async ({
+    trpc
+  }) => {
+    await expect(() =>
+      trpc.administrator.admin.createStructure({
+        ...validInput,
+        inhabitantsNumber: '',
+        inseeCode: '',
+        siret: ''
+      })
+    ).rejects.toThrow(/inhabitantsNumber[\s\S]*inseeCode[\s\S]*siret/i)
+  })
+
+  test('The type survey is required', async ({ trpc }) => {
+    const { typeSurvey: _typeSurvey, ...inputWithoutSurvey } = validInput
+    await expect(() =>
+      trpc.administrator.admin.createStructure(
+        // @ts-expect-error typeSurvey is deliberately missing
+        inputWithoutSurvey
+      )
+    ).rejects.toThrow(/typeSurvey/i)
+  })
+
+  test('At least one social support type is required', async ({ trpc }) => {
+    await expect(() =>
+      trpc.administrator.admin.createStructure({
+        ...validInput,
+        typeSurvey: { structureType: 'Ccas', socialSupportTypes: [] }
+      })
+    ).rejects.toThrow(/socialSupportTypes/i)
+  })
+
+  test('structureTypeOther is required when the structure type is Autre', async ({
+    trpc
+  }) => {
+    await expect(() =>
+      trpc.administrator.admin.createStructure({
+        ...validInput,
+        typeSurvey: {
+          structureType: 'Autre',
+          socialSupportTypes: ['SuiviSocialGeneraliste']
+        }
+      })
+    ).rejects.toThrow(/structureTypeOther/i)
   })
 })

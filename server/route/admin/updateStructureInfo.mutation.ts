@@ -8,14 +8,25 @@ import { UserActivityType } from '@prisma/client'
 
 const adminHandler = async ({
   input,
-  ctx: _ctx
+  ctx
 }: {
   input: EditStructureAdminInfoInput
   ctx: AdminContext
 }) => {
+  const { typeSurvey, ...structure } = input
+
   const updatedStructure = await StructureRepo.prisma.update({
     where: { id: input.id },
-    data: input,
+    data: {
+      ...structure,
+      // Existing structures may not have filled in the survey yet
+      typeSurvey: typeSurvey && {
+        upsert: {
+          create: { ...typeSurvey, filledById: ctx.user.id },
+          update: typeSurvey
+        }
+      }
+    },
     select: {
       id: true
     }
