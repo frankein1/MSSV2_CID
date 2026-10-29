@@ -4,7 +4,6 @@ import {
   requiredNativeEnum,
   stringConstraint,
   siretConstraint,
-  stringOrEmpty,
   phoneConstraint,
   validationCodeConstraint
 } from '../helpers.schema'
@@ -13,16 +12,20 @@ import {
   minStringLengthMessage,
   maxStringLengthMessage,
   validZipcode,
-  validEmailMessage
+  validEmailMessage,
+  requiredErrorMessage
 } from '~/utils/zod'
+import { submitStructureTypeSurveySchema } from './structureTypeSurvey.schema'
 
-export const createStructureSchema = z.object({
+const structureAdminInfoBaseSchema = z.object({
   type: requiredNativeEnum(StructureType),
   inhabitantsNumber: stringConstraint
-    .max(50, maxStringLengthMessage(50))
-    .nullish(),
-  inseeCode: stringConstraint.max(50, maxStringLengthMessage(50)).nullish(),
-  siret: stringOrEmpty(siretConstraint),
+    .min(1, requiredErrorMessage)
+    .max(50, maxStringLengthMessage(50)),
+  inseeCode: stringConstraint
+    .min(1, requiredErrorMessage)
+    .max(50, maxStringLengthMessage(50)),
+  siret: siretConstraint,
   name: stringConstraint
     .max(50, maxStringLengthMessage(50))
     .min(2, minStringLengthMessage(2)),
@@ -47,11 +50,54 @@ export const createStructureSchema = z.object({
   dpoEmail: z.string(errorMessages).email(validEmailMessage)
 })
 
-export type CreateStructureInput = z.infer<typeof createStructureSchema>
+// The type survey is mandatory when an administrator creates a structure, and
+// cannot be emptied when editing a structure that already has one
+export const structureAdminInfoWithTypeSurveySchema =
+  structureAdminInfoBaseSchema.extend({
+    typeSurvey: submitStructureTypeSurveySchema
+  })
 
-export const editStructureAdminInfoSchema = createStructureSchema.extend({
-  id: z.string().uuid()
-})
+export type CreateStructureInput = z.infer<
+  typeof structureAdminInfoWithTypeSurveySchema
+>
+
+type TypeSurveyFormValues = {
+  structureType?: string | null
+  structureTypeOther?: string | null
+  socialSupportTypes?: string[] | null
+}
+
+const isEmptyTypeSurvey = (value: unknown) => {
+  if (!value) {
+    return true
+  }
+  const survey = value as TypeSurveyFormValues
+  return (
+    !survey.structureType &&
+    !survey.structureTypeOther &&
+    !survey.socialSupportTypes?.length
+  )
+}
+
+// Editing a structure without a type survey: the survey is optional, but must be
+// complete once started. The form always sends a survey object, so an empty one
+// is treated as missing.
+export const editStructureWithoutTypeSurveySchema =
+  structureAdminInfoBaseSchema.extend({
+    typeSurvey: z.preprocess(
+      value => (isEmptyTypeSurvey(value) ? undefined : value),
+      submitStructureTypeSurveySchema.optional()
+    )
+  })
+
+export type StructureAdminInfoInput = z.infer<
+  typeof editStructureWithoutTypeSurveySchema
+>
+
+export const editStructureAdminInfoSchema =
+  editStructureWithoutTypeSurveySchema.extend({
+    id: z.string().uuid()
+  })
 
 export type EditStructureAdminInfoInput = z.infer<
   typeof editStructureAdminInfoSchema

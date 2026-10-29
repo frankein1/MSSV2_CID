@@ -1,5 +1,11 @@
 <template>
   <PageContainer class="fr-p-5w">
+    <NuxtLink
+      :to="routes.admin.AdminUsers.path()"
+      class="fr-btn fr-btn--tertiary-no-outline fr-icon-arrow-left-line fr-btn--icon-left fr-mb-6v"
+    >
+      {{ routes.admin.AdminUsers.title }}
+    </NuxtLink>
     <PageTitle :title="user ? formatUserDisplayName(user) : '-'" />
     <div class="fr-grid-row fr-grid-row--gutters">
       <div class="fr-col-12">
@@ -33,6 +39,7 @@
   import type { AdminEditUserInput } from '~~/server/schema'
   import { AlertType } from '~/utils/constants/alert'
   import { formatUserDisplayName } from '~/utils/user'
+  import { routes } from '~/utils/routes'
 
   const route = useRoute()
   const userId = route.params.id as string
