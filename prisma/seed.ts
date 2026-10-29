@@ -2,6 +2,7 @@
 import { PrismaClient } from '@prisma/client'
 import {
   fixtureStructures,
+  fixturesStructureTypeSurveys,
   fixturesDataInclusionStructures,
   fixturesDataInclusionStructuresV1,
   fixturesPartnerOrganizations,
@@ -36,6 +37,15 @@ function loadFixtureStructure() {
 
   return prismaClient.structure.createMany({
     data: fixtureStructures,
+    skipDuplicates: true
+  })
+}
+
+function loadFixturesStructureTypeSurveys() {
+  console.log('📋 Structure type surveys...')
+
+  return prismaClient.structureTypeSurvey.createMany({
+    data: fixturesStructureTypeSurveys,
     skipDuplicates: true
   })
 }
@@ -288,6 +298,7 @@ function createMinister() {
 function loadFixtures() {
   return [
     loadFixtureStructure(),
+    loadFixturesStructureTypeSurveys(),
     loadFixturesSocialSupportSubjects(),
     loadFixturesUsers(),
     loadFixturesCGUHistory(),
