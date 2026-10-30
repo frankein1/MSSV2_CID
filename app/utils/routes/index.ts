@@ -3,6 +3,7 @@ import { routes as auth, apiProConnectRoutes, apiRdvspRoutes } from './auth'
 import { routes as beneficiary } from './beneficiary'
 import { routes as budget } from './budget'
 import { routes as cgu } from './cgu'
+import { routes as crossStructure } from './cross-structure'
 import { routes as siteMap } from './site-map'
 import { routes as file } from './file'
 import { routes as followup } from './followup'
@@ -20,6 +21,7 @@ export const routes = {
   beneficiary,
   budget,
   cgu,
+  crossStructure,
   siteMap,
   file,
   followup,

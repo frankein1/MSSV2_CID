@@ -53,9 +53,10 @@
 
   const trpcClient = useTrpcClient()
 
-  const { data, error, status } = await trpcClient.stat.getGenderStats.useQuery(
-    toRef(() => props.filters)
-  )
+  const { data, error, status } =
+    await trpcClient.crossStructureStat.getGenderStats.useQuery(
+      toRef(() => props.filters)
+    )
   const genderStats = computed(
     () =>
       (data.value?.map(({ _count, gender }) => ({

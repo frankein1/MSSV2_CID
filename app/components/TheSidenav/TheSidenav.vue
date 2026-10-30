@@ -67,17 +67,6 @@
                 </NuxtLink>
               </li>
             </NuxtLink>
-            <li
-              v-if="!application.view.admin"
-              class="fr-mt-3w"
-            >
-              <NuxtLink
-                class="full fr-btn btn-primary-on-primary fr-icon-user-add-line fr-btn--icon-left"
-                :to="routes.beneficiary.AppBeneficiariesAdd.path()"
-              >
-                Créer un dossier
-              </NuxtLink>
-            </li>
             <li class="fr-mt-3w">
               <NuxtLink
                 class="fr-link fr-sidemenu__link fr-sidemenu__help"
@@ -177,73 +166,18 @@
     }
   }
 
-  const menuItems = computed(() => {
-    const items = []
-    if (application.value.view.admin) {
-      items.push({
-        to: routes.admin.AdminOverview.path(),
-        label: 'Tableau de bord',
-        icon: 'fr-icon-home-4-line'
-      })
-      items.push({
-        to: routes.admin.AdminStructures.path(),
-        label: 'Structures',
-        icon: 'fr-icon-home-4-line'
-      })
-      items.push({
-        to: routes.admin.AdminUsers.path(),
-        label: 'Utilisateurs',
-        icon: 'fr-icon-user-line'
-      })
-      items.push({
-        to: routes.admin.AdminEmails.path(),
-        label: 'Emails',
-        icon: 'fr-icon-mail-line'
-      })
-      items.push({
-        to: routes.admin.AdminMinisters.path(),
-        label: 'Ministres',
-        icon: 'fr-icon-shield-user-line'
-      })
-    } else {
-      items.push({
-        to: routes.user.AppOverview.path(),
-        label: 'Tableau de bord',
-        icon: 'fr-icon-home-4-line'
-      })
-      items.push({
-        to: routes.beneficiary.AppBeneficiaries.path(),
-        label: 'Bénéficiaires',
-        icon: 'fr-icon-user-line'
-      })
-      items.push({
-        to: routes.file.AppHistoryFollowups.path(),
-        label: 'Accompagnements',
-        icon: 'fr-icon-folder-2-line'
-      })
-      items.push({
-        to: routes.workshop.AppWorkshops.path(),
-        label: 'Ateliers',
-        icon: 'fr-icon-calendar-event-line'
-      })
-      items.push({
-        to: routes.stats.AppStatsBeneficiaries.path(),
-        label: 'Statistiques',
-        icon: 'fr-icon-line-chart-line'
-      })
+  // Review app (Pilotage territorial): the panel is the only entry
+  const menuItems = [
+    {
+      to: routes.crossStructure.PilotageTerritorial.path(),
+      label: routes.crossStructure.PilotageTerritorial.title,
+      icon: 'fr-icon-line-chart-line'
     }
-
-    return items
-  })
+  ]
 </script>
 
 <style lang="scss" scoped>
   @use '~/assets/style/variables' as *;
-
-  .full {
-    width: 100%;
-    justify-content: center;
-  }
 
   .fr-sidemenu {
     background-color: $primary;

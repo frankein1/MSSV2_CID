@@ -28,11 +28,13 @@ import { workshopRouter } from './workshop/router'
 import { ministerRouter } from './minister/router'
 import { redirectionRouter } from './redirection/router'
 import { dataEducationRouter } from './dataEducationRouter'
+import { crossStructureStatRouter } from './crossStructureStat/router'
 
 export const appRouter = router({
   admin: adminRouter,
   beneficiary: beneficiaryRouter,
   budget: budgetRouter,
+  crossStructureStat: crossStructureStatRouter,
   dataEducation: dataEducationRouter,
   dataInclusion: dataInclusionRouter,
   notification: notificationRouter,

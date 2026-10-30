@@ -40,7 +40,7 @@
   const trpcClient = useTrpcClient()
 
   const { data, error, status } =
-    await trpcClient.stat.getSchoolClassStats.useQuery(
+    await trpcClient.crossStructureStat.getSchoolClassStats.useQuery(
       toRef(() => props.filters)
     )
 

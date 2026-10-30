@@ -52,7 +52,7 @@
   const trpcClient = useTrpcClient()
 
   const { data, error, status } =
-    await trpcClient.stat.getRepClassificationStats.useQuery(
+    await trpcClient.crossStructureStat.getRepClassificationStats.useQuery(
       toRef(() => props.filters)
     )
 

@@ -56,7 +56,7 @@
 
   const trpcClient = useTrpcClient()
   const { data, error, status } =
-    await trpcClient.stat.getHelpRequestRedirectionReasonsStats.useQuery(
+    await trpcClient.crossStructureStat.getHelpRequestRedirectionReasonsStats.useQuery(
       toRef(() => props.filters)
     )
 

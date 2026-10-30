@@ -33,7 +33,7 @@
   }>()
   const trpc = useTrpcClient()
   const { data, status, error } =
-    await trpc.stat.getSupportProgramMeanDurationStats.useQuery(
+    await trpc.crossStructureStat.getSupportProgramMeanDurationStats.useQuery(
       toRef(() => props.filters)
     )
 

@@ -27,7 +27,7 @@
 
   const trpc = useTrpcClient()
   const { data, status, error } =
-    await trpc.stat.getSupportProgramEntriesExitsStats.useQuery(
+    await trpc.crossStructureStat.getSupportProgramEntriesExitsStats.useQuery(
       toRef(() => props.filters)
     )
 

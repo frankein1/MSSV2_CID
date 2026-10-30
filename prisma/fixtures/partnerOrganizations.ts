@@ -31,88 +31,88 @@ export const fixturesPartnerOrganizations = [
   // Custom (no data inclusion)
   {
     id: '16f4c01f-738a-41b0-918c-73ae14e4267c',
-    name: 'CAF 26',
+    name: 'CMP',
     structureId
   },
   {
     id: '8a2d66f7-1d4b-4ac5-8238-7082d51b8281',
-    name: 'France Travail',
+    name: 'Centre social et socioculturel',
     structureId
   },
   {
     id: 'f4105259-e47e-46b3-8a52-61b3ea273be4',
-    name: 'Mairie de Valence',
+    name: 'Education nationale',
     structureId
   },
   {
     id: 'c8825cc8-76fb-4792-8add-f66b62e8c839',
-    name: 'Maison des Solidarités',
+    name: 'MDS',
     structureId,
     inactive: true
   },
   // V1 partner orgs (dataInclusionIdV1 filled, no v0)
   {
     id: 'a1b2c3d4-1111-4000-8000-000000000001',
-    name: "Maison Départementale de l'Autonomie (MDA) de la Drôme",
+    name: 'CLAS',
     structureId,
     dataInclusionIdV1: 'ma-boussole-aidants--10012430'
   },
   {
     id: 'a1b2c3d4-1111-4000-8000-000000000002',
-    name: "Centre communal d'action sociale (CCAS) - Portes-lès-Valence",
+    name: 'CCAS',
     structureId,
     dataInclusionIdV1: 'ma-boussole-aidants--10004354'
   },
   {
     id: 'a1b2c3d4-1111-4000-8000-000000000003',
-    name: "Centre communal d'action sociale (CCAS) - Tain-l'Hermitage",
+    name: 'PMI',
     structureId,
     dataInclusionIdV1: 'ma-boussole-aidants--10004359'
   },
   {
     id: 'a1b2c3d4-1111-4000-8000-000000000004',
-    name: 'France services Livron',
+    name: 'France services',
     structureId,
     dataInclusionIdV1: 'mediation-numerique--France-Services_157'
   },
   {
     id: 'a1b2c3d4-1111-4000-8000-000000000005',
-    name: 'MJC Etoile',
+    name: 'MJC',
     structureId,
     dataInclusionIdV1: 'mediation-numerique--Hinaura_MjcEtoile3'
   },
   // V1 partner orgs — have been matched (v0 ID resolves to a v1 structure)
   {
     id: 'b2c3d4e5-2222-4000-8000-000000000001',
-    name: 'Croix-Rouge Valence (v0)',
+    name: 'CAF',
     structureId,
     dataInclusionId: v0[0].id,
     dataInclusionIdV1: `dora--${v0[0].id}`
   },
   {
     id: 'b2c3d4e5-2222-4000-8000-000000000002',
-    name: 'Secours Catholique Lyon (v0)',
+    name: 'CMPP',
     structureId,
     dataInclusionId: v0[1].id,
     dataInclusionIdV1: `dora--${v0[1].id}`
   },
   {
     id: 'b2c3d4e5-2222-4000-8000-000000000003',
-    name: 'Restos du Cœur Grenoble (v0)',
+    name: 'Mission locale',
     structureId,
     dataInclusionId: v0[2].id,
     dataInclusionIdV1: `dora--${v0[2].id}`
   },
   {
     id: 'b2c3d4e5-2222-4000-8000-000000000004',
-    name: 'CPAM Drôme (v0)',
+    name: 'CPAM',
     structureId,
     dataInclusionId: v0[3].id,
     dataInclusionIdV1: `dora--${v0[3].id}`
   },
   {
     id: 'b2c3d4e5-2222-4000-8000-000000000005',
-    name: 'Emmaüs Romans (v0)',
+    name: 'ASE',
     structureId,
     dataInclusionId: v0[4].id,
     dataInclusionIdV1: `dora--${v0[4].id}`
@@ -120,31 +120,31 @@ export const fixturesPartnerOrganizations = [
   // V0 legacy partner orgs — unmatched (no corresponding v1 structure)
   {
     id: 'b2c3d4e5-2222-4000-8000-000000000006',
-    name: 'Médecins du Monde Marseille (v0)',
+    name: 'Club de prévention',
     structureId,
     dataInclusionId: v0[5].id
   },
   {
     id: 'b2c3d4e5-2222-4000-8000-000000000007',
-    name: 'APF France Handicap Nice (v0)',
+    name: 'Centre médico-social',
     structureId,
     dataInclusionId: v0[6].id
   },
   {
     id: 'b2c3d4e5-2222-4000-8000-000000000008',
-    name: 'ATD Quart Monde Toulouse (v0)',
+    name: 'Point accueil écoute jeunes',
     structureId,
     dataInclusionId: v0[7].id
   },
   {
     id: 'b2c3d4e5-2222-4000-8000-000000000009',
-    name: 'Petits Frères des Pauvres Bordeaux (v0)',
+    name: 'Médiathèque',
     structureId,
     dataInclusionId: v0[8].id
   },
   {
     id: 'b2c3d4e5-2222-4000-8000-00000000000a',
-    name: 'Fondation Abbé Pierre Nantes (v0)',
+    name: 'Ludothèque',
     structureId,
     dataInclusionId: v0[9].id
   }

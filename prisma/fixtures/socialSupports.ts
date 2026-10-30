@@ -47,31 +47,31 @@ export const fixtureCommentId = '24d14db7-c0ac-4924-86ae-c786efba3afc'
 export const fixturesRedirectionReasons = [
   {
     id: 'a1f3e2d4-0b5c-4a7e-9f8d-1c2b3a4e5f60',
-    name: 'Accès aux droits',
+    name: 'Hors compétence',
     structureId: fixtureStructures[0].id,
     createdById: fixturesUsers[FixtureUserRole.SocialWorker].id
   },
   {
     id: 'b2e4f3c5-1c6d-4b8f-a09e-2d3c4b5f6a71',
-    name: "Aide alimentaire d'urgence",
+    name: 'Besoin d’un suivi spécialisé',
     structureId: fixtureStructures[0].id,
     createdById: fixturesUsers[FixtureUserRole.SocialWorker].id
   },
   {
     id: 'c3d5a4b6-2d7e-4c9a-b10f-3e4d5c6a7b82',
-    name: 'Insertion professionnelle',
+    name: 'Demande du bénéficiaire',
     structureId: fixtureStructures[0].id,
     createdById: fixturesUsers[FixtureUserRole.SocialWorker].id
   },
   {
     id: 'd4c6b5a7-3e8f-4d0b-c21a-4f5e6d7b8c93',
-    name: 'Prévention expulsion locative',
+    name: 'Délai de prise en charge trop long',
     structureId: fixtureStructures[0].id,
     createdById: fixturesUsers[FixtureUserRole.SocialWorker].id
   },
   {
     id: 'e5b7c6a8-4f9a-4e1c-d32b-5a6f7e8c9d04',
-    name: 'Soutien à la parentalité',
+    name: 'Orientation vers le droit commun',
     structureId: fixtureStructures[0].id,
     createdById: fixturesUsers[FixtureUserRole.SocialWorker].id
   }

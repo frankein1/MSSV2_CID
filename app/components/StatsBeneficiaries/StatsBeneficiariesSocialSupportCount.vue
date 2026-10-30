@@ -39,7 +39,7 @@
   const trpcClient = useTrpcClient()
 
   const { data, error, status } =
-    await trpcClient.stat.getSocialSupportCountPerBeneficiaryStats.useQuery(
+    await trpcClient.crossStructureStat.getSocialSupportCountPerBeneficiaryStats.useQuery(
       toRef(() => props.filters)
     )
 

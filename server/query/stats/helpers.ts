@@ -82,6 +82,13 @@ export function prepareSupportProgramStatFilters(
     }
   }
 
+  // Review app only: cross-structure statistics panel filter
+  if (filters.structureIds?.length) {
+    supportProgramFilters.supportProgramName = {
+      structureId: { in: filters.structureIds }
+    }
+  }
+
   // A support program matches the period when it was active during it:
   // started before the end of the period and not ended before its start.
   // A missing start or end date is treated as an open bound, but support
@@ -227,6 +234,11 @@ export function prepareSocialSupportStatFilters(filters: StatFilterInput) {
     }
   }
 
+  // Review app only: cross-structure statistics panel filter
+  if (filters.structureIds?.length) {
+    socialSupport.structureId = { in: filters.structureIds }
+  }
+
   return socialSupport
 }
 
@@ -306,6 +318,11 @@ export function prepareBeneficiaryStatFilters(
   }
 
   const formattedFilters: Prisma.BeneficiaryWhereInput = {}
+
+  // Review app only: cross-structure statistics panel filter
+  if (filters.structureIds?.length) {
+    formattedFilters.structureId = { in: filters.structureIds }
+  }
 
   if (filters.supportProgramNameIds?.length) {
     formattedFilters.supportPrograms = {
