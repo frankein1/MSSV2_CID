@@ -530,12 +530,13 @@ const configWorkshopAttendee: Record<
   beneficiary_id: true,
   type: true,
   attendance: true,
-  comment: true,
   workshop_external_attendee_id: true,
   workshop_id: true,
   list_type: true,
   payment_amount: true,
-  payment_received: true
+  payment_received: true,
+  // -- BEGIN ANONYMIZED
+  comment: false
 }
 
 const configWorkshopExternalAttendee: Record<
