@@ -7,10 +7,6 @@ import type { AppRouter } from '~~/server/trpc/routers'
 
 type Input = inferProcedureInput<AppRouter['stat']['getFollowupCountStats']>
 
-// No seeded followup sets `firstFollowup` or `isDuringWalkInSession`:
-// `firstFollowups` and `walkInSessionFollowups` are 0 in every case and only
-// pin the shape of the output.
-
 describe('Statistics - Followup Count - Role Scope', () => {
   test('A structure manager should count all followups of the structure', async ({
     trpc
@@ -21,8 +17,8 @@ describe('Statistics - Followup Count - Role Scope', () => {
 
     expect(stats).toEqual({
       followups: 6,
-      firstFollowups: 0,
-      walkInSessionFollowups: 0,
+      firstFollowups: 2,
+      walkInSessionFollowups: 2,
       followupBeneficiaries: 4
     })
   })
@@ -36,8 +32,8 @@ describe('Statistics - Followup Count - Role Scope', () => {
 
     expect(stats).toEqual({
       followups: 2,
-      firstFollowups: 0,
-      walkInSessionFollowups: 0,
+      firstFollowups: 1,
+      walkInSessionFollowups: 1,
       followupBeneficiaries: 1
     })
   })
@@ -53,8 +49,8 @@ describe('Statistics - Followup Count - Filters', () => {
 
     expect(stats).toEqual({
       followups: 3,
-      firstFollowups: 0,
-      walkInSessionFollowups: 0,
+      firstFollowups: 1,
+      walkInSessionFollowups: 1,
       followupBeneficiaries: 2
     })
   })
@@ -68,8 +64,8 @@ describe('Statistics - Followup Count - Filters', () => {
 
     expect(stats).toEqual({
       followups: 2,
-      firstFollowups: 0,
-      walkInSessionFollowups: 0,
+      firstFollowups: 1,
+      walkInSessionFollowups: 1,
       followupBeneficiaries: 1
     })
   })
@@ -83,7 +79,7 @@ describe('Statistics - Followup Count - Filters', () => {
 
     expect(stats).toEqual({
       followups: 2,
-      firstFollowups: 0,
+      firstFollowups: 1,
       walkInSessionFollowups: 0,
       followupBeneficiaries: 1
     })
@@ -100,8 +96,8 @@ describe('Statistics - Followup Count - Filters', () => {
 
     expect(stats).toEqual({
       followups: 6,
-      firstFollowups: 0,
-      walkInSessionFollowups: 0,
+      firstFollowups: 2,
+      walkInSessionFollowups: 2,
       followupBeneficiaries: 4
     })
   })
