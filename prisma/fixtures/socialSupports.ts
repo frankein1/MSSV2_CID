@@ -96,7 +96,9 @@ const fixturesFollowupSocialSupports = [
     subtype: 'PlannedInPerson',
     followup: {
       create: {
-        medium: 'PlannedInPerson'
+        medium: 'PlannedInPerson',
+        duration: 'Half',
+        firstFollowup: true
       }
     },
     socialSupportRedirections: {
@@ -131,7 +133,8 @@ const fixturesFollowupSocialSupports = [
     subtype: 'PhoneCall',
     followup: {
       create: {
-        medium: 'PhoneCall'
+        medium: 'PhoneCall',
+        duration: 'Hour'
       }
     },
     socialSupportRedirections: {
@@ -161,7 +164,9 @@ const fixturesFollowupSocialSupports = [
     subtype: 'Videoconference',
     followup: {
       create: {
-        medium: 'Videoconference'
+        medium: 'Videoconference',
+        duration: 'Quarter',
+        firstFollowup: true
       }
     },
     socialSupportRedirections: {
@@ -192,7 +197,9 @@ const fixturesFollowupSocialSupports = [
     subtype: 'UnplannedInPerson',
     followup: {
       create: {
-        medium: 'UnplannedInPerson'
+        medium: 'UnplannedInPerson',
+        duration: 'MoreThanHour',
+        isDuringWalkInSession: true
       }
     },
     socialSupportRedirections: {
@@ -224,7 +231,9 @@ const fixturesFollowupSocialSupports = [
     subtype: 'PlannedInPerson',
     followup: {
       create: {
-        medium: 'PlannedInPerson'
+        medium: 'PlannedInPerson',
+        duration: 'ThreeQuarter',
+        isDuringWalkInSession: true
       }
     }
   },
