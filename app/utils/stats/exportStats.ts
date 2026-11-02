@@ -65,32 +65,20 @@ export const zipAndDownloadImages = async (
     )[0] as HTMLElement
     if (expandButton) {
       expandButton.click()
-      setTimeout(async () => {
-        const width = node.clientWidth
-        const height = node.clientHeight
-
-        const blob = await createBlob(node, { width, height }, filter)
-        if (blob == null) {
-          throw new Error(`L'image n'a pas pu être exportée ${node.id}`)
-        }
-        return zipWriter.add(
-          findImageName(statsCardConfig, node) + '.png',
-          new BlobReader(blob)
-        )
-      }, 300)
-    } else {
-      const width = node.clientWidth
-      const height = node.clientHeight
-
-      const blob = await createBlob(node, { width, height }, filter)
-      if (blob == null) {
-        throw new Error(`L'image n'a pas pu être exportée ${node.id}`)
-      }
-      return zipWriter.add(
-        findImageName(statsCardConfig, node) + '.png',
-        new BlobReader(blob)
-      )
+      // Wait for the card to expand before capturing it
+      await new Promise(resolve => setTimeout(resolve, 300))
     }
+    const width = node.clientWidth
+    const height = node.clientHeight
+
+    const blob = await createBlob(node, { width, height }, filter)
+    if (blob == null) {
+      throw new Error(`L'image n'a pas pu être exportée ${node.id}`)
+    }
+    return zipWriter.add(
+      findImageName(statsCardConfig, node) + '.png',
+      new BlobReader(blob)
+    )
   })
   try {
     await Promise.all(promises)
