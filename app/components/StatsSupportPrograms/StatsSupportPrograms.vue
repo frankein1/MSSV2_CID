@@ -15,7 +15,7 @@
         <h3 class="fr-sr-only">Résultats</h3>
         <StatsHeader
           class="fr-my-2w"
-          :menus="[]"
+          :menus="menus"
         >
           <template #header>
             <h4 class="fr-sr-only">Nombre de bénéficiaires concernés</h4>
@@ -45,6 +45,7 @@
             </p>
           </template>
         </StatsHeader>
+        <StatsExportAlert v-if="!alertClose" />
 
         <div class="fr-container--no-max">
           <div class="fr-grid-row fr-grid-row--gutters">
@@ -117,6 +118,9 @@
   import type { SupportProgramStatFilterInput } from '~~/server/schema'
   import { isSupportProgramPeriodFiltered } from '~/utils/stats'
   import type { Options } from '~/utils/options'
+  import type { MenuItem } from '~~/types/menu'
+  import { exportStats, zipAndDownloadImages } from '~/utils/stats/exportStats'
+  import { EventCategory, ExportEventAction } from '~~/types/matomo'
   import userPictogram from '@gouvfr/dsfr/dist/artwork/pictograms/digital/avatar.svg?url&no-inline'
 
   defineProps<{
@@ -124,6 +128,10 @@
   }>()
 
   const trpcClient = useTrpcClient()
+  const matomo = useMatomo()
+
+  const alertClose = ref<boolean>(true)
+  const isDownloading = ref(false)
 
   const filters = ref<SupportProgramStatFilterInput>({})
 
@@ -166,4 +174,65 @@
       subtitle: 'Seuls les dispositifs avec dates sont comptés.'
     }
   }
+
+  const excelIsDownloading = (downloading: boolean) => {
+    isDownloading.value = downloading
+  }
+
+  const handleExportExcel = () => {
+    exportStats(
+      filters.value,
+      'stats_parcours_dispositifs',
+      trpcClient,
+      excelIsDownloading
+    )
+  }
+
+  const buttonFilter = (node: HTMLElement | Node) => {
+    return (node as HTMLElement).tagName !== 'BUTTON'
+  }
+
+  const closeAlert = () => {
+    alertClose.value = true
+  }
+
+  const menus = computed<MenuItem[]>(() => {
+    if (!count.value?.beneficiary) {
+      return []
+    }
+    return [
+      {
+        label: 'En images (.zip)',
+        icon: 'fr-icon-folder-image-line',
+        onClick: () => {
+          matomo.trackEvent(
+            EventCategory.ExportStats,
+            ExportEventAction.DownloadSupportProgramStatsImages
+          )
+          alertClose.value = false
+          const date = new Date()
+          setTimeout(() => {
+            zipAndDownloadImages(
+              'Statistiques - Parcours et dispositifs - ' +
+                date.toLocaleDateString(),
+              supportProgramCardConfig,
+              buttonFilter,
+              closeAlert
+            )
+          }, 200)
+        }
+      },
+      {
+        label: 'En tableur (.xlsx)',
+        icon: 'fr-icon-file-excel-line',
+        onClick: () => {
+          matomo.trackEvent(
+            EventCategory.ExportStats,
+            ExportEventAction.DownloadSupportProgramStatsExcel
+          )
+          handleExportExcel()
+        }
+      }
+    ]
+  })
 </script>

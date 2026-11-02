@@ -1,6 +1,9 @@
 import type { StatsCardConfig } from '~~/types/stat'
 import { toBlob } from 'html-to-image'
-import type { StatFilterInput } from '~~/server/schema'
+import type {
+  StatFilterInput,
+  SupportProgramStatFilterInput
+} from '~~/server/schema'
 import { getExportUrl } from '~/utils/export/getExportUrl'
 import { getExportFilename } from '~/utils/export/getExportFilename'
 import { FAILED_DOWNLOAD_ERROR_MESSAGE } from '~/utils/constants'
@@ -113,10 +116,11 @@ type ExportType =
   | 'stats_instructions_dossier'
   | 'stats_beneficiaires'
   | 'stats_ateliers'
+  | 'stats_parcours_dispositifs'
 
 // export as Excel file
 export const exportStats = async (
-  filters: StatFilterInput,
+  filters: StatFilterInput | SupportProgramStatFilterInput,
   exportType: ExportType,
   client: any,
   isDownloading: (downloading: boolean) => void
@@ -136,6 +140,10 @@ export const exportStats = async (
         break
       case 'stats_ateliers':
         exportedFile = await client.stat.exportWorkshopStats.mutate(filters)
+        break
+      case 'stats_parcours_dispositifs':
+        exportedFile =
+          await client.stat.exportSupportProgramStats.mutate(filters)
         break
     }
     if (!exportedFile?.data) {

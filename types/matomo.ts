@@ -180,7 +180,9 @@ export enum ExportEventAction {
   DownloadHelpRequestStatsImages = 'Export des stats Instructions de dossier en images',
   DownloadHelpRequestStatsExcel = 'Export des stats Instructions de dossier en document Excel',
   DownloadWorkshopStatsImages = 'Export des stats Ateliersen images',
-  DownloadWorkshopStatsExcel = 'Export des stats Ateliers en document Excel'
+  DownloadWorkshopStatsExcel = 'Export des stats Ateliers en document Excel',
+  DownloadSupportProgramStatsImages = 'Export des stats Parcours et dispositifs en images',
+  DownloadSupportProgramStatsExcel = 'Export des stats Parcours et dispositifs en document Excel'
 }
 
 export enum WorkshopAction {
