@@ -18,6 +18,7 @@
       <StatsHeader
         class="fr-my-2w"
         :menus="menus"
+        :is-exporting="isExporting"
       >
         <template #header>
           <h4 class="fr-sr-only">Nombre de bénéficiaires</h4>
@@ -57,7 +58,6 @@
           </p>
         </template>
       </StatsHeader>
-      <StatsExportAlert v-if="!alertClose" />
       <AtomAlert
         v-if="error"
         :alert-type="AlertType.Error"
@@ -291,15 +291,11 @@
   import { AlertType } from '~/utils/constants/alert'
   import type { Options } from '~/utils/options'
   import { statFilterSchema, type StatFilterInput } from '~~/server/schema'
-  import type { MenuItem } from '~~/types/menu'
   import { StatPeriodFilter } from '~~/types/stat'
-  import { exportStats, zipAndDownloadImages } from '~/utils/stats/exportStats'
-  import { EventCategory, ExportEventAction } from '~~/types/matomo'
+  import { ExportEventAction } from '~~/types/matomo'
 
-  const alertClose = ref<boolean>(true)
   const trpcClient = useTrpcClient()
   const { application } = usePermissions()
-  const matomo = useMatomo()
 
   withDefaults(
     defineProps<{
@@ -320,7 +316,6 @@
     }
   )
 
-  const isDownloading = ref(false)
   const filters = ref<StatFilterInput>({})
 
   const {
@@ -352,18 +347,6 @@
     }
     return [`${count} ${plural('Bénéficiaire', count)}`]
   })
-
-  const excelIsDownloading = (downloading: boolean) => {
-    isDownloading.value = downloading
-  }
-  const handleExportExcel = () => {
-    exportStats(
-      filters.value,
-      'stats_beneficiaires',
-      trpcClient,
-      excelIsDownloading
-    )
-  }
 
   const beneficiariesCardConfig = {
     gender: {
@@ -439,57 +422,19 @@
     }
   }
 
-  const menus: ComputedRef<MenuItem[]> = computed(() => {
-    const menus: MenuItem[] = []
-
-    if (beneficiaryCount.value?.count != 0) {
-      menus.push({
-        label: 'En images (.zip)',
-        icon: 'fr-icon-folder-image-line',
-        onClick: async () => {
-          matomo.trackEvent(
-            EventCategory.ExportStats,
-            ExportEventAction.DownloadBeneficiaryStatsImages
-          )
-          alertClose.value = false
-          const date = new Date()
-          setTimeout(() => {
-            zipAndDownloadImages(
-              'Statistiques - Bénéficiaires - ' + date.toLocaleDateString(),
-              {
-                ...beneficiariesCardConfig,
-                ...(application.value.module.ministere &&
-                  beneficiariesCardMinistereConfig)
-              },
-              buttonFilter,
-              closeAlert
-            )
-          }, 200)
-        }
-      })
+  const { menus, isExporting } = useStatsExportMenus({
+    hasData: () => beneficiaryCount.value?.count != 0,
+    cardConfig: () => ({
+      ...beneficiariesCardConfig,
+      ...(application.value.module.ministere &&
+        beneficiariesCardMinistereConfig)
+    }),
+    mutation: () =>
+      trpcClient.stat.exportBeneficiaryStats.mutate(filters.value),
+    fileName: 'stats_beneficiaires',
+    matomoEvents: {
+      images: ExportEventAction.DownloadBeneficiaryStatsImages,
+      excel: ExportEventAction.DownloadBeneficiaryStatsExcel
     }
-
-    if (beneficiaryCount.value?.count != 0) {
-      menus.push({
-        label: 'En tableur (.xlsx)',
-        icon: 'fr-icon-file-excel-line',
-        onClick: () => {
-          matomo.trackEvent(
-            EventCategory.ExportStats,
-            ExportEventAction.DownloadBeneficiaryStatsExcel
-          )
-          handleExportExcel()
-        }
-      })
-    }
-    return menus
   })
-
-  const buttonFilter = (node: HTMLElement | Node) => {
-    return (node as HTMLElement).tagName !== 'BUTTON'
-  }
-
-  const closeAlert = () => {
-    alertClose.value = true
-  }
 </script>
