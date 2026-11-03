@@ -153,7 +153,8 @@ export default defineNuxtConfig({
         '@tiptap/extension-link',
         '@tiptap/pm/model',
         '@braintree/sanitize-url',
-        'remove-accents'
+        'remove-accents',
+        '@turf/turf'
       ]
     },
     css: {

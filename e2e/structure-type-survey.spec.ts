@@ -3,6 +3,7 @@ import { test, expect } from '@playwright/test'
 import type { UserRole } from '@prisma/client'
 import { prismaClient } from '~~/server/prisma'
 import { signJwt } from '~~/server/lib/jwt'
+import { gotoHydrated } from '~~/e2e/helpers/navigation'
 
 // Dedicated structure without survey, so that seeded structures stay untouched
 const PREFIX = 'E2E-SURVEY-'
@@ -40,14 +41,6 @@ async function authenticateAs(context: BrowserContext, userId: string) {
       secure: true
     }
   ])
-}
-
-/** Wait for Vue hydration, otherwise the form is submitted natively (GET) */
-async function gotoHydrated(page: Page, path: string) {
-  await page.goto(path)
-  await page.waitForFunction(
-    () => !!(document.querySelector('#__nuxt') as any)?.__vue_app__
-  )
 }
 
 async function selectSocialSupportType(page: Page, label: string) {
