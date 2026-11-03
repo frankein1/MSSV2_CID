@@ -22,3 +22,21 @@ shamefullyHoist: true
 minimumReleaseAgeExclude:
   - handlebars@4.7.10
   - shell-quote@1.11.0
+  - '@nuxt/devtools-kit@3.4.4'
+  - '@nuxt/devtools-wizard@3.4.4'
+  - '@nuxt/devtools@3.4.4'
+  - '@nuxt/kit@4.6.3'
+  - '@nuxt/nitro-server@4.6.3'
+  - '@nuxt/schema@4.6.3'
+  - '@nuxt/vite-builder@4.6.3'
+  - '@nuxt/vite-server@4.6.3'
+  - ignore@7.0.14
+  - impound@1.2.1
+  - nitropack@2.13.5
+  - nuxt@4.6.3
+  - pkg-types@2.4.0
+  - postcss@8.5.31
+  - seroval@1.7.3
+  - undici@8.12.3
+  - unrouting@0.3.1
+  - vite@8.3.5
