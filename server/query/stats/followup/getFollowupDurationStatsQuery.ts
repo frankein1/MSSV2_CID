@@ -17,7 +17,7 @@ export async function getFollowupDurationStatsQuery(
     by: ['duration'],
     ...where,
     _count: true,
-    orderBy: { _count: { medium: 'desc' } }
+    orderBy: { _count: { duration: 'desc' } }
   })
 
   return res
