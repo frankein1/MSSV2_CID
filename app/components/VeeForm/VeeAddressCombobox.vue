@@ -28,7 +28,10 @@
     BanResponse,
     AddressSelected
   } from './types'
-  import { SEARCH_NUMBER_CHARACTERS, SEARCH_DEFER_MS } from '~/utils/constants'
+  import {
+    ADDRESS_SEARCH_NUMBER_CHARACTERS,
+    SEARCH_DEFER_MS
+  } from '~/utils/constants'
 
   const props = withDefaults(
     defineProps<{
@@ -102,7 +105,7 @@
   // that isn't picked from the results list still gets saved as-is.
   function onSearch(search: string) {
     setValue(search)
-    if (search.trim().length < SEARCH_NUMBER_CHARACTERS) {
+    if (search.trim().length < ADDRESS_SEARCH_NUMBER_CHARACTERS) {
       addressOptions.value = []
       return
     }
