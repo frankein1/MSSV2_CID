@@ -26,9 +26,8 @@ export async function getFollowupPrescribingOrganizationStatsQuery(
     }
   })
 
-  const followups = socialSupports.reduce(
-    (fu, { followup }) => (followup !== null ? [...fu, followup] : fu),
-    [] as Array<Exclude<(typeof socialSupports)[0]['followup'], null>>
+  const followups = socialSupports.flatMap(({ followup }) =>
+    followup !== null ? [followup] : []
   )
 
   return preparePrescribingOrganizationStats(followups)
