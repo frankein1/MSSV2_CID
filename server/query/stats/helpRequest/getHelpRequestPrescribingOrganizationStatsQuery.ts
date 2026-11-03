@@ -42,18 +42,12 @@ export async function getHelpRequestPrescribingOrganizationStatsQuery(
     }
   })
 
-  const fileInstructions = socialSupports.reduce(
-    (fu, { fileInstruction }) =>
-      fileInstruction !== null ? [...fu, fileInstruction] : fu,
-    [] as Array<Exclude<(typeof socialSupports)[0]['fileInstruction'], null>>
-  )
-
   const requests = []
-  for (const fi of fileInstructions) {
-    if (fi.helpRequest) {
-      requests.push(fi.helpRequest)
-    } else if (fi.housingHelpRequest) {
-      requests.push(fi.housingHelpRequest)
+  for (const { fileInstruction } of socialSupports) {
+    if (fileInstruction?.helpRequest) {
+      requests.push(fileInstruction.helpRequest)
+    } else if (fileInstruction?.housingHelpRequest) {
+      requests.push(fileInstruction.housingHelpRequest)
     }
   }
 
