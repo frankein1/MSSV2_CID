@@ -85,11 +85,7 @@
   }>()
 
   // Multi-structure support
-  const multiStructure = inject<{
-    structureOptions: ComputedRef<Options>
-    selectedStructureIds: Ref<string[]>
-    isMultiStructure: ComputedRef<boolean>
-  } | null>('multiStructureConfig', null)
+  const multiStructure = useMultiStructureConfig()
 
   const isMultiStructureMode = computed(
     () => multiStructure?.isMultiStructure.value ?? false
@@ -155,6 +151,12 @@
         emit('update:filters', { structureIds: newStructureIds })
         return
       }
+    }
+
+    // The form emits its values again when it is mounted (initial load, or
+    // after a structure change). Same values: no update, so no stat refetch.
+    if (isSameStatFilters(filterValues, props.filters)) {
+      return
     }
 
     emit('update:filters', filterValues as unknown as StatFilterInput)

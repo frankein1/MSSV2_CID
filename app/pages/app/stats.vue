@@ -39,6 +39,7 @@
 </template>
 
 <script lang="ts" setup>
+  import type { MultiStructureConfig } from '~/composables/useMultiStructureStats'
   import { toOptions } from '~/utils/options'
   import { AlertType } from '~/utils/constants/alert'
   import { hasDefinedCity } from '~/utils/beneficiary/hasDefinedCity'
@@ -124,7 +125,7 @@
     toOptions(multiStructureList.value ?? [], 'id', 'name')
   )
 
-  provide('multiStructureConfig', {
+  provide<MultiStructureConfig>(multiStructureConfigKey, {
     structureOptions,
     selectedStructureIds,
     isMultiStructure

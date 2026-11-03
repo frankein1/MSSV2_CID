@@ -321,7 +321,7 @@
   )
 
   const isDownloading = ref(false)
-  const filters = ref<StatFilterInput>({})
+  const filters = ref<StatFilterInput>(useInitialStatFilters())
 
   const {
     data: beneficiaryCount,
