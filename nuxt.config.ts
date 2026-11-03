@@ -122,6 +122,12 @@ export default defineNuxtConfig({
       meta: [{ name: 'robots', content: 'noindex' }]
     }
   },
+  // Nuxt 4.6.4's schema resolves an unset devServer.host to `undefined`, which
+  // untyped 2.0.0 turns into `{}`; @nuxt/cli 4.0.1 then crashes calling
+  // `hostname.toLowerCase()`. An explicit string avoids it (same binding as the default).
+  devServer: {
+    host: process.env.NUXT_HOST || 'localhost'
+  },
   // Build Configuration: https://go.nuxtjs.dev/config-build
   vite: {
     server: {
