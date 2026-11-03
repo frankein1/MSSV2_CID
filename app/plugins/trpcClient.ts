@@ -34,7 +34,7 @@ export default defineNuxtPlugin(() => {
         // force POST method
         true: httpBatchLink({
           ...batchLinkOptions,
-          methodOverride: 'POST',
+          methodOverride: 'POST'
           // maxItems: 1
         }),
         // regular requests
