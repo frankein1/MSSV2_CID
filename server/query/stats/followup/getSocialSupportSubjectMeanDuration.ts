@@ -6,7 +6,7 @@ type SocialSupport = {
   } | null
 }
 
-export const getSocialSupportSubjectTotalDuration = (
+export const getSocialSupportSubjectMeanDuration = (
   socialSupports: SocialSupport[]
 ) => {
   if (socialSupports.length === 0) {

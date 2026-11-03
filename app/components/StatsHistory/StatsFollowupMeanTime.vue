@@ -54,7 +54,6 @@
   import type { StatFilterInput } from '~~/server/schema'
   import { AlertType } from '~/utils/constants/alert'
   import { SupportColor } from '~~/client/colors'
-  import { getSocialSupportSubjectTotalDuration } from '~/utils/followups/getSocialSupportSubjetcTotalDuration'
 
   const props = defineProps<{
     totalCount: number
@@ -73,7 +72,7 @@
         return {
           key: item.id || 'null',
           label: item.name,
-          count: getSocialSupportSubjectTotalDuration(item.socialSupports),
+          count: item.meanDuration,
           color: SupportColor.followups
         }
       }) || []

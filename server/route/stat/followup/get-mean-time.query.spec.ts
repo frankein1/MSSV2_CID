@@ -2,7 +2,6 @@ import { describe, expect } from 'vitest'
 import type { inferProcedureInput, inferProcedureOutput } from '@trpc/server'
 import { test } from '~~/test/server/test-utils'
 import { StatPeriodFilter } from '~~/types/stat'
-import { getSocialSupportSubjectTotalDuration } from '~/utils/followups/getSocialSupportSubjetcTotalDuration'
 
 import type { AppRouter } from '~~/server/trpc/routers'
 
@@ -13,15 +12,11 @@ type Output = inferProcedureOutput<
 >
 
 // No `orderBy`: the per-subject means are compared as a map.
-// Computed like the card (`StatsFollowupMeanTime.vue`): mean duration per
-// subject, then the unweighted mean of the per-subject means.
+// The overall mean is computed like the card (`StatsFollowupMeanTime.vue`):
+// the unweighted mean of the per-subject means.
 const parseMeanTimes = (subjects: Output) =>
-  subjects.reduce<Record<string, number>>(
-    (acc, { name, socialSupports }) => ({
-      ...acc,
-      [name]: getSocialSupportSubjectTotalDuration(socialSupports)
-    }),
-    {}
+  Object.fromEntries(
+    subjects.map(({ name, meanDuration }) => [name, meanDuration])
   )
 
 const getOverallMeanTime = (subjects: Output) => {
