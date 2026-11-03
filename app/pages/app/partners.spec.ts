@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mountSuspended, mockNuxtImport } from '@nuxt/test-utils/runtime'
 import { flushPromises } from '@vue/test-utils'
 import { ref } from 'vue'
-import PartnersPage from '~/pages/app/partners.vue'
+import PartnersPage from './partners.vue'
 import {
   createFakeTrpcClient,
   createFakePartner
