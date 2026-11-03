@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test'
 import { prismaClient } from '~~/server/prisma'
 import { fixturesBeneficiaries, FixtureBeneficiary } from '~~/prisma/fixtures'
+import { gotoHydrated } from '~~/e2e/helpers/navigation'
 
 const idCoursor = fixturesBeneficiaries[FixtureBeneficiary.COURSOR].id
 const idPenberthy = fixturesBeneficiaries[FixtureBeneficiary.PENBERTHY].id
@@ -32,7 +33,7 @@ test.describe('Ccas Agent accessing beneficiary health form', () => {
     const id = fixturesBeneficiaries[FixtureBeneficiary.COURSOR].id
     const familyFileId =
       fixturesBeneficiaries[FixtureBeneficiary.COURSOR].familyFileId
-    await page.goto(healthUrl(id))
+    await gotoHydrated(page, healthUrl(id))
 
     const healthSection = page.getByRole('button', { name: /santé/i })
     const nir = page.getByLabel(/sécurité sociale/i)
@@ -46,7 +47,6 @@ test.describe('Ccas Agent accessing beneficiary health form', () => {
     await page.getByRole('button', { name: /enregistrer et quitter/i }).click()
 
     await page.waitForURL(beneficiaryUrl(familyFileId, id))
-    await page.waitForLoadState('networkidle')
     const url = page.url()
 
     expect
