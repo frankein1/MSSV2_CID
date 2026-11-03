@@ -1,6 +1,7 @@
 {
   "name": "monsuivisocial-v2",
   "version": "1.70.0",
+  "type": "module",
   "scripts": {
     "dev": "NUXT_LOGS_ACTIVATE_REQUEST_LOGGING=false nuxt dev",
     "dev:log-requests": "FORCE_COLOR=1 nuxt dev | pino-pretty",

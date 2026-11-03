@@ -188,7 +188,10 @@ async function main() {
     `\nDone in ${duration}ms: ${matched} matched, ${overrideDetails.length} overrides, ${ambiguous.length} ambiguous, ${unmatched.length} unmatched out of ${partnerOrgs.length} expected`
   )
 
-  const reportPath = join(__dirname, `report-${env}-${Date.now()}.ignore.json`)
+  const reportPath = join(
+    import.meta.dirname,
+    `report-${env}-${Date.now()}.ignore.json`
+  )
   writeFileSync(reportPath, JSON.stringify(report, null, 2))
   console.log(`Report written to ${reportPath}`)
 }

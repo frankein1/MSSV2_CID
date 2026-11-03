@@ -342,7 +342,7 @@ async function main() {
   )
 
   const reportPath = join(
-    __dirname,
+    import.meta.dirname,
     `report-unmatched-name-first-${env}-${Date.now()}.ignore.json`
   )
   writeFileSync(reportPath, JSON.stringify(report, null, 2))

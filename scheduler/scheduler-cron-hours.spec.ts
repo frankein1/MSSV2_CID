@@ -46,7 +46,7 @@ function parseCronJobs(source: string) {
 }
 
 describe('Scheduler cron hours safety', () => {
-  const source = readFileSync(resolve(__dirname, 'index.ts'), 'utf-8')
+  const source = readFileSync(resolve(import.meta.dirname, 'index.ts'), 'utf-8')
   const { jobs, unresolved } = parseCronJobs(source)
 
   it('should resolve all cron variable references', () => {
