@@ -1,7 +1,7 @@
-import type { Prisma, User } from '@prisma/client'
-import type { FieldLabels } from '~~/types/fieldLabels'
+import type { Prisma } from '@prisma/client'
 
-export const userFieldLabels: FieldLabels<User> = {
+// ANONYMIZED: firstName, lastName, email, authorizationCode, authorizationCodeValidity removed from User
+export const userFieldLabels = {
   id: 'Identifiant',
   lastName: 'Nom',
   firstName: 'Prénom',
@@ -18,7 +18,7 @@ export const userFieldLabels: FieldLabels<User> = {
   authorizationCode: "Code d'autorisation",
   authorizationCodeValidity: "Validité du code d'autorisation",
   accountReminderEmail: "Nombre d'e-mail de rappel de création de compte"
-}
+} as const
 
 /**
  * Prisma `_count` key behind each blocking relation. Every restricting foreign

@@ -4,7 +4,8 @@ import {
   getBeneficiariesCitiesQuery,
   getBeneficiariesEmployersQuery,
   getBeneficiariesSchoolsQuery,
-  getExaminationDatesQuery
+  getExaminationDatesQuery,
+  getMultiStructureListQuery
 } from '~~/server/route/config'
 
 export const configRouter = router({
@@ -22,5 +23,8 @@ export const configRouter = router({
     .query(getBeneficiariesSchoolsQuery.execute),
   getExaminationDates: protectedProcedure
     .input(getExaminationDatesQuery.inputValidation)
-    .query(getExaminationDatesQuery.execute)
+    .query(getExaminationDatesQuery.execute),
+  getMultiStructureList: protectedProcedure
+    .input(getMultiStructureListQuery.inputValidation)
+    .query(getMultiStructureListQuery.execute)
 })

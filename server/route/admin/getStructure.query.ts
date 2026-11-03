@@ -22,13 +22,13 @@ const adminHandler = async ({
       zipcode: true,
       city: true,
       phone: true,
-      email: true,
+      // email: true,
       inhabitantsNumber: true,
       inseeCode: true,
       siret: true,
-      dpoFirstName: true,
-      dpoLastName: true,
-      dpoEmail: true,
+      // dpoFirstName: true,
+      // dpoLastName: true,
+      // dpoEmail: true,
       typeSurvey: {
         select: {
           structureType: true,
@@ -51,10 +51,10 @@ const adminHandler = async ({
       users: {
         select: {
           id: true,
-          lastName: true,
-          firstName: true,
-          email: true,
-          role: true,
+          // lastName: true,
+          // firstName: true,
+          // email: true,
+          // role: true,
           aidantConnectAuthorisation: true,
           status: true
         },

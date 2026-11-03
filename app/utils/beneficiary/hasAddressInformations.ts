@@ -1,19 +1,14 @@
-import type { Beneficiary } from '@prisma/client'
-
-export function hasAddressInformations(
-  beneficiary: Pick<
-    Beneficiary,
-    | 'accommodationMode'
-    | 'accommodationAdditionalInformation'
-    | 'accommodationZone'
-    | 'street'
-    | 'zipcode'
-    | 'city'
-    | 'region'
-    | 'department'
-    | 'qpv'
-  >
-) {
+export function hasAddressInformations(beneficiary: {
+  accommodationMode?: unknown
+  accommodationAdditionalInformation?: string | null
+  accommodationZone?: unknown
+  street?: string | null
+  zipcode?: string | null
+  city?: string | null
+  region?: string | null
+  department?: string | null
+  qpv?: boolean | null
+}) {
   return (
     beneficiary.accommodationMode ||
     beneficiary.accommodationAdditionalInformation ||

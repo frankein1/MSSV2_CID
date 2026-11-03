@@ -56,7 +56,7 @@
   import { NOTIFICATIONS_REQUEST_LIMIT_DEFAULT } from '~/utils/constants'
   import ArchiveNotificationModal from '~/components/Archive/ArchiveNotificationModal.vue'
   import { routes } from '~/utils/routes'
-  import { formatBeneficiaryName } from '~/utils/beneficiary'
+  // ANONYMIZED: formatBeneficiaryName no longer used here
   import type { NotificationItemType } from './types'
 
   const trpcClient = useTrpcClient()
@@ -311,16 +311,12 @@
   const unwatch = watch([modal.isReady, beneficiariesToArchived], () => {
     if (modal.isReady && beneficiariesToArchived.value?.[0]) {
       const firstNotification = beneficiariesToArchived.value[0]
-      const beneficiaryNames = beneficiariesToArchived.value.map(notification =>
-        formatBeneficiaryName({
-          title: null,
-          firstName: notification?.beneficiary?.firstName
-            ? notification.beneficiary.firstName
-            : '',
-          usualName: notification?.beneficiary?.usualName
-            ? notification.beneficiary.usualName
-            : ''
-        })
+      // ANONYMIZED: beneficiary name fields no longer available
+      const beneficiaryNames = beneficiariesToArchived.value.map(
+        notification =>
+          notification?.beneficiary?.id
+            ? `Dossier ${notification.beneficiary.id.slice(0, 8)}`
+            : 'Dossier'
       )
       modal.open(ArchiveNotificationModal, {
         triggerOpen: true,

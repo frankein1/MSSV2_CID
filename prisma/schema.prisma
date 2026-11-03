@@ -16,19 +16,19 @@ datasource db {
 // }
 
 model Account {
-  id                String  @id @default(uuid()) // FIXME: Cannot set as @db.Uuid as no cast is possible
-  userId            String  @map("user_id") @db.Uuid
-  provider          String
-  providerAccountId String  @map("provider_account_id")
-  idToken           String? @map("id_token") @db.Text
-  sessionState      String? @map("session_state")
+  id       String @id @default(uuid()) // FIXME: Cannot set as @db.Uuid as no cast is possible
+  userId   String @map("user_id") @db.Uuid
+  provider String
+  // ANONYMIZED providerAccountId String  @map("provider_account_id")
+  // ANONYMIZED idToken           String? @map("id_token") @db.Text
+  // ANONYMIZED sessionState      String? @map("session_state")
 
   created DateTime? @default(now())
   updated DateTime? @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([provider, providerAccountId])
+  // ANONYMIZED @@unique([provider, providerAccountId])
   @@map("account")
 }
 
@@ -38,20 +38,20 @@ model ExternalAccount {
   created DateTime @default(now())
   updated DateTime @updatedAt
 
-  userId            String    @map("user_id") @db.Uuid
-  provider          String
-  providerAccountId String    @map("provider_account_id")
-  refreshToken      String?   @map("refresh_token") @db.Text
-  accessToken       String?   @map("access_token") @db.Text
-  expiresAt         DateTime? @map("expires_at")
+  userId   String @map("user_id") @db.Uuid
+  provider String
+  // ANONYMIZED providerAccountId String    @map("provider_account_id")
+  // ANONYMIZED refreshToken      String?   @map("refresh_token") @db.Text
+  // ANONYMIZED accessToken       String?   @map("access_token") @db.Text
+  // ANONYMIZED expiresAt         DateTime? @map("expires_at")
 
-  scope        String?
-  idToken      String? @map("id_token") @db.Text
-  sessionState String? @map("session_state")
+  // ANONYMIZED scope        String?
+  // ANONYMIZED idToken      String? @map("id_token") @db.Text
+  // ANONYMIZED sessionState String? @map("session_state")
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([provider, providerAccountId])
+  // ANONYMIZED @@unique([provider, providerAccountId])
   @@unique([userId, provider])
   @@map("external_account")
 }
@@ -71,12 +71,12 @@ enum UserRole {
 }
 
 model User {
-  id        String     @id @default(uuid()) @db.Uuid
-  firstName String     @map("first_name")
-  lastName  String     @map("last_name")
-  email     String     @unique
-  role      UserRole
-  status    UserStatus @default(value: Active)
+  id     String     @id @default(uuid()) @db.Uuid
+  // ANONYMIZED firstName String     @map("first_name")
+  // ANONYMIZED lastName  String     @map("last_name")
+  // ANONYMIZED email     String     @unique
+  role   UserRole
+  status UserStatus @default(value: Active)
 
   accounts         Account[]
   externalAccounts ExternalAccount[]
@@ -87,8 +87,8 @@ model User {
   firstAccess                DateTime? @map("first_access")
   lastAccess                 DateTime? @map("last_access")
 
-  authorizationCode         String?   @map("authorization_code")
-  authorizationCodeValidity DateTime? @map("authorization_code_validity")
+  // ANONYMIZED authorizationCode         String?   @map("authorization_code")
+  // ANONYMIZED authorizationCodeValidity DateTime? @map("authorization_code_validity")
 
   created DateTime? @default(now())
   updated DateTime? @updatedAt
@@ -140,13 +140,13 @@ model Structure {
   city                  String
   address               String
   phone                 String
-  email                 String
+  // ANONYMIZED email                 String
   inhabitantsNumber     String?                @map("inhabitants_number")
   inseeCode             String?                @map("insee_code")
   siret                 String?
-  dpoFirstName          String?                @map("dpo_first_name")
-  dpoLastName           String?                @map("dpo_last_name")
-  dpoEmail              String?                @map("dpo_email")
+  // ANONYMIZED dpoFirstName          String?                @map("dpo_first_name")
+  // ANONYMIZED dpoLastName           String?                @map("dpo_last_name")
+  // ANONYMIZED dpoEmail              String?                @map("dpo_email")
   socialSupportSubjects SocialSupportSubject[]
   users                 User[]
   socialSupports        SocialSupport[]
@@ -237,16 +237,16 @@ enum DocumentType {
 }
 
 model Document {
-  key              String       @id @default(uuid()) // FIXME: Cannot set as @db.Uuid as no cast is possible
-  mimeType         String       @map("mime_type")
-  name             String
-  filenameDisk     String       @map("filename_disk")
-  filenameDownload String?      @map("filename_download")
-  type             DocumentType
+  key          String       @id @default(uuid()) // FIXME: Cannot set as @db.Uuid as no cast is possible
+  mimeType     String       @map("mime_type")
+  // ANONYMIZED name             String
+  // ANONYMIZED filenameDisk     String       @map("filename_disk")
+  // ANONYMIZED filenameDownload String?      @map("filename_download")
+  type         DocumentType
   // Size in bytes
-  size             Int?
-  tags             String[]
-  confidential     Boolean
+  size         Int?
+  tags         String[]
+  confidential Boolean
 
   familyFile   FamilyFile @relation(fields: [familyFileId], references: [id], onDelete: Cascade)
   familyFileId String     @map("family_file_id") @db.Uuid
@@ -263,7 +263,7 @@ model Document {
 
   migrated Boolean @default(false)
 
-  encryptedDataKey String? @map("encrypted_data_key")
+  // ANONYMIZED encryptedDataKey String? @map("encrypted_data_key")
 
   documentContent DocumentContent?
 
@@ -425,16 +425,16 @@ model SocialSupport {
   comments      Comment[]
   notifications Notification[]
 
-  synthesis        String?
-  privateSynthesis String? @map("private_synthesis")
+  // ANONYMIZED synthesis        String?
+  // ANONYMIZED privateSynthesis String? @map("private_synthesis")
 
-  synthesisRichText        String? @map("synthesis_rich_text")
-  privateSynthesisRichText String? @map("private_synthesis_rich_text")
+  // ANONYMIZED synthesisRichText        String? @map("synthesis_rich_text")
+  // ANONYMIZED privateSynthesisRichText String? @map("private_synthesis_rich_text")
 
   minister   MinisterEntity? @relation(fields: [ministerId], references: [id])
   ministerId String?         @map("minister_id") @db.Uuid
 
-  numeroPegase String? @map("numero_pegase")
+  // ANONYMIZED numeroPegase String? @map("numero_pegase")
 
   status  SocialSupportStatus
   dueDate DateTime?           @map("due_date") @db.Date
@@ -554,7 +554,7 @@ model Followup {
 
   helpRequested         Boolean?          @map("help_requested")
   place                 String?
-  thirdPersonName       String?           @map("third_person_name")
+  // ANONYMIZED thirdPersonName       String?           @map("third_person_name")
   classified            Boolean?
   firstFollowup         Boolean?          @map("first_followup")
   forwardedToJustice    Boolean?          @map("forwarded_to_justice")
@@ -1682,8 +1682,8 @@ model BudgetIncome {
   beneficiaryId String?      @unique @map("beneficiary_id") @db.Uuid
   beneficiary   Beneficiary? @relation(fields: [beneficiaryId], references: [id], onDelete: Cascade)
 
-  lastName     String?               @map("last_name")
-  firstName    String?               @map("first_name")
+  // ANONYMIZED lastName     String?               @map("last_name")
+  // ANONYMIZED firstName    String?               @map("first_name")
   relationship RelativeRelationship?
 
   budgetId String @map("budget_id") @db.Uuid
@@ -1875,35 +1875,35 @@ model Beneficiary {
   aidantConnectAuthorized Boolean @default(false) @map("aidant_connect_authorized")
 
   // General information
-  fileNumber                         String                        @unique @map("file_number")
+  // ANONYMIZED fileNumber                         String                        @unique @map("file_number")
   status                             BeneficiaryStatus
   title                              BeneficiaryTitle?
-  usualName                          String?                       @map("usual_name")
-  usualNameNormalized                String?                       @default(dbgenerated("lower(immutable_unaccent(usual_name))")) @map("usual_name_normalized")
-  birthName                          String?                       @map("birth_name")
-  birthNameNormalized                String?                       @default(dbgenerated("lower(immutable_unaccent(birth_name))")) @map("birth_name_normalized")
-  firstName                          String?                       @map("first_name")
-  firstNameNormalized                String?                       @default(dbgenerated("lower(immutable_unaccent(first_name))")) @map("first_name_normalized")
+  // ANONYMIZED usualName                          String?                       @map("usual_name")
+  // ANONYMIZED usualNameNormalized                String?                       @default(dbgenerated("lower(immutable_unaccent(usual_name))")) @map("usual_name_normalized")
+  // ANONYMIZED birthName                          String?                       @map("birth_name")
+  // ANONYMIZED birthNameNormalized                String?                       @default(dbgenerated("lower(immutable_unaccent(birth_name))")) @map("birth_name_normalized")
+  // ANONYMIZED firstName                          String?                       @map("first_name")
+  // ANONYMIZED firstNameNormalized                String?                       @default(dbgenerated("lower(immutable_unaccent(first_name))")) @map("first_name_normalized")
   birthDate                          DateTime?                     @map("birth_date") @db.Date
-  birthPlace                         String?                       @map("birth_place")
+  // ANONYMIZED birthPlace                         String?                       @map("birth_place")
   deathDate                          DateTime?                     @map("death_date") @db.Date
   gender                             Gender?
   nationality                        Nationality?
   accommodationMode                  BeneficiaryAccommodationMode? @map("accommodation_mode")
   accommodationName                  String?                       @map("accommodation_name")
   accommodationAdditionalInformation String?                       @map("accommodation_additional_information")
-  street                             String?
-  addressComplement                  String?                       @map("address_complement")
+  // ANONYMIZED street                             String?
+  // ANONYMIZED addressComplement                  String?                       @map("address_complement")
   zipcode                            String?
   city                               String?
   department                         String?
   region                             String?
   qpv                                Boolean?                      @default(false)
   district                           String?
-  noPhone                            Boolean                       @default(false) @map("no_phone")
-  phone1                             String?
-  phone2                             String?
-  email                              String?
+  // ANONYMIZED noPhone                            Boolean                       @default(false) @map("no_phone")
+  // ANONYMIZED phone1                             String?
+  // ANONYMIZED phone2                             String?
+  // ANONYMIZED email                              String?
   familySituation                    BeneficiaryFamilySituation?   @map("family_situation")
   weddingDate                        DateTime?                     @map("wedding_date") @db.Date
   divorceDate                        DateTime?                     @map("divorce_date") @db.Date
@@ -1919,11 +1919,11 @@ model Beneficiary {
   ministereStructure            BeneficiaryMinistereStructure?            @map("ministere_structure")
 
   // Health
-  gir                         BeneficiaryGir?
-  doctor                      String?
-  healthAdditionalInformation String?         @map("health_additional_information")
-  socialSecurityNumber        String?         @map("social_security_number")
-  insurance                   String?
+  // ANONYMIZED gir                         BeneficiaryGir?
+  // ANONYMIZED doctor                      String?
+  // ANONYMIZED healthAdditionalInformation String?         @map("health_additional_information")
+  // ANONYMIZED socialSecurityNumber        String?         @map("social_security_number")
+  insurance String?
 
   // School
   schoolClass    BeneficiarySchoolClass?    @map("school_class")
@@ -1938,17 +1938,17 @@ model Beneficiary {
   studyLevel                BeneficiaryStudyLevel?                @map("study_level")
   occupation                String?
   employer                  String?
-  employerSiret             String?                               @map("employer_siret")
-  unemploymentNumber        String?                               @map("unemployment_number")
+  // ANONYMIZED employerSiret             String?                               @map("employer_siret")
+  // ANONYMIZED unemploymentNumber        String?                               @map("unemployment_number")
   pensionOrganisations      BeneficiaryPensionOrganisation[]      @map("pension_organisations")
   otherPensionOrganisations String?                               @map("other_pension_organisations")
-  cafNumber                 String?                               @map("caf_number")
+  // ANONYMIZED cafNumber                 String?                               @map("caf_number")
   bank                      String?
   funeralContract           String?                               @map("funeral_contract")
 
   // External Structures
   protectionMeasure                BeneficiaryProtectionMeasure?    @map("protection_measure")
-  representative                   String?
+  // ANONYMIZED representative                   String?
   /// Legacy field replaced by prescribingOrganizationId
   prescribingStructure             String?                          @map("prescribing_structure")
   orientationType                  BeneficiaryOrientationType?      @map("orientation_type")
@@ -1963,9 +1963,9 @@ model Beneficiary {
   prescribingOrganizationContactId String?                          @map("prescribing_organization_contact_id") @db.Uuid
   contributingPartners             BeneficiaryContributingPartner[]
 
-  additionalInformation String?                       @map("additional_information")
-  numeroPegase          String?                       @map("numero_pegase")
-  accommodationZone     BeneficiaryAccommodationZone? @map("accommodation_zone")
+  // ANONYMIZED additionalInformation String?                       @map("additional_information")
+  // ANONYMIZED numeroPegase          String?                       @map("numero_pegase")
+  accommodationZone BeneficiaryAccommodationZone? @map("accommodation_zone")
 
   // External integrations
   externalRdvspId String? @map("external_rdvsp_id")
@@ -1997,7 +1997,7 @@ model Beneficiary {
   @@index(fields: [structureId], map: "beneficiary_structure_id_idx")
   @@index(fields: [familyFileId], map: "beneficiary_family_file_id_idx")
   @@index(fields: [structureId, familyFileId], map: "beneficiary_structure_id_family_file_id_idx")
-  @@index(fields: [structureId, fileNumber], map: "beneficiary_structure_id_file_number_idx")
+  // ANONYMIZED @@index(fields: [structureId, fileNumber], map: "beneficiary_structure_id_file_number_idx")
   @@map("beneficiary")
 }
 
@@ -2013,7 +2013,7 @@ model BeneficiaryContributingPartner {
   partnerOrganizationContact   PartnerOrganizationContact? @relation(fields: [partnerOrganizationContactId], references: [id])
   partnerOrganizationContactId String?                     @map("partner_organization_contact_id") @db.Uuid
 
-  precisions String?
+  // ANONYMIZED precisions String?
 
   createdAt DateTime @default(now()) @map("created_at")
 
@@ -2124,13 +2124,13 @@ enum RelativeRelationship {
 
 model BeneficiaryRelative {
   id           String                @id @default(uuid()) @db.Uuid
-  lastName     String?               @map("last_name")
-  firstName    String?               @map("first_name")
+  // ANONYMIZED lastName     String?               @map("last_name")
+  // ANONYMIZED firstName    String?               @map("first_name")
   relationship RelativeRelationship?
 
-  city  String?
-  email String?
-  phone String?
+  // ANONYMIZED city  String?
+  // ANONYMIZED email String?
+  // ANONYMIZED phone String?
 
   hosted    Boolean @default(false)
   caregiver Boolean @default(false)
@@ -2141,9 +2141,9 @@ model BeneficiaryRelative {
   linkedBeneficiaryId String? @map("beneficiary_link_id") @db.Uuid
   // linkedBeneficiary   Beneficiary? @relation(fields: [linkedBeneficiaryId], references: [id], name: "linkedBeneficiary")
 
-  additionalInformation String? @map("additional_information")
+  // ANONYMIZED additionalInformation String? @map("additional_information")
 
-  birthDate DateTime? @map("birth_date") @db.Date
+  // ANONYMIZED birthDate DateTime? @map("birth_date") @db.Date
 
   created DateTime? @default(now())
   updated DateTime? @updatedAt
@@ -2160,10 +2160,10 @@ model ArchivedBeneficiary {
   structure    Structure @relation(fields: [structureId], references: [id], onDelete: Cascade)
   updated      DateTime? @updatedAt
 
-  title     BeneficiaryTitle?
-  usualName String?           @map("usual_name")
-  birthName String?           @map("birth_name")
-  firstName String?           @map("first_name")
+  // ANONYMIZED title     BeneficiaryTitle?
+  // ANONYMIZED usualName String?           @map("usual_name")
+  // ANONYMIZED birthName String?           @map("birth_name")
+  // ANONYMIZED firstName String?           @map("first_name")
 
   reason          ArchiveReason?
   eventDateReason DateTime?      @map("event_date_reason")
@@ -2286,7 +2286,7 @@ model PartnerOrganization {
 
   phone1  String?
   phone2  String?
-  email   String?
+  // ANONYMIZED email   String?
   website String?
 
   workingHours String? @map("working_hours")
@@ -2369,7 +2369,7 @@ model Notification {
 
   created DateTime? @default(now())
 
-  detail String?
+  // ANONYMIZED detail String?
 
   recipient   User   @relation("received_notifications", fields: [recipientId], references: [id], onDelete: Cascade)
   recipientId String @map("recipient_id") @db.Uuid
@@ -2469,8 +2469,8 @@ model UserActivity {
   objectId String             @map("object_id") // FIXME: Should be uuid ?
   activity UserActivityType
 
-  content Json?
-  diff    Json?
+  // ANONYMIZED content Json?
+  // ANONYMIZED diff    Json?
 
   user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   structure Structure? @relation(fields: [structureId], references: [id], onDelete: Cascade)
@@ -2602,9 +2602,9 @@ model Workshop {
   partnerOrganization   PartnerOrganization? @relation(fields: [partnerOrganizationId], references: [id])
   supportProgramNameId  String?              @map("support_program_name_id") @db.Uuid
   supportProgramName    SupportProgramName?  @relation(fields: [supportProgramNameId], references: [id], onDelete: SetNull)
-  host                  String?
+  // ANONYMIZED host                  String?
   sessionName           String?              @map("session_name")
-  description           String?
+  // ANONYMIZED description           String?
   attendeeLimit         Int?                 @map("attendee_limit")
   ageLimitCondition     AgeLimitCondition?   @map("ageLimitCondition")
   ageLimit              Int?                 @map("ageLimit")
@@ -2691,13 +2691,13 @@ model WorkshopExternalAttendee {
   created DateTime? @default(now())
   updated DateTime? @updatedAt
 
-  firstName String?   @map("first_name")
-  lastName  String?   @map("last_name")
-  gender    Gender?
-  email     String?
-  phone     String?
-  birthDate DateTime? @map("birth_date") @db.Date
-  city      String?
+  // ANONYMIZED firstName String?   @map("first_name")
+  // ANONYMIZED lastName  String?   @map("last_name")
+  gender Gender?
+  // ANONYMIZED email     String?
+  // ANONYMIZED phone     String?
+  // ANONYMIZED birthDate DateTime? @map("birth_date") @db.Date
+  city   String?
 
   isAnonymized Boolean @default(false) @map("is_anonymized")
 

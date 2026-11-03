@@ -1,4 +1,3 @@
-import RemoveAccents from 'remove-accents'
 import type { inferProcedureOutput } from '@trpc/server'
 import type { AppRouter } from '~~/server/trpc/routers'
 import type { ArrayElement } from '~~/types/utils'
@@ -7,57 +6,12 @@ type BeneficiarySearchResult = ArrayElement<
   inferProcedureOutput<AppRouter['beneficiary']['search']>
 >
 
-function toSearchFormat(input: string): string {
-  return RemoveAccents.remove(input.toLowerCase())
-}
-
-function getMatchScore({
-  input,
-  searchResult
-}: {
-  input: string
-  searchResult: BeneficiarySearchResult
-}) {
-  const [
-    usualNameNormalized,
-    birthNameNormalized,
-    firstNameNormalized,
-    inputNormalized
-  ] = [
-    searchResult.usualName ?? '',
-    searchResult.birthName ?? '',
-    searchResult.firstName ?? '',
-    input
-  ].map(toSearchFormat) as [string, string, string, string]
-
-  if (usualNameNormalized.includes(inputNormalized)) {
-    return 3
-  }
-  if (birthNameNormalized.includes(inputNormalized)) {
-    return 2
-  }
-  if (firstNameNormalized.includes(inputNormalized)) {
-    return 1
-  }
-  return 0
-}
-
-export default function sortBeneficiarySearchResults(input: string) {
+// ANONYMIZED: name-based sorting no longer possible
+export default function sortBeneficiarySearchResults(_input: string) {
   return function sortResults(
     a: BeneficiarySearchResult,
     b: BeneficiarySearchResult
   ) {
-    const scoreDiff =
-      getMatchScore({ input, searchResult: b }) -
-      getMatchScore({ input, searchResult: a })
-
-    if (scoreDiff !== 0) {
-      return scoreDiff
-    }
-
-    return (a.usualName ?? a.birthName ?? '').toLowerCase() <
-      (b.usualName ?? b.birthName ?? '')
-      ? -1
-      : 1
+    return a.id < b.id ? -1 : 1
   }
 }

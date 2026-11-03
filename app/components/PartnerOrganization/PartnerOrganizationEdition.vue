@@ -91,7 +91,7 @@
       address: partner.address,
       city: partner.city,
       zipcode: partner.zipcode,
-      email: partner.email,
+      email: (partner as any).email,
       website: partner.website,
       workingHours: partner.workingHours,
       contacts: formatContacts(partner.contacts)

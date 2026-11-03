@@ -10,15 +10,15 @@ export default defineNuxtRouteMiddleware(to => {
       query: { redirectUrl }
     })
   }
-  const {
-    public: { cguVersion }
-  } = useRuntimeConfig()
-  const { status, latestVersionAccepted } = authState.hasAcceptedCgu(cguVersion)
-  if (!status) {
-    const showSummary = latestVersionAccepted !== null
-    if (authState.isStructureManager()) {
-      return navigateTo(routes.cgu.CGUManager.path({ showSummary }))
-    }
-    return navigateTo(routes.cgu.CGUUser.path({ showSummary }))
-  }
+  // const {
+  //   public: { cguVersion }
+  // } = useRuntimeConfig()
+  // const { status, latestVersionAccepted } = authState.hasAcceptedCgu(cguVersion)
+  // if (!status) {
+  //   const showSummary = latestVersionAccepted !== null
+  //   if (authState.isStructureManager()) {
+  //     return navigateTo(routes.cgu.CGUManager.path({ showSummary }))
+  //   }
+  //   return navigateTo(routes.cgu.CGUUser.path({ showSummary }))
+  // }
 })

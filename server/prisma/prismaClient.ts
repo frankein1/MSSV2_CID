@@ -13,13 +13,14 @@ if (shouldLogPrisma) {
 
 function createPrismaClient() {
   return new PrismaClient({
-    log: prismaLogLevels,
+    log: prismaLogLevels
+    // omit disabled: encryptedDataKey commented out in the anonymized schema
     // prevent fields to be included by default in queries
-    omit: {
-      document: {
-        encryptedDataKey: true
-      }
-    }
+    // omit: {
+    //   document: {
+    //     encryptedDataKey: true
+    //   }
+    // }
   })
 }
 

@@ -45,6 +45,14 @@ const proConnectJwksClient = jwksClient({
 // always clear session
 
 export default defineEventHandler(async event => {
+  if (process.env.NODE_ENV === 'production') {
+    throw createError({
+      statusCode: 500,
+      message:
+        'This build uses an anonymized database schema and cannot handle authentication in production.'
+    })
+  }
+
   const { code, state } = getQuery(event)
 
   if (!code) {
@@ -156,7 +164,7 @@ export default defineEventHandler(async event => {
   if (account) {
     user = account.user
   } else {
-    user = await getUser(email)
+    // user = await getUser(email)
   }
 
   // If user has not been previously created through admin panel
@@ -181,44 +189,43 @@ export default defineEventHandler(async event => {
   }
 
   // Check 2FA presence when authenticating as an admin
-  if (user.role === 'Administrator') {
-    const emailIsValid =
-      mssEnvironment === 'local' ||
-      user.email.endsWith('@beta.gouv.fr') ||
-      user.email.endsWith('@ext.anct.gouv.fr')
+  // if (user.role === 'Administrator') {
+  //   const emailIsValid =
+  //     mssEnvironment === 'local' ||
+  //     user.email.endsWith('@beta.gouv.fr') ||
+  //     user.email.endsWith('@ext.anct.gouv.fr')
 
-    // If already authenticated, going through login flow does not fill amr field and entails 403.
-    // This is mitigated by :
-    // - redirecting to admin panel when admin is already logged in (via a skip auth middleware)
-    // - providing a proconnect-only logout link in the error page for backup
-    const authenticationModes = (validatedIdToken?.amr || []) as string[]
+  //   // If already authenticated, going through login flow does not fill amr field and entails 403.
+  //   // This is mitigated by :
+  //   // - redirecting to admin panel when admin is already logged in (via a skip auth middleware)
+  //   // - providing a proconnect-only logout link in the error page for backup
+  //   const authenticationModes = (validatedIdToken?.amr || []) as string[]
 
-    if (!emailIsValid) {
-      const logoutUrl = client.getLogoutUrl({ idToken, state })
-      await session.update({ logoutUrl })
-      throw forbidden('[ProConnect] Access denied')
-    }
+  //   if (!emailIsValid) {
+  //     const logoutUrl = client.getLogoutUrl({ idToken, state })
+  //     await session.update({ logoutUrl })
+  //     throw forbidden('[ProConnect] Access denied')
+  //   }
 
-    if (!authenticationModes.includes('mfa')) {
-      const logoutUrl = client.getLogoutUrl({ idToken, state })
-      await session.update({ logoutUrl })
-      throw forbidden('[ProConnect] Access denied: MFA necessary')
-    }
-  }
+  //   if (!authenticationModes.includes('mfa')) {
+  //     const logoutUrl = client.getLogoutUrl({ idToken, state })
+  //     await session.update({ logoutUrl })
+  //     throw forbidden('[ProConnect] Access denied: MFA necessary')
+  //   }
+  // }
 
   // Update account with session information: idToken and state will be needed for logout
-  await upsertAccount({
-    providerAccountId: sub,
-    user,
-    idToken,
-    state: state as string
-  })
+  // await upsertAccount({
+  //   id: account!.id,
+  //   idToken,
+  //   state: state as string
+  // })
 
   // Update email information with current proconnect info. This allows to update the email
   // of the user when she changes her proconnect account (when proconnect allow email change)
-  if (cleanEmail(user.email) !== email) {
-    updateEmail(user.id, email)
-  }
+  // if (cleanEmail(user.email) !== email) {
+  //   updateEmail(user.id, email)
+  // }
 
   // Generate MSS token
   const { id, firstAccess } = user
@@ -306,19 +313,19 @@ async function fetchProConnnectToken(client: ProConnectClient, code: string) {
   return proConnectTokenResponse.data
 }
 
-async function updateEmail(userId: string, email: string) {
-  return await prismaClient.user.update({
-    where: { id: userId },
-    data: {
-      email: cleanEmail(email)
-    }
-  })
-}
+// async function updateEmail(userId: string, email: string) {
+//   return await prismaClient.user.update({
+//     where: { id: userId },
+//     data: {
+//       email: cleanEmail(email)
+//     }
+//   })
+// }
 
 const userSelect: { select: Prisma.UserSelect } = {
   select: {
     id: true,
-    email: true,
+    // email: true,
     role: true,
     status: true,
     structureId: true,
@@ -333,57 +340,35 @@ const userSelect: { select: Prisma.UserSelect } = {
 }
 
 async function getAccount({ sub }: { sub: string }) {
-  return await prismaClient.account.findUnique({
-    where: {
-      provider_providerAccountId: {
-        provider: proconnectProvider,
-        providerAccountId: sub
-      }
-    },
+  return await prismaClient.account.findFirst({
     select: {
+      id: true,
       user: userSelect
     }
   })
 }
 
-async function upsertAccount({
-  user,
-  providerAccountId,
-  idToken,
-  state
-}: {
-  user: UserAuthInfo
-  providerAccountId: string
-  idToken: string
-  state: string
-}) {
-  return await prismaClient.account.upsert({
-    where: {
-      provider_providerAccountId: {
-        provider: proconnectProvider,
-        providerAccountId
-      }
-    },
-    create: {
-      userId: user.id,
-      provider: proconnectProvider,
-      providerAccountId,
-      idToken,
-      sessionState: state
-    },
-    update: {
-      idToken,
-      sessionState: state
-    }
-  })
-}
+// async function upsertAccount({
+//   id,
+//   idToken,
+//   state
+// }: {
+//   id: string
+//   idToken: string
+//   state: string
+// }) {
+//   return await prismaClient.account.update({
+//     where: { id },
+//     data: { idToken, sessionState: state }
+//   })
+// }
 
-async function getUser(email: string) {
-  return await UserRepo.prisma.findUnique({
-    where: { email: cleanEmail(email) },
-    select: userSelect.select
-  })
-}
+// async function getUser(email: string) {
+//   return await UserRepo.prisma.findUnique({
+//     where: { email: cleanEmail(email) },
+//     select: userSelect.select
+//   })
+// }
 
 async function provideLogoutUrl(
   session: NitroSession,

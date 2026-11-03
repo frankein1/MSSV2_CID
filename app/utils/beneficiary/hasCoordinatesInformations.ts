@@ -1,8 +1,11 @@
-import type { Beneficiary } from '@prisma/client'
+type AddressFields = {
+  street?: string | null
+  zipcode?: string | null
+  city?: string | null
+  region?: string | null
+}
 
-function hasAddress(
-  beneficiary: Pick<Beneficiary, 'street' | 'zipcode' | 'city' | 'region'>
-) {
+function hasAddress(beneficiary: AddressFields) {
   return (
     beneficiary.street ||
     beneficiary.zipcode ||
@@ -12,10 +15,11 @@ function hasAddress(
 }
 
 export function hasPhoneOrAddress(
-  beneficiary: Pick<
-    Beneficiary,
-    'street' | 'zipcode' | 'city' | 'region' | 'noPhone' | 'phone1' | 'phone2'
-  >
+  beneficiary: AddressFields & {
+    noPhone?: boolean
+    phone1?: string | null
+    phone2?: string | null
+  }
 ) {
   return (
     beneficiary.noPhone ||
@@ -26,18 +30,13 @@ export function hasPhoneOrAddress(
 }
 
 export function hasEmailOrAddressComplement(
-  beneficiary: Pick<
-    Beneficiary,
-    | 'street'
-    | 'zipcode'
-    | 'city'
-    | 'region'
-    | 'noPhone'
-    | 'phone1'
-    | 'phone2'
-    | 'email'
-    | 'addressComplement'
-  >
+  beneficiary: AddressFields & {
+    noPhone?: boolean
+    phone1?: string | null
+    phone2?: string | null
+    email?: string | null
+    addressComplement?: string | null
+  }
 ) {
   return (
     beneficiary.email ||
@@ -46,18 +45,13 @@ export function hasEmailOrAddressComplement(
 }
 
 export function hasCoordinatesInformations(
-  beneficiary: Pick<
-    Beneficiary,
-    | 'street'
-    | 'zipcode'
-    | 'city'
-    | 'region'
-    | 'noPhone'
-    | 'phone1'
-    | 'phone2'
-    | 'email'
-    | 'addressComplement'
-  >
+  beneficiary: AddressFields & {
+    noPhone?: boolean
+    phone1?: string | null
+    phone2?: string | null
+    email?: string | null
+    addressComplement?: string | null
+  }
 ) {
   return (
     hasPhoneOrAddress(beneficiary) || hasEmailOrAddressComplement(beneficiary)

@@ -1,31 +1,5 @@
-import type {
-  Beneficiary,
-  BeneficiaryContributingPartner
-} from '@prisma/client'
-import type { FieldLabels } from '~~/types/fieldLabels'
-
-type BeneficiaryFieldLabels = Omit<
-  Beneficiary & {
-    referents: string
-    documents: string
-    entourages: string
-    taxHouseholds: string
-    historyTotal: string
-    subjects: string
-    relationship: string
-  },
-  | 'createdById'
-  | 'disabledById'
-  | 'previousFamilyFileId'
-  | 'splitFromFileById'
-  | 'externalRdvspId'
-  | 'firstNameNormalized'
-  | 'firstNameNormalized'
-  | 'usualNameNormalized'
-  | 'birthNameNormalized'
->
-
-const beneficiaryFieldLabels: FieldLabels<BeneficiaryFieldLabels> = {
+// ANONYMIZED: many Beneficiary/BeneficiaryContributingPartner fields removed from schema
+const beneficiaryFieldLabels = {
   id: 'Identifiant',
   fileNumber: 'N° dossier bénéficiaire',
   structureId: 'Structure',
@@ -65,7 +39,7 @@ const beneficiaryFieldLabels: FieldLabels<BeneficiaryFieldLabels> = {
   caregiver: 'Aidant familial',
   mobility: 'Données mobilité',
   additionalInformation: 'Informations complémentaires',
-  gir: 'GIR',
+  // gir: 'GIR',
   doctor: 'Médecin traitant',
   healthAdditionalInformation: 'Informations complémentaires',
   socialSecurityNumber: 'N° de Sécurité Sociale',
@@ -120,9 +94,9 @@ const beneficiaryContributingPartnerFieldLabels = {
   beneficiaryId: 'Bénéficiaire',
   partnerOrganizationId: 'Partenaire intervenant',
   partnerOrganizationContactId: 'Contact du partenaire intervenant',
-  precisions: 'Précisions',
+  precisions: 'Précisions', // ANONYMIZED field, kept for label reference
   createdAt: 'Date de création'
-} as const satisfies FieldLabels<BeneficiaryContributingPartner>
+} as const
 
 const beneficiaryReferentTransfertLabels = {
   referentId: 'Sélectionnez l’agent référent à ajouter'

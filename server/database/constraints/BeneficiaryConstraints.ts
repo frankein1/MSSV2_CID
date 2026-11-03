@@ -17,7 +17,9 @@ const get = (user: SecurityRuleGrantee) => {
   Object.assign<Prisma.BeneficiaryWhereInput, Prisma.BeneficiaryWhereInput>(
     where,
     {
-      structureId: user.structureId
+      structureId: user.multiStructureIds
+        ? { in: user.multiStructureIds }
+        : user.structureId
     }
   )
 

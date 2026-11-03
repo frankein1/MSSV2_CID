@@ -21,7 +21,11 @@ const get = (user: SecurityRuleGrantee) => {
   Object.assign<
     Prisma.SupportProgramNameWhereInput,
     Prisma.SupportProgramNameWhereInput
-  >(where, { structureId: user.structureId })
+  >(where, {
+    structureId: user.multiStructureIds
+      ? { in: user.multiStructureIds }
+      : user.structureId
+  })
   return where
 }
 

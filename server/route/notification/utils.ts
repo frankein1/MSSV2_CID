@@ -1,7 +1,6 @@
-import type { Notification, Prisma, SocialSupport, User } from '@prisma/client'
+import type { Notification, Prisma, SocialSupport } from '@prisma/client'
 import { SocialSupportType } from '@prisma/client'
 import dayjs from 'dayjs'
-import { formatUserDisplayName } from '~/utils/user'
 import { formatUTCTimestamp } from '~~/server/utils/formatUTCTimestamp'
 
 export const notificationSelect = {
@@ -17,9 +16,7 @@ export const notificationSelect = {
   beneficiary: {
     select: {
       id: true,
-      firstName: true,
-      usualName: true,
-      birthName: true,
+      // ANONYMIZED firstName, usualName, birthName
       archiveDueDate: true,
       familyFile: {
         select: {
@@ -35,15 +32,16 @@ export const notificationSelect = {
   },
   itemCreatedBy: {
     select: {
-      firstName: true,
-      lastName: true
-    }
-  },
-  comment: {
-    select: {
-      content: true
+      id: true
+      // ANONYMIZED firstName, lastName
     }
   }
+  // comment: {
+  //   select: {
+  //     id: true
+  //     // ANONYMIZED content
+  //   }
+  // }
 } satisfies Prisma.NotificationSelect
 
 export function getDescription(
@@ -110,13 +108,10 @@ export function getDescription(
 
 export function getDescriptionHint(
   notification: Pick<Notification, 'type' | 'created' | 'archiveDate'> & {
-    itemCreatedBy: Pick<User, 'firstName' | 'lastName'> | null
+    itemCreatedBy: { id: string } | null
     socialSupport: Pick<SocialSupport, 'socialSupportType'> | null
     beneficiary: {
       id: string
-      firstName: string | null
-      usualName: string | null
-      birthName: string | null
       archiveDueDate: Date | null
       familyFile: {
         id: string
@@ -124,8 +119,9 @@ export function getDescriptionHint(
     } | null
   }
 ) {
+  // ANONYMIZED: itemCreatedBy no longer has firstName/lastName
   const userName = notification.itemCreatedBy
-    ? formatUserDisplayName(notification.itemCreatedBy)
+    ? notification.itemCreatedBy.id.slice(0, 8)
     : ''
 
   const isFu =

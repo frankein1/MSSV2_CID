@@ -1,9 +1,10 @@
-import type { Beneficiary } from '@prisma/client'
 import { beneficiaryTitleKeys } from '~~/client/options'
 
-export function formatBeneficiaryName(
-  names: Pick<Beneficiary, 'firstName' | 'usualName' | 'title'>
-) {
+export function formatBeneficiaryName(names: {
+  firstName?: string | null
+  usualName?: string | null
+  title?: string | null
+}) {
   return [
     beneficiaryTitleKeys.value(names.title),
     names.firstName,

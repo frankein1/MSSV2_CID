@@ -18,29 +18,13 @@
     <div
       class="fr-grid-row text--muted fr-text--regular fr-text--sm whitespace-pre-wrap fr-mt-1v"
     >
-      <span class="fr-sr-only">Numéro de dossier : </span>
-      <AtomTextEmphasis
-        :name="beneficiary.fileNumber"
-        :input="search"
-      />
-      <template v-if="beneficiary.numeroPegase">
-        <span class="fr-sr-only">Numéro Pégase : </span>
-        <span> - </span>
-        <AtomTextEmphasis
-          :name="beneficiary.numeroPegase"
-          :input="search"
-        />
-      </template>
+      <!-- ANONYMIZED: fileNumber, numeroPegase, phone1 -->
       <span v-if="beneficiary.birthDate && !showAge">
-        - {{ formatDate(beneficiary.birthDate) }}
+        {{ formatDate(beneficiary.birthDate) }}
       </span>
       <span v-if="beneficiary.birthDate && showAge">{{
         calculateAge(beneficiary.birthDate) + ' ans'
       }}</span>
-      <template v-if="beneficiary.phone1">
-        <span class="fr-sr-only">Téléphone : </span>
-        <span> - {{ beneficiary.phone1 }}</span>
-      </template>
     </div>
   </div>
 </template>

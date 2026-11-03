@@ -97,7 +97,7 @@
   const queryInput = computed(() => ({
     page: page.value,
     perPage: perPage.value,
-    orderBy: orderBy.value,
+    orderBy: {},
     filters: props.filters,
     referents: true
   }))

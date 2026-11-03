@@ -19,60 +19,76 @@ export type BeneficiaryReferent = {
 }
 
 export type BeneficiaryNames = Partial<
-  Pick<Beneficiary, 'id' | 'firstName' | 'usualName' | 'birthName'>
+  Pick<Beneficiary, 'id'> & {
+    // ANONYMIZED firstName, usualName, birthName
+    firstName?: string | null
+    usualName?: string | null
+    birthName?: string | null
+  }
 >
 
 export type BeneficiaryIdentification = Pick<
   Beneficiary,
-  'id' | 'firstName' | 'usualName' | 'birthName' | 'birthDate'
->
+  'id' | 'birthDate'
+> & {
+  // ANONYMIZED firstName, usualName, birthName
+  firstName?: string | null
+  usualName?: string | null
+  birthName?: string | null
+}
 
 export type BeneficiaryFileIdentification = Pick<
   Beneficiary,
-  'id' | 'firstName' | 'usualName' | 'birthName' | 'birthDate' | 'relationship'
->
+  'id' | 'birthDate' | 'relationship'
+> & {
+  // ANONYMIZED firstName, usualName, birthName
+  firstName?: string | null
+  usualName?: string | null
+  birthName?: string | null
+}
 
-export type GetBeneficiaryHealth = Pick<
-  Beneficiary,
-  | 'gir'
-  | 'doctor'
-  | 'healthAdditionalInformation'
-  | 'insurance'
-  | 'socialSecurityNumber'
->
+export type GetBeneficiaryHealth = Pick<Beneficiary, 'insurance'> & {
+  // ANONYMIZED gir, doctor, healthAdditionalInformation, socialSecurityNumber
+  gir?: unknown
+  doctor?: string | null
+  healthAdditionalInformation?: string | null
+  socialSecurityNumber?: string | null
+}
 
 export type GetBeneficiaryGeneral = Pick<
   Beneficiary,
   | 'title'
-  | 'usualName'
-  | 'birthName'
-  | 'firstName'
   | 'birthDate'
-  | 'birthPlace'
   | 'deathDate'
   | 'gender'
   | 'status'
   | 'nationality'
-  | 'numeroPegase'
   | 'accommodationMode'
   | 'accommodationName'
   | 'accommodationZone'
   | 'accommodationAdditionalInformation'
-  | 'street'
-  | 'addressComplement'
   | 'zipcode'
   | 'city'
   | 'region'
   | 'department'
   | 'qpv'
   | 'district'
-  | 'noPhone'
-  | 'phone1'
-  | 'phone2'
-  | 'email'
   | 'mobility'
-  | 'additionalInformation'
->
+> & {
+  // ANONYMIZED fields
+  usualName?: string | null
+  birthName?: string | null
+  firstName?: string | null
+  birthPlace?: string | null
+  numeroPegase?: string | null
+  street?: string | null
+  addressComplement?: string | null
+  noPhone?: boolean
+  phone1?: string | null
+  phone2?: string | null
+  email?: string | null
+  additionalInformation?: string | null
+}
 
 export type ContributingPartnerOutput =
   Prisma.BeneficiaryContributingPartnerGetPayload<{
@@ -91,13 +107,15 @@ export type GetSupportProgramItem = Pick<
 export type GetBeneficiaryExternalOrganisations = Pick<
   Beneficiary,
   | 'protectionMeasure'
-  | 'representative'
   | 'prescribingStructure'
   | 'orientationType'
   | 'orientationStructure'
   | 'serviceProviders'
   | 'involvedPartners'
 > & {
+  // ANONYMIZED representative
+  representative?: string | null
+} & {
   prescribingOrganization: { id: string; name: string } | null
   prescribingOrganizationContact: { id: string; name: string } | null
   contributingPartners: ContributingPartnerOutput[]
@@ -116,15 +134,17 @@ export type GetBeneficiaryOccupationIncome = Pick<
   | 'occupation'
   | 'studyLevel'
   | 'employer'
-  | 'employerSiret'
-  | 'unemploymentNumber'
   | 'pensionOrganisations'
   | 'otherPensionOrganisations'
-  | 'cafNumber'
   | 'ministereCategorie'
   | 'ministereDepartementServiceAc'
   | 'ministereStructure'
 > & {
+  // ANONYMIZED employerSiret, unemploymentNumber, cafNumber
+  employerSiret?: string | null
+  unemploymentNumber?: string | null
+  cafNumber?: string | null
+} & {
   school: {
     uai: string
     name: string
@@ -143,19 +163,17 @@ export type GetBeneficiaryOccupationIncome = Pick<
 
 export type GetBeneficiaryRelative = Pick<
   BeneficiaryRelative,
-  | 'id'
-  | 'lastName'
-  | 'firstName'
-  | 'relationship'
-  | 'city'
-  | 'email'
-  | 'phone'
-  | 'hosted'
-  | 'caregiver'
-  | 'beneficiaryId'
-  | 'additionalInformation'
-  | 'birthDate'
->
+  'id' | 'relationship' | 'hosted' | 'caregiver' | 'beneficiaryId'
+> & {
+  // ANONYMIZED lastName, firstName, city, email, phone, additionalInformation, birthDate
+  lastName?: string | null
+  firstName?: string | null
+  city?: string | null
+  email?: string | null
+  phone?: string | null
+  additionalInformation?: string | null
+  birthDate?: Date | null
+}
 
 export type GetBeneficiaryTaxHousehold = Pick<
   Beneficiary,
@@ -171,10 +189,12 @@ export type BeneficiaryFileInformation = Pick<
   Beneficiary,
   'status' | 'aidantConnectAuthorized' | 'vulnerablePerson'
 > & {
-  referents: Pick<
-    User,
-    'id' | 'firstName' | 'lastName' | 'email' | 'role' | 'status'
-  >[]
+  referents: (Pick<User, 'id' | 'role' | 'status'> & {
+    // ANONYMIZED firstName, lastName, email
+    firstName?: string | null
+    lastName?: string | null
+    email?: string | null
+  })[]
 }
 
 type BeneficiaryDetails = RouterOutput['beneficiary']['getBeneficiaryDetails']
@@ -184,18 +204,19 @@ export type BeneficiarySearchResult = RouterOutput['beneficiary']['search'][0]
 export type GetBeneficiaryOutput = Pick<
   Beneficiary,
   | 'id'
-  | 'fileNumber'
   | 'familyFileId'
   | 'structureId'
-  | 'additionalInformation'
   | 'createdById'
   | 'created'
   | 'updated'
   | 'lastActivity'
   | 'status'
   | 'relationship'
-> &
-  BeneficiaryFileInformation & {
+> & {
+  // ANONYMIZED fileNumber, additionalInformation
+  fileNumber?: string | null
+  additionalInformation?: string | null
+} & BeneficiaryFileInformation & {
     general: GetBeneficiaryGeneral
     health: GetBeneficiaryHealth | undefined
     externalOrganisations: GetBeneficiaryExternalOrganisations | undefined

@@ -17,11 +17,13 @@
     />
     <AtomFilters
       v-else
+      :key="filterResetKey"
       :filters="statsFilters"
       :default-values="defaultValues"
+      :initial-selected-values="initialSelectedValues"
       :expanded-by-default="true"
       :validation-schema="validationSchema"
-      @filter="emit('update:filters', $event)"
+      @filter="onFilter"
     />
   </section>
 </template>
@@ -42,7 +44,7 @@
   import type { Options } from '~/utils/options'
   import { withEmptyValue } from '~/utils/options'
   import type { StatFilterInput } from '~~/server/schema'
-  import type { FilterProp } from '~~/types/filter'
+  import type { FilterProp, FilterValues } from '~~/types/filter'
   import { StatPeriodFilter } from '~~/types/stat'
   import {
     beneficiaryFieldLabels,
@@ -61,7 +63,7 @@
       socialSupportSubjectOptions: Options
       beneficiariesCitiesOptions: Options
       beneficiariesEmployersOptions: Options
-      beneficiariesSchoolsOptions: Options
+      beneficiariesSchoolsOptions?: Options
       agentOptions: Options
       supportProgramNameOptions?: Options
       filters: StatFilterInput
@@ -73,13 +75,35 @@
       isHelpRequest: false,
       isHistory: false,
       validationSchema: undefined,
-      supportProgramNameOptions: () => []
+      supportProgramNameOptions: () => [],
+      beneficiariesSchoolsOptions: () => []
     }
   )
 
   const emit = defineEmits<{
     'update:filters': [filters: StatFilterInput]
   }>()
+
+  // Multi-structure support
+  const multiStructure = useMultiStructureConfig()
+
+  const isMultiStructureMode = computed(
+    () => multiStructure?.isMultiStructure.value ?? false
+  )
+
+  const filterResetKey = ref(0)
+  const previousStructureIds = ref<string[]>(
+    multiStructure?.selectedStructureIds.value ?? []
+  )
+
+  const initialSelectedValues = computed(() => {
+    if (!isMultiStructureMode.value) {
+      return undefined
+    }
+    return {
+      structureIds: multiStructure?.selectedStructureIds.value ?? []
+    }
+  })
 
   const defaultValues = computed<StatFilterInput | undefined>(() => {
     if (props.isHelpRequest) {
@@ -110,8 +134,48 @@
     }))
   })
 
+  function onFilter(filterValues: FilterValues) {
+    const newStructureIds = filterValues.structureIds as string[] | undefined
+
+    if (isMultiStructureMode.value && newStructureIds) {
+      const changed =
+        JSON.stringify([...newStructureIds].sort()) !==
+        JSON.stringify([...previousStructureIds.value].sort())
+
+      if (changed) {
+        previousStructureIds.value = [...newStructureIds]
+        if (multiStructure) {
+          multiStructure.selectedStructureIds.value = [...newStructureIds]
+        }
+        filterResetKey.value++
+        emit('update:filters', { structureIds: newStructureIds })
+        return
+      }
+    }
+
+    // The form emits its values again when it is mounted (initial load, or
+    // after a structure change). Same values: no update, so no stat refetch.
+    if (isSameStatFilters(filterValues, props.filters)) {
+      return
+    }
+
+    emit('update:filters', filterValues as unknown as StatFilterInput)
+  }
+
   const statsFilters = computed(() => {
-    const statsFilters: FilterProp[] = [
+    const statsFilters: FilterProp[] = []
+
+    if (isMultiStructureMode.value && multiStructure) {
+      statsFilters.push({
+        name: 'structureIds',
+        label: 'Structures',
+        options: multiStructure.structureOptions.value,
+        type: FilterType.SelectMultiple,
+        alwaysExpanded: true
+      })
+    }
+
+    statsFilters.push(
       {
         name: 'helpRequestSubject',
         label: "Thématique d'instruction",
@@ -135,7 +199,7 @@
         matomoEventCategory: EventCategory.StatFilter,
         matomoEventAction: StatFilterEventAction.Period
       }
-    ]
+    )
 
     if (props.filters.period === StatPeriodFilter.Custom) {
       statsFilters.push(
@@ -188,7 +252,11 @@
         matomoEventAction: StatFilterEventAction.SupportProgram
       })
     }
-    if (application.value.module.statsByReferent && !props.isHistory) {
+    if (
+      !isMultiStructureMode.value &&
+      application.value.module.statsByReferent &&
+      !props.isHistory
+    ) {
       statsFilters.push({
         name: 'referent',
         label: 'Référent',
@@ -199,7 +267,7 @@
         matomoEventAction: StatFilterEventAction.Referent
       })
     }
-    if (props.isHistory) {
+    if (!isMultiStructureMode.value && props.isHistory) {
       statsFilters.push({
         name: 'createdById',
         label: 'Agent',

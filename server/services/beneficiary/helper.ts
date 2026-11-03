@@ -5,7 +5,6 @@ import { AgeGroup } from '~~/client/options'
 import type { BeneficiaryFilterServerInput } from '~~/server/schema'
 import { ageGroupToDateRange } from '~/utils/ageGroupToDateRange'
 import dayjs from 'dayjs'
-import { generatorRegExp } from '~/utils/generateFileNumber'
 
 interface PrepareBeneficiarySearchConditionsOptions {
   isMinistry?: boolean
@@ -13,59 +12,34 @@ interface PrepareBeneficiarySearchConditionsOptions {
 
 export function prepareBeneficiarySearchConditions(
   query: string,
-  options: PrepareBeneficiarySearchConditionsOptions = {}
+  _options: PrepareBeneficiarySearchConditionsOptions = {}
 ): {
   AND: Prisma.BeneficiaryWhereInput[]
 } {
-  const { isMinistry } = options
   const trimmedQuery = query.trim()
 
-  const nameFields = [
-    'usualNameNormalized',
-    'birthNameNormalized',
-    'firstNameNormalized'
-  ] as const
-
-  // Normalize for name search
+  // ANONYMIZED: usualNameNormalized, birthNameNormalized, firstNameNormalized,
+  // numeroPegase, fileNumber are no longer available.
+  // Search by remaining non-anonymized fields only (id, birthDate, etc.)
   const normalizedQuery = RemoveAccents.remove(
     trimmedQuery.replace(/%/g, '').toLowerCase()
   )
 
-  if (isMinistry && normalizedQuery.startsWith('a-')) {
-    return {
-      AND: [{ numeroPegase: { startsWith: normalizedQuery.toUpperCase() } }]
-    }
-  }
   const tokens = normalizedQuery.split(/\s+/g).filter(Boolean)
 
-  // Name search: each token must match at least one name field
-  // (token1 in firstName OR lastName OR birthName) AND (token2 in firstName OR lastName OR birthName)
-  const nameTokenConditions = tokens.map(token => ({
-    OR: nameFields.map(field => ({
-      [field]: { contains: token }
-    }))
+  // Search by city or zipcode as fallback
+  const tokenConditions = tokens.map(token => ({
+    OR: [
+      { city: { contains: token, mode: 'insensitive' as const } },
+      { zipcode: { startsWith: token } }
+    ]
   }))
 
-  // If query looks like a fileNumber, also allow matching by fileNumber prefix
-  const looksLikeFileNumber =
-    trimmedQuery.length >= 3 && generatorRegExp.test(trimmedQuery.toUpperCase())
-
-  if (looksLikeFileNumber) {
-    // Match by fileNumber OR by name
-    return {
-      AND: [
-        {
-          OR: [
-            { fileNumber: { startsWith: trimmedQuery.toUpperCase() } },
-            { AND: nameTokenConditions }
-          ]
-        }
-      ]
-    }
+  if (tokenConditions.length === 0) {
+    return { AND: [] }
   }
 
-  // Name search only
-  return { AND: nameTokenConditions }
+  return { AND: tokenConditions }
 }
 
 export function prepareBeneficiaryFilters(

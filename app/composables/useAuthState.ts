@@ -4,9 +4,9 @@ import { formatUserDisplayName } from '~/utils/user'
 
 export type UserProfile = {
   id: string
-  lastName: string
-  firstName: string
-  email: string
+  firstName?: string | null
+  lastName?: string | null
+  email?: string | null
   role: UserRole
   status: UserStatus
   structureId: string | null

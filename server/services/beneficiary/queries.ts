@@ -15,14 +15,14 @@ import { isObjectEmpty } from '~~/server/utils/isObjectEmpty'
 export const contributingPartnerSelect = {
   id: true,
   partnerOrganization: { select: { id: true, name: true } },
-  partnerOrganizationContact: { select: { id: true, name: true } },
-  precisions: true
+  partnerOrganizationContact: { select: { id: true, name: true } }
+  // precisions: true
 } satisfies Prisma.BeneficiaryContributingPartnerSelect
 
 const select = {
   id: true,
   familyFileId: true,
-  fileNumber: true,
+  // fileNumber: true,
   status: true,
   structureId: true,
   createdById: true,
@@ -33,36 +33,36 @@ const select = {
   archiveDueDateHistory: true,
   aidantConnectAuthorized: true,
   vulnerablePerson: true,
-  additionalInformation: true,
+  // additionalInformation: true,
   qpv: true,
   relationship: true,
 
   // general
   title: true,
-  usualName: true,
-  birthName: true,
-  firstName: true,
-  birthDate: true,
-  birthPlace: true,
+  // usualName: true,
+  // birthName: true,
+  // firstName: true,
+  // birthDate: true,
+  // birthPlace: true,
   deathDate: true,
   gender: true,
   nationality: true,
-  numeroPegase: true,
+  // numeroPegase: true,
   accommodationMode: true,
   accommodationName: true,
   accommodationZone: true,
   accommodationAdditionalInformation: true,
-  street: true,
-  addressComplement: true,
-  zipcode: true,
+  // street: true,
+  // addressComplement: true,
+  // zipcode: true,
   city: true,
   region: true,
   department: true,
   district: true,
-  noPhone: true,
-  phone1: true,
-  phone2: true,
-  email: true,
+  // noPhone: true,
+  // phone1: true,
+  // phone2: true,
+  // email: true,
   mobility: true,
 
   // tax households
@@ -74,11 +74,11 @@ const select = {
   caregiver: true,
 
   // health
-  gir: true,
-  doctor: true,
-  healthAdditionalInformation: true,
-  socialSecurityNumber: true,
-  insurance: true,
+  // gir: true,
+  // doctor: true,
+  // healthAdditionalInformation: true,
+  // socialSecurityNumber: true,
+  // insurance: true,
 
   // occupation & income
   socioProfessionalCategory: true,
@@ -87,11 +87,11 @@ const select = {
   occupation: true,
   studyLevel: true,
   employer: true,
-  employerSiret: true,
-  unemploymentNumber: true,
+  // employerSiret: true,
+  // unemploymentNumber: true,
   pensionOrganisations: true,
   otherPensionOrganisations: true,
-  cafNumber: true,
+  // cafNumber: true,
   schoolClass: true,
   schoolPrograms: true,
   schoolUai: true,
@@ -101,7 +101,7 @@ const select = {
 
   // external organisations
   protectionMeasure: true,
-  representative: true,
+  // representative: true,
   prescribingStructure: true,
   orientationType: true,
   orientationStructure: true,
@@ -135,9 +135,9 @@ const select = {
       referents: {
         select: {
           id: true,
-          firstName: true,
-          lastName: true,
-          email: true,
+          // firstName: true,
+          // lastName: true,
+          // email: true,
           role: true,
           status: true
         }
@@ -147,17 +147,17 @@ const select = {
   relatives: {
     select: {
       id: true,
-      lastName: true,
-      firstName: true,
+      // lastName: true,
+      // firstName: true,
       relationship: true,
-      city: true,
-      email: true,
-      phone: true,
+      // city: true,
+      // email: true,
+      // phone: true,
       hosted: true,
       caregiver: true,
-      beneficiaryId: true,
-      additionalInformation: true,
-      birthDate: true
+      beneficiaryId: true
+      // additionalInformation: true,
+      // birthDate: true
     }
   },
   school: {
@@ -344,11 +344,11 @@ function getGeneral(
   const { module } = permissions
   return {
     title: beneficiary.title,
-    usualName: beneficiary.usualName,
-    birthName: beneficiary.birthName,
-    firstName: beneficiary.firstName,
-    birthDate: beneficiary.birthDate,
-    birthPlace: beneficiary.birthPlace,
+    // usualName: beneficiary.usualName,
+    // birthName: beneficiary.birthName,
+    // firstName: beneficiary.firstName,
+    // birthDate: beneficiary.birthDate,
+    // birthPlace: beneficiary.birthPlace,
     deathDate: beneficiary.deathDate,
     gender: beneficiary.gender,
     nationality: beneficiary.nationality,
@@ -398,11 +398,11 @@ function getTaxHouseholds(beneficiary: BeneficiaryOutput) {
 
 function getHealth(beneficiary: BeneficiaryOutput, canGetNir = false) {
   return {
-    gir: beneficiary.gir,
-    doctor: beneficiary.doctor,
-    healthAdditionalInformation: beneficiary.healthAdditionalInformation,
-    socialSecurityNumber: canGetNir ? beneficiary.socialSecurityNumber : null,
-    insurance: beneficiary.insurance
+    // gir: beneficiary.gir,
+    // doctor: beneficiary.doctor,
+    // healthAdditionalInformation: beneficiary.healthAdditionalInformation,
+    // socialSecurityNumber: canGetNir ? beneficiary.socialSecurityNumber : null,
+    // insurance: beneficiary.insurance
   }
 }
 

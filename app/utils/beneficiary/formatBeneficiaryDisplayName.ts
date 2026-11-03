@@ -1,8 +1,11 @@
 import { nameOrEmpty } from '~/utils/nameOrEmpty'
-import type { BeneficiaryNames } from '~~/types/beneficiary'
 
 export function formatBeneficiaryDisplayName(
-  beneficiary: BeneficiaryNames,
+  beneficiary: Record<string, unknown> & {
+    firstName?: string | null
+    usualName?: string | null
+    birthName?: string | null
+  },
   lastNameFirst?: boolean
 ): string {
   let lastname = ''

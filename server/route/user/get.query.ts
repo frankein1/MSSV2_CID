@@ -13,9 +13,9 @@ const securityCheck = (ctx: SecurityRuleContext) =>
 
 const userSelect = {
   id: true,
-  firstName: true,
-  lastName: true,
-  email: true,
+  // firstName: true,
+  // lastName: true,
+  // email: true,
   role: true,
   status: true,
   aidantConnectAuthorisation: true,
@@ -56,9 +56,9 @@ const handler = async ({
 
     return {
       id: user.id,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
+      // firstName: user.firstName,
+      // lastName: user.lastName,
+      // email: user.email,
       role: user.role,
       status: user.status,
       aidantConnectAuthorisation: user.aidantConnectAuthorisation,
@@ -80,9 +80,9 @@ const handler = async ({
 
   return {
     id: user.id,
-    firstName: user.firstName,
-    lastName: user.lastName,
-    email: user.email,
+    // firstName: user.firstName,
+    // lastName: user.lastName,
+    // email: user.email,
     role: user.role,
     status: user.status,
     aidantConnectAuthorisation: user.aidantConnectAuthorisation,

@@ -227,6 +227,10 @@ export function prepareSocialSupportStatFilters(filters: StatFilterInput) {
     }
   }
 
+  if (filters.structureIds?.length) {
+    socialSupport.structureId = { in: filters.structureIds }
+  }
+
   return socialSupport
 }
 
@@ -383,6 +387,10 @@ export function prepareBeneficiaryStatFilters(
   if (filters.ministereDepartementServiceAc) {
     formattedFilters.ministereDepartementServiceAc =
       filters.ministereDepartementServiceAc
+  }
+
+  if (filters.structureIds?.length) {
+    formattedFilters.structureId = { in: filters.structureIds }
   }
 
   return formattedFilters

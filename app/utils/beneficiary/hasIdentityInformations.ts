@@ -1,20 +1,15 @@
-import type { Beneficiary } from '@prisma/client'
-
-export function hasIdentityInformations(
-  beneficiary: Pick<
-    Beneficiary,
-    | 'title'
-    | 'usualName'
-    | 'firstName'
-    | 'birthDate'
-    | 'birthPlace'
-    | 'gender'
-    | 'birthName'
-    | 'deathDate'
-    | 'numeroPegase'
-    | 'nationality'
-  >
-) {
+export function hasIdentityInformations(beneficiary: {
+  title?: unknown
+  usualName?: string | null
+  firstName?: string | null
+  birthDate?: Date | null
+  birthPlace?: string | null
+  gender?: unknown
+  birthName?: string | null
+  deathDate?: Date | null
+  numeroPegase?: string | null
+  nationality?: unknown
+}) {
   return (
     beneficiary.title ||
     beneficiary.usualName ||
