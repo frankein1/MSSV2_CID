@@ -10,7 +10,7 @@ async function main() {
   })
   console.log(`Loaded ${structures.length} v1 structures`)
 
-  const outPath = join(import.meta.dirname, `v1-structures.ignore.json`)
+  const outPath = join(__dirname, `v1-structures.ignore.json`)
   writeFileSync(outPath, JSON.stringify(structures))
   console.log(`Written to ${outPath}`)
 }
