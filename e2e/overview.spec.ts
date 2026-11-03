@@ -2,6 +2,7 @@ import type { Page } from '@playwright/test'
 import { test, expect } from '@playwright/test'
 import { fixturesUsers, FixtureUserRole } from '~~/prisma/fixtures'
 import { prismaClient } from '~~/server/prisma'
+import { gotoHydrated } from '~~/e2e/helpers/navigation'
 
 async function validateHeadings(page: Page) {
   await expect(page).toHaveTitle(/Tableau de bord/)
@@ -84,7 +85,7 @@ test.describe('Homepage as authenticated Structure Manager', () => {
   test('should have title, legal mentions and settings menu', async ({
     page
   }) => {
-    await page.goto('/app/overview')
+    await gotoHydrated(page, '/app/overview')
 
     await validateHeadings(page)
     await validateLegals(page, 'manager')
@@ -98,7 +99,7 @@ test.describe('Homepage as authenticated Social Worker', () => {
   test('should have title, legal mentions and settings menu', async ({
     page
   }) => {
-    await page.goto('/app/overview')
+    await gotoHydrated(page, '/app/overview')
 
     await validateHeadings(page)
     await validateLegals(page, 'user')

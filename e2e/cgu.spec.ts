@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test'
 import { prismaClient } from '~~/server/prisma'
 import { FixtureUserRole, fixturesUsers } from '~~/prisma/fixtures'
+import { gotoHydrated } from '~~/e2e/helpers/navigation'
 
 test.afterEach(async () => {
   await prismaClient.cGUHistory.deleteMany({
@@ -37,8 +38,7 @@ test.describe('Validate CGU as new Structure Manager', () => {
   test('should show error if CGU are not read and accepted before validation', async ({
     page
   }) => {
-    await page.goto('/cgu/manager')
-    await page.waitForLoadState('networkidle')
+    await gotoHydrated(page, '/cgu/manager')
 
     await page.getByRole('button', { name: 'Enregistrer' }).click()
 
@@ -48,8 +48,7 @@ test.describe('Validate CGU as new Structure Manager', () => {
   })
 
   test('should validate CGU if read and accepted', async ({ page }) => {
-    await page.goto('/cgu/manager')
-    await page.waitForLoadState('networkidle')
+    await gotoHydrated(page, '/cgu/manager')
 
     await page
       .getByRole('checkbox', { name: /confirme/i })
@@ -85,8 +84,7 @@ test.describe('Validate CGU as new Social Worker', () => {
   test('should show error if CGU are not read and accepted before validation', async ({
     page
   }) => {
-    await page.goto('/cgu/user')
-    await page.waitForLoadState('networkidle')
+    await gotoHydrated(page, '/cgu/user')
 
     await page.getByRole('button', { name: 'Enregistrer' }).click()
 
@@ -96,8 +94,7 @@ test.describe('Validate CGU as new Social Worker', () => {
   })
 
   test('should validate CGU if read and accepted', async ({ page }) => {
-    await page.goto('/cgu/user')
-    await page.waitForLoadState('networkidle')
+    await gotoHydrated(page, '/cgu/user')
 
     await page
       .getByRole('checkbox', { name: /confirme/i })

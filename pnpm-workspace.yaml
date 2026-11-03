@@ -20,5 +20,58 @@ allowBuilds:
   unrs-resolver: false
 shamefullyHoist: true
 minimumReleaseAgeExclude:
-  - handlebars@4.7.10
-  - shell-quote@1.11.0
+  - '@nuxt/devtools-kit@3.4.4'
+  - '@nuxt/devtools-wizard@3.4.4'
+  - '@nuxt/devtools@3.4.4'
+  - '@nuxt/kit@4.6.3 || 4.6.4'
+  - '@nuxt/nitro-server@4.6.3 || 4.6.4'
+  - '@nuxt/schema@4.6.3 || 4.6.4'
+  - '@nuxt/vite-builder@4.6.3 || 4.6.4'
+  - '@nuxt/vite-server@4.6.3 || 4.6.4'
+  - ignore@7.0.14
+  - impound@1.2.1
+  - nitropack@2.13.5 || 2.13.6
+  - nuxt@4.6.3 || 4.6.4
+  - pkg-types@2.4.0
+  - postcss@8.5.31 || 8.5.32
+  - seroval@1.7.3 || 1.7.6
+  - undici@8.12.3
+  - unrouting@0.3.1 || 0.3.2
+  - vite@8.3.5
+  - '@rollup/plugin-alias@6.0.1'
+  - '@rollup/plugin-terser@1.0.2'
+  - '@rollup/rollup-android-arm-eabi@4.67.4'
+  - '@rollup/rollup-android-arm64@4.67.4'
+  - '@rollup/rollup-android-x64@4.67.4'
+  - '@rollup/rollup-darwin-arm64@4.67.4'
+  - '@rollup/rollup-darwin-x64@4.67.4'
+  - '@rollup/rollup-freebsd-arm64@4.67.4'
+  - '@rollup/rollup-freebsd-x64@4.67.4'
+  - '@rollup/rollup-linux-arm-gnueabihf@4.67.4'
+  - '@rollup/rollup-linux-arm-musleabihf@4.67.4'
+  - '@rollup/rollup-linux-arm64-gnu@4.67.4'
+  - '@rollup/rollup-linux-arm64-musl@4.67.4'
+  - '@rollup/rollup-linux-loong64-gnu@4.67.4'
+  - '@rollup/rollup-linux-loong64-musl@4.67.4'
+  - '@rollup/rollup-linux-ppc64-gnu@4.67.4'
+  - '@rollup/rollup-linux-ppc64-musl@4.67.4'
+  - '@rollup/rollup-linux-riscv64-gnu@4.67.4'
+  - '@rollup/rollup-linux-riscv64-musl@4.67.4'
+  - '@rollup/rollup-linux-s390x-gnu@4.67.4'
+  - '@rollup/rollup-linux-x64-gnu@4.67.4'
+  - '@rollup/rollup-linux-x64-musl@4.67.4'
+  - '@rollup/rollup-openbsd-x64@4.67.4'
+  - '@rollup/rollup-openharmony-arm64@4.67.4'
+  - '@rollup/rollup-win32-arm64-msvc@4.67.4'
+  - '@rollup/rollup-win32-ia32-msvc@4.67.4'
+  - '@rollup/rollup-win32-x64-gnu@4.67.4'
+  - '@rollup/rollup-win32-x64-msvc@4.67.4'
+  - '@types/estree@1.0.10'
+  - autoprefixer@10.6.2
+  - exsolve@1.2.0
+  - httpxy@0.5.6
+  - magic-string@1.4.5
+  - mime@4.1.2
+  - rollup@4.67.4
+  - unplugin@3.7.0
+  - vue-component-type-helpers@3.3.14
