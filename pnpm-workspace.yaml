@@ -20,8 +20,6 @@ allowBuilds:
   unrs-resolver: false
 shamefullyHoist: true
 minimumReleaseAgeExclude:
-  - handlebars@4.7.10
-  - shell-quote@1.11.0
   - '@nuxt/devtools-kit@3.4.4'
   - '@nuxt/devtools-wizard@3.4.4'
   - '@nuxt/devtools@3.4.4'
