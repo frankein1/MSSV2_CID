@@ -1,9 +1,9 @@
 import { describe, test, expect } from 'vitest'
 import { FollowupDuration } from '@prisma/client'
 import {
-  getSocialSupportSubjectTotalDuration,
+  getSocialSupportSubjectMeanDuration,
   convertDurationInMinutes
-} from './getSocialSupportSubjetcTotalDuration'
+} from './getSocialSupportSubjectMeanDuration'
 
 describe('convertDurationInMinutes', () => {
   test('should convert LessThanQuarter to 8', () => {
@@ -35,9 +35,9 @@ describe('convertDurationInMinutes', () => {
   })
 })
 
-describe('getSocialSupportSubjectTotalDuration', () => {
+describe('getSocialSupportSubjectMeanDuration', () => {
   test('should return 0 for empty array', () => {
-    expect(getSocialSupportSubjectTotalDuration([])).toBe(0)
+    expect(getSocialSupportSubjectMeanDuration([])).toBe(0)
   })
 
   test('should return average duration in minutes', () => {
@@ -45,7 +45,7 @@ describe('getSocialSupportSubjectTotalDuration', () => {
       { followup: { duration: FollowupDuration.Hour } },
       { followup: { duration: FollowupDuration.Half } }
     ]
-    expect(getSocialSupportSubjectTotalDuration(supports)).toBe(45)
+    expect(getSocialSupportSubjectMeanDuration(supports)).toBe(45)
   })
 
   test('should treat null duration as 0 minutes', () => {
@@ -53,7 +53,7 @@ describe('getSocialSupportSubjectTotalDuration', () => {
       { followup: { duration: FollowupDuration.Hour } },
       { followup: { duration: null } }
     ]
-    expect(getSocialSupportSubjectTotalDuration(supports)).toBe(30)
+    expect(getSocialSupportSubjectMeanDuration(supports)).toBe(30)
   })
 
   test('should treat null followup as 0 minutes', () => {
@@ -61,11 +61,11 @@ describe('getSocialSupportSubjectTotalDuration', () => {
       { followup: { duration: FollowupDuration.Hour } },
       { followup: null }
     ]
-    expect(getSocialSupportSubjectTotalDuration(supports)).toBe(30)
+    expect(getSocialSupportSubjectMeanDuration(supports)).toBe(30)
   })
 
   test('should return exact value for single support', () => {
     const supports = [{ followup: { duration: FollowupDuration.Quarter } }]
-    expect(getSocialSupportSubjectTotalDuration(supports)).toBe(15)
+    expect(getSocialSupportSubjectMeanDuration(supports)).toBe(15)
   })
 })

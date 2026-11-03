@@ -23,7 +23,6 @@ import type { ProtectedAppContext } from '~~/server/trpc'
 import { createExportFromWorkbook } from '~/utils/export/createExport'
 import { AllowSecurityCheck } from '~~/server/security/rules/types'
 import { STATS_NULL_LABEL } from '~/utils/constants/stats'
-import { getSocialSupportSubjectTotalDuration } from '~/utils/followups/getSocialSupportSubjetcTotalDuration'
 import ExcelPkg from 'exceljs'
 import type { Workbook } from 'exceljs'
 
@@ -280,9 +279,7 @@ const handler = async ({
   const followupMeanTime = await getFollowupMeanTimeStatsQuery(user, input)
   const meanTimeRows: DurationRow[] = followupMeanTime.map(item => ({
     label: item.name,
-    number: Math.round(
-      getSocialSupportSubjectTotalDuration(item.socialSupports)
-    )
+    number: Math.round(item.meanDuration)
   }))
   const meanTimeValue =
     meanTimeRows.length > 0
