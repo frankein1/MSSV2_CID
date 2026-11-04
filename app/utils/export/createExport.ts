@@ -8,17 +8,6 @@ import type { RowType, WorksheetType } from '~~/types/export'
 
 const { Workbook: WorkbookConstructor } = ExcelPkg
 
-export async function createExport(
-  userId: string,
-  worksheets: WorksheetType[]
-) {
-  const workbook = new WorkbookConstructor()
-
-  worksheets.forEach(worksheet => createWorksheet(workbook, worksheet))
-
-  return createExportFromWorkbook(userId, workbook)
-}
-
 export async function createExportFromWorkbook(
   userId: string,
   workbook: Workbook
@@ -34,6 +23,8 @@ export async function createExportFromWorkbook(
   }
 }
 
+// TODO: only used by skipped tests (followup and fileInstruction export
+// services). Re-enable these tests or remove this function.
 export async function rowsToCsv(
   columns: Partial<Column>[],
   rows: RowType[]
@@ -69,6 +60,7 @@ function createWorksheet(workbook: Workbook, worksheetData: WorksheetType) {
     }
   })
 }
+
 function getFullColumns(
   columns: Partial<Column>[],
   rows: (string[] | RowType)[]

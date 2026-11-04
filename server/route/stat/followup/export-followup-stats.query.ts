@@ -85,10 +85,32 @@ const handler = async ({
   const { Workbook: WorkbookConstructor } = ExcelPkg
   const workbook = new WorkbookConstructor()
 
-  const followupCount = await getFollowupCountQuery(user, input)
+  const isMinistere = structure.type === StructureType.Ministere
+  const [
+    followupCount,
+    subjectsData,
+    followupMediumData,
+    followupMinistreData,
+    followupStatusData,
+    followupRedirectionsData,
+    followupRedirectionReasonsData,
+    followupPrescribingOrganizationData,
+    followupDuration,
+    followupMeanTime
+  ] = await Promise.all([
+    getFollowupCountQuery(user, input),
+    getFollowupSubjectsStatsQuery(user, input),
+    getFollowupMediumStatsQuery(user, input),
+    isMinistere ? getFollowupMinistreStatsQuery(user, input) : [],
+    getFollowupStatusStatsQuery(user, input),
+    getFollowupRedirectionsStatsQuery(user, input),
+    getFollowupRedirectionReasonsStatsQuery(user, input),
+    getFollowupPrescribingOrganizationStatsQuery(user, input),
+    getFollowupDurationStatsQuery(user, input),
+    getFollowupMeanTimeStatsQuery(user, input)
+  ])
 
   // Subjects
-  const subjectsData = await getFollowupSubjectsStatsQuery(user, input)
   const subjectCountTotal = subjectsData.reduce(
     (total, { _count }) => total + _count.socialSupports,
     0
@@ -113,7 +135,6 @@ const handler = async ({
   addStatsWorksheet(workbook, "Objets d'accompagnement", subjectRows)
 
   // Followup medium
-  const followupMediumData = await getFollowupMediumStatsQuery(user, input)
   const followupMediumRows: StatsRow[] = followupMediumData.map(item => ({
     label: (followupMediumKeys.value(item.medium) ||
       STATS_NULL_LABEL) as string,
@@ -123,12 +144,8 @@ const handler = async ({
   followupMediumRows.push({ label: 'Total', number: followupCount, percent: 1 })
   addStatsWorksheet(workbook, "Types d'entretien", followupMediumRows)
 
-  if (structure.type === StructureType.Ministere) {
+  if (isMinistere) {
     // Ministre
-    const followupMinistreData = await getFollowupMinistreStatsQuery(
-      user,
-      input
-    )
     const followupMinistreRows: StatsRow[] = followupMinistreData.map(item => ({
       label: item.minister || STATS_NULL_LABEL,
       number: item._count ?? null,
@@ -143,7 +160,6 @@ const handler = async ({
   }
 
   // Status
-  const followupStatusData = await getFollowupStatusStatsQuery(user, input)
   const followupStatusRows: StatsRow[] = followupStatusData.map(item => ({
     label: socialSupportStatusKeys.byKey[item.status] || STATS_NULL_LABEL,
     number: item._count,
@@ -153,10 +169,6 @@ const handler = async ({
   addStatsWorksheet(workbook, 'Statuts', followupStatusRows)
 
   // Redirection
-  const followupRedirectionsData = await getFollowupRedirectionsStatsQuery(
-    user,
-    input
-  )
   const redirectionsBase =
     followupRedirectionsData.followupsWithRedirections._count
   const followupsRedirectionsRows: StatsRow[] = [
@@ -198,8 +210,6 @@ const handler = async ({
   addStatsWorksheet(workbook, 'Réorientations', followupsRedirectionsRows)
 
   // Redirection reasons
-  const followupRedirectionReasonsData =
-    await getFollowupRedirectionReasonsStatsQuery(user, input)
   const redirectionReasonsBase =
     followupRedirectionReasonsData.followupsWithReason._count
   const redirectionReasonsRows: StatsRow[] = [
@@ -217,8 +227,6 @@ const handler = async ({
   addStatsWorksheet(workbook, 'Motifs de réorientation', redirectionReasonsRows)
 
   // Prescribing Organizations
-  const followupPrescribingOrganizationData =
-    await getFollowupPrescribingOrganizationStatsQuery(user, input)
   let prescribingTotal = 0
   let prescribingSubTotal = 0
   followupPrescribingOrganizationData.forEach(item => {
@@ -262,7 +270,6 @@ const handler = async ({
   )
 
   // Duration
-  const followupDuration = await getFollowupDurationStatsQuery(user, input)
   addStatsWorksheet(
     workbook,
     'Durée des entretiens',
@@ -276,7 +283,6 @@ const handler = async ({
   )
 
   // Mean time
-  const followupMeanTime = await getFollowupMeanTimeStatsQuery(user, input)
   const meanTimeRows: DurationRow[] = followupMeanTime.map(item => ({
     label: item.name,
     number: Math.round(item.meanDuration)

@@ -84,10 +84,48 @@ const handler = async ({
   const { Workbook: WorkbookConstructor } = ExcelPkg
   const workbook = new WorkbookConstructor()
 
-  const beneficiaryCount = await getBeneficiaryCountQuery(user, input)
+  const isMinistere = structure.type === StructureType.Ministere
+  const [
+    beneficiaryCount,
+    genders,
+    ages,
+    situations,
+    cities,
+    departments,
+    regions,
+    zones,
+    modes,
+    mobilities,
+    csps,
+    schoolClasses,
+    repClassifications,
+    socialSupportCounts,
+    structures,
+    services,
+    categories,
+    interpellations
+  ] = await Promise.all([
+    getBeneficiaryCountQuery(user, input),
+    getGenderStatsQuery(user, input),
+    getAgeStatsQuery(user, input),
+    getFamilyStatsQuery(user, input),
+    getCityStatsQuery(user, input),
+    getDepartmentStatsQuery(user, input),
+    getRegionStatsQuery(user, input),
+    isMinistere ? getAccommodationZoneStatsQuery(user, input) : [],
+    getAccommodationModeStatsQuery(user, input),
+    getMobilityStatsQuery(user, input),
+    getCSPStatsQuery(user, input),
+    getSchoolClassStatsQuery(user, input),
+    getRepClassificationStatsQuery(user, input),
+    getSocialSupportCountPerBeneficiaryStatsQuery(user, input),
+    isMinistere ? getMinistereStructureStatsQuery(user, input) : [],
+    isMinistere ? getMinistereDepartementServiceAcStatsQuery(user, input) : [],
+    isMinistere ? getMinistereCategorieStatsQuery(user, input) : [],
+    isMinistere ? getMinistereInterpellationStatsQuery(user, input) : []
+  ])
 
   // Gender
-  const genders = await getGenderStatsQuery(user, input)
   addStatsWorksheet(
     workbook,
     'Genre',
@@ -99,7 +137,6 @@ const handler = async ({
   )
 
   // Age
-  const ages = await getAgeStatsQuery(user, input)
   addStatsWorksheet(
     workbook,
     "Tranches d'âge",
@@ -114,7 +151,6 @@ const handler = async ({
   )
 
   // Family situation
-  const situations = await getFamilyStatsQuery(user, input)
   addStatsWorksheet(
     workbook,
     'Types de situations familiales',
@@ -126,7 +162,6 @@ const handler = async ({
   )
 
   // Cities
-  const cities = await getCityStatsQuery(user, input)
   addStatsWorksheet(
     workbook,
     'Villes',
@@ -138,7 +173,6 @@ const handler = async ({
   )
 
   // Departments
-  const departments = await getDepartmentStatsQuery(user, input)
   addStatsWorksheet(
     workbook,
     'Départements',
@@ -150,7 +184,6 @@ const handler = async ({
   )
 
   // Regions
-  const regions = await getRegionStatsQuery(user, input)
   addStatsWorksheet(
     workbook,
     'Régions',
@@ -161,9 +194,8 @@ const handler = async ({
     }))
   )
 
-  if (structure.type === StructureType.Ministere) {
+  if (isMinistere) {
     // Accommodation zone
-    const zones = await getAccommodationZoneStatsQuery(user, input)
     addStatsWorksheet(
       workbook,
       "Zones d'hébergement",
@@ -178,7 +210,6 @@ const handler = async ({
   }
 
   // Accommodation mode
-  const modes = await getAccommodationModeStatsQuery(user, input)
   addStatsWorksheet(
     workbook,
     "Modes d'hébergement",
@@ -192,7 +223,6 @@ const handler = async ({
   )
 
   // Mobility data
-  const mobilities = await getMobilityStatsQuery(user, input)
   addStatsWorksheet(
     workbook,
     'Données mobilité',
@@ -204,7 +234,6 @@ const handler = async ({
   )
 
   // CSP
-  const csps = await getCSPStatsQuery(user, input)
   addStatsWorksheet(
     workbook,
     'CSP',
@@ -219,7 +248,6 @@ const handler = async ({
   )
 
   // School class
-  const schoolClasses = await getSchoolClassStatsQuery(user, input)
   addStatsWorksheet(
     workbook,
     'Classes fréquentées',
@@ -231,7 +259,6 @@ const handler = async ({
   )
 
   // REP classification
-  const repClassifications = await getRepClassificationStatsQuery(user, input)
   addStatsWorksheet(
     workbook,
     'Fréquentation REP',
@@ -243,8 +270,6 @@ const handler = async ({
   )
 
   // Social support count per beneficiary
-  const socialSupportCounts =
-    await getSocialSupportCountPerBeneficiaryStatsQuery(user, input)
   const socialSupportCountTotal = socialSupportCounts.reduce(
     (acc, cur) => acc + cur._count,
     0
@@ -261,9 +286,8 @@ const handler = async ({
       }))
   )
 
-  if (structure.type === StructureType.Ministere) {
+  if (isMinistere) {
     // Ministere structure
-    const structures = await getMinistereStructureStatsQuery(user, input)
     addStatsWorksheet(
       workbook,
       'Structures de rattachement',
@@ -276,10 +300,6 @@ const handler = async ({
     )
 
     // Ministere departement service
-    const services = await getMinistereDepartementServiceAcStatsQuery(
-      user,
-      input
-    )
     addStatsWorksheet(
       workbook,
       "Départements de l'AC",
@@ -294,7 +314,6 @@ const handler = async ({
     )
 
     // Ministere category
-    const categories = await getMinistereCategorieStatsQuery(user, input)
     addStatsWorksheet(
       workbook,
       'Catégories',
@@ -307,10 +326,6 @@ const handler = async ({
     )
 
     // Minister interpellations
-    const interpellations = await getMinistereInterpellationStatsQuery(
-      user,
-      input
-    )
     const totalCount = interpellations.reduce((acc, cur) => acc + cur._count, 0)
     addStatsWorksheet(
       workbook,

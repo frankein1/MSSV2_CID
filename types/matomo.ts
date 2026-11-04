@@ -197,8 +197,7 @@ export enum WorkshopAction {
   DuplicateWorkshopAndParticipants = 'Dupliquer un atelier et ses participants',
   DuplicateWorkshopWithoutParticipants = 'Dupliquer un atelier sans les participants',
   RegisterToOneWorkshop = 'Inscription à un atelier',
-  RegisterToManyWorkshops = 'Inscription à plusieurs ateliers',
-  ExportWorkshops = 'Export de la liste des ateliers'
+  RegisterToManyWorkshops = 'Inscription à plusieurs ateliers'
 }
 
 export enum UserAction {

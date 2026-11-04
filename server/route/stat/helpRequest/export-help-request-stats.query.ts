@@ -135,13 +135,38 @@ const handler = async ({
   const { Workbook: WorkbookConstructor } = ExcelPkg
   const workbook = new WorkbookConstructor()
 
-  const helpRequestCount = await getHelpRequestCountQuery(user, input)
+  const isMinistere = structure.type === StructureType.Ministere
+  const [
+    helpRequestCount,
+    fileInstructionType,
+    subjectsData,
+    helpRequestStatusData,
+    helpRequestMinistreData,
+    helpRequestPrescribingOrganizationData,
+    instructions,
+    amountsAllocated,
+    amountsByInstructorOrganization,
+    amountsBySubject,
+    helpRequestRedirectionsData,
+    helpRequestRedirectionReasonsData,
+    housingRequest
+  ] = await Promise.all([
+    getHelpRequestCountQuery(user, input),
+    getFileInstructionTypeStatsQuery(user, input),
+    getHelpRequestSubjectsStatsQuery(user, input),
+    getHelpRequestStatusStatsQuery(user, input),
+    isMinistere ? getHelpRequestMinistreStatsQuery(user, input) : [],
+    getHelpRequestPrescribingOrganizationStatsQuery(user, input),
+    getHelpRequestInstructionsStats(user, input),
+    getHelpRequestAmountsAllocatedQuery(user, input),
+    getHelpRequestAmountsByInstructorOrganizationQuery(user, input),
+    getHelpRequestAmountsBySubjectQuery(user, input),
+    getHelpRequestRedirectionsStatsQuery(user, input),
+    getHelpRequestRedirectionReasonsStatsQuery(user, input),
+    getHelpRequestHousingStatsQuery(user, input)
+  ])
 
   // Instruction type
-  const fileInstructionType = await getFileInstructionTypeStatsQuery(
-    user,
-    input
-  )
   const instructionTypeRows: StatsRow[] = fileInstructionType.map(item => ({
     label: item.subject
       ? fileInstructionTypeKeys.byKey[item.subject]
@@ -157,7 +182,6 @@ const handler = async ({
   addStatsWorksheet(workbook, "Thématique d'instruction", instructionTypeRows)
 
   // Subject
-  const subjectsData = await getHelpRequestSubjectsStatsQuery(user, input)
   const subjectRows: StatsRow[] = subjectsData
     .filter(item => item._count.socialSupports > 0)
     .map(item => ({
@@ -173,10 +197,6 @@ const handler = async ({
   addStatsWorksheet(workbook, "Objet d'accompagnement", subjectRows)
 
   // Status
-  const helpRequestStatusData = await getHelpRequestStatusStatsQuery(
-    user,
-    input
-  )
   const helpRequestStatusRows: StatsRow[] = helpRequestStatusData.map(item => ({
     label: socialSupportStatusKeys.byKey[item.status] || STATS_NULL_LABEL,
     number: item._count,
@@ -189,12 +209,8 @@ const handler = async ({
   })
   addStatsWorksheet(workbook, 'Statuts', helpRequestStatusRows)
 
-  if (structure.type === StructureType.Ministere) {
+  if (isMinistere) {
     // Ministre
-    const helpRequestMinistreData = await getHelpRequestMinistreStatsQuery(
-      user,
-      input
-    )
     const helpRequestMinistreRows: StatsRow[] = helpRequestMinistreData.map(
       item => ({
         label: item.minister || STATS_NULL_LABEL,
@@ -211,8 +227,6 @@ const handler = async ({
   }
 
   // Prescribing organizations
-  const helpRequestPrescribingOrganizationData =
-    await getHelpRequestPrescribingOrganizationStatsQuery(user, input)
   let prescribingTotal = 0
   let prescribingSubTotal = 0
   helpRequestPrescribingOrganizationData.forEach(item => {
@@ -255,7 +269,6 @@ const handler = async ({
   )
 
   // Instructions
-  const instructions = await getHelpRequestInstructionsStats(user, input)
   const externalCount = instructions.fileInstructions.externalStructure._count
   const externalTotalCount =
     instructions.fileInstructions.instructorOrganization.reduce(
@@ -300,10 +313,6 @@ const handler = async ({
   addStatsWorksheet(workbook, 'Instructions', instructionRows)
 
   // Amounts allocated
-  const amountsAllocated = await getHelpRequestAmountsAllocatedQuery(
-    user,
-    input
-  )
   addAmountsWorksheet(
     workbook,
     'Montants des aides délivrées',
@@ -317,8 +326,6 @@ const handler = async ({
   )
 
   // Amounts allocated by instructor organization
-  const amountsByInstructorOrganization =
-    await getHelpRequestAmountsByInstructorOrganizationQuery(user, input)
   const totalAllocated = amountsByInstructorOrganization.reduce(
     (acc, cur) => acc + cur.count,
     0
@@ -348,10 +355,6 @@ const handler = async ({
   )
 
   // Amounts allocated by social support subject
-  const amountsBySubject = await getHelpRequestAmountsBySubjectQuery(
-    user,
-    input
-  )
   const totalBySubject = amountsBySubject.reduce(
     (acc, cur) => acc + cur.count,
     0
@@ -363,8 +366,6 @@ const handler = async ({
   addAmountsBySubjectWorksheet(workbook, amountsBySubjectRows)
 
   // Redirections
-  const helpRequestRedirectionsData =
-    await getHelpRequestRedirectionsStatsQuery(user, input)
   const redirectionsBase =
     helpRequestRedirectionsData.helpRequestsWithRedirections._count
   const helpRequestRedirectionsRows: StatsRow[] = [
@@ -406,8 +407,6 @@ const handler = async ({
   addStatsWorksheet(workbook, 'Réorientations', helpRequestRedirectionsRows)
 
   // Redirection reasons
-  const helpRequestRedirectionReasonsData =
-    await getHelpRequestRedirectionReasonsStatsQuery(user, input)
   const redirectionReasonsBase =
     helpRequestRedirectionReasonsData.helpRequestsWithReason._count
   const redirectionReasonsRows: StatsRow[] = [
@@ -425,7 +424,6 @@ const handler = async ({
   addStatsWorksheet(workbook, 'Motifs de réorientation', redirectionReasonsRows)
 
   // Housing request
-  const housingRequest = await getHelpRequestHousingStatsQuery(user, input)
   const contextValue = (value: boolean | null) => {
     switch (value) {
       case true:

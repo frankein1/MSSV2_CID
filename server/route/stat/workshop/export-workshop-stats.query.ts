@@ -85,12 +85,28 @@ const handler = async ({
   const { Workbook: WorkbookConstructor } = ExcelPkg
   const workbook = new WorkbookConstructor()
 
-  const workshopCount = await getWorkshopCountStats(input, ctx)
-  const workshopAttendeeCount = await getWorkshopAttendeeCount(input, ctx)
+  const [
+    workshopCount,
+    workshopAttendeeCount,
+    names,
+    attendances,
+    genders,
+    ages,
+    workshopPartners,
+    cities
+  ] = await Promise.all([
+    getWorkshopCountStats(input, ctx),
+    getWorkshopAttendeeCount(input, ctx),
+    getWorkshopNameStats(input, ctx),
+    getWorkshopAttendance(input, ctx),
+    getWorkshopGender(input, ctx),
+    getWorkshopAttendeeAge(input, ctx),
+    getWorkshopPartners(input, ctx),
+    getWorkshopCities(input, ctx)
+  ])
   const attendeeTotal = workshopAttendeeCount[0]?._count ?? null
 
   // Workshop names and count
-  const names = await getWorkshopNameStats(input, ctx)
   addWorkshopNamesWorksheet(
     workbook,
     names.map(({ name, _count }) => ({
@@ -100,7 +116,6 @@ const handler = async ({
   )
 
   // Workshop attendees
-  const attendances = await getWorkshopAttendance(input, ctx)
   const totalPassedAttendees = attendances.reduce(
     (acc, val) => acc + val._count,
     0
@@ -117,7 +132,6 @@ const handler = async ({
   )
 
   // Attendee gender
-  const genders = await getWorkshopGender(input, ctx)
   addStatsWorksheet(
     workbook,
     'Genre',
@@ -129,7 +143,6 @@ const handler = async ({
   )
 
   // Age
-  const ages = await getWorkshopAttendeeAge(input, ctx)
   addStatsWorksheet(
     workbook,
     "Tranches d'âge",
@@ -141,7 +154,6 @@ const handler = async ({
   )
 
   // Partners
-  const workshopPartners = await getWorkshopPartners(input, ctx)
   addStatsWorksheet(
     workbook,
     'Partenaires',
@@ -153,7 +165,6 @@ const handler = async ({
   )
 
   // City
-  const cities = await getWorkshopCities(input, ctx)
   addStatsWorksheet(
     workbook,
     'Villes',
