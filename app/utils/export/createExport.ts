@@ -1,4 +1,5 @@
-import { readFileSync, unlinkSync } from 'fs'
+import { randomUUID } from 'node:crypto'
+import { readFileSync, rmSync } from 'fs'
 // FIXME: ExcelJS type error (Cf. https://github.com/exceljs/exceljs/issues/960)
 import type { Column, Workbook } from 'exceljs'
 import ExcelPkg from 'exceljs'
@@ -7,33 +8,40 @@ import type { RowType, WorksheetType } from '~~/types/export'
 
 const { Workbook: WorkbookConstructor } = ExcelPkg
 
-function getFullColumns(
-  columns: Partial<Column>[],
-  rows: (string[] | RowType)[]
+export async function createExport(
+  userId: string,
+  worksheets: WorksheetType[]
 ) {
-  const fullColumns: Partial<Column>[] = []
+  const workbook = new WorkbookConstructor()
 
-  columns.forEach(column => {
-    let isBlankColumn = true
+  worksheets.forEach(worksheet => createWorksheet(workbook, worksheet))
 
-    rows.forEach(row => {
-      if (
-        column.key &&
-        !Array.isArray(row) &&
-        row[column.key] &&
-        row[column.key] !== null &&
-        row[column.key] !== ''
-      ) {
-        isBlankColumn = false
-      }
-    })
+  return createExportFromWorkbook(userId, workbook)
+}
 
-    if (!isBlankColumn) {
-      fullColumns.push(column)
-    }
-  })
+export async function createExportFromWorkbook(
+  userId: string,
+  workbook: Workbook
+) {
+  // One file per export, so concurrent exports of a user do not collide
+  const exportName = `/tmp/mss-export-${userId}-${randomUUID()}.xlsx`
 
-  return fullColumns
+  try {
+    await workbook.xlsx.writeFile(exportName)
+    return readFileSync(exportName)
+  } finally {
+    rmSync(exportName, { force: true })
+  }
+}
+
+export async function rowsToCsv(
+  columns: Partial<Column>[],
+  rows: RowType[]
+): Promise<string> {
+  const workbook = new WorkbookConstructor()
+  createWorksheet(workbook, { name: 'export', columns, rows })
+  const buffer = await workbook.csv.writeBuffer()
+  return buffer.toString()
 }
 
 function createWorksheet(workbook: Workbook, worksheetData: WorksheetType) {
@@ -61,45 +69,31 @@ function createWorksheet(workbook: Workbook, worksheetData: WorksheetType) {
     }
   })
 }
-
-export async function createExport(
-  userId: string,
-  worksheets: WorksheetType[]
-) {
-  const workbook = new WorkbookConstructor()
-
-  worksheets.forEach(worksheet => createWorksheet(workbook, worksheet))
-
-  const exportName = `/tmp/mss-export-${userId}.xlsx`
-
-  await workbook.xlsx.writeFile(exportName)
-  const stream = readFileSync(exportName)
-
-  unlinkSync(exportName)
-
-  return stream
-}
-
-export async function createExportFromWorkbook(
-  userId: string,
-  workbook: Workbook
-) {
-  const exportName = `/tmp/mss-export-${userId}.xlsx`
-
-  await workbook.xlsx.writeFile(exportName)
-  const stream = readFileSync(exportName)
-
-  unlinkSync(exportName)
-
-  return stream
-}
-
-export async function rowsToCsv(
+function getFullColumns(
   columns: Partial<Column>[],
-  rows: RowType[]
-): Promise<string> {
-  const workbook = new WorkbookConstructor()
-  createWorksheet(workbook, { name: 'export', columns, rows })
-  const buffer = await workbook.csv.writeBuffer()
-  return buffer.toString()
+  rows: (string[] | RowType)[]
+) {
+  const fullColumns: Partial<Column>[] = []
+
+  columns.forEach(column => {
+    let isBlankColumn = true
+
+    rows.forEach(row => {
+      if (
+        column.key &&
+        !Array.isArray(row) &&
+        row[column.key] &&
+        row[column.key] !== null &&
+        row[column.key] !== ''
+      ) {
+        isBlankColumn = false
+      }
+    })
+
+    if (!isBlankColumn) {
+      fullColumns.push(column)
+    }
+  })
+
+  return fullColumns
 }
