@@ -9,6 +9,7 @@
       <StatsHeader
         class="fr-my-2w"
         :menus="menus"
+        :is-exporting="isExporting"
       >
         <template #header>
           <h4 class="fr-sr-only">Nombre d’ateliers</h4>
@@ -27,7 +28,6 @@
           </p>
         </template>
       </StatsHeader>
-      <StatsExportAlert v-if="!alertClose" />
       <AtomAlert
         v-if="error"
         :alert-type="AlertType.Error"
@@ -98,16 +98,10 @@
 <script lang="ts" setup>
   import { AlertType } from '~/utils/constants/alert'
   import type { WorkshopStatFilterInput } from '~~/server/schema'
-  import type { MenuItem } from '~~/types/menu'
-  import { exportStats, zipAndDownloadImages } from '~/utils/stats/exportStats'
-  import { EventCategory, ExportEventAction } from '~~/types/matomo'
-
-  const alertClose = ref<boolean>(true)
+  import { ExportEventAction } from '~~/types/matomo'
 
   const trpcClient = useTrpcClient()
-  const matomo = useMatomo()
 
-  const isDownloading = ref(false)
   const filters = ref<WorkshopStatFilterInput>({})
 
   const { data: workshopCount, error } =
@@ -127,13 +121,6 @@
 
     return `(${pastCount} ${plural('passé', pastCount)} et ${futureCount} à venir)`
   })
-
-  const excelIsDownloading = (downloading: boolean) => {
-    isDownloading.value = downloading
-  }
-  const handleExportExcel = () => {
-    exportStats(filters.value, 'stats_ateliers', trpcClient, excelIsDownloading)
-  }
 
   const workshopCardConfig = {
     workshopName: {
@@ -164,55 +151,14 @@
     }
   }
 
-  const menus: ComputedRef<MenuItem[]> = computed(() => {
-    const menus: MenuItem[] = []
-
-    if (workshopCount.value?.total != 0) {
-      menus.push({
-        label: 'En images (.zip)',
-        icon: 'fr-icon-folder-image-line',
-        onClick: async () => {
-          matomo.trackEvent(
-            EventCategory.ExportStats,
-            ExportEventAction.DownloadWorkshopStatsImages
-          )
-          alertClose.value = false
-          const date = new Date()
-          setTimeout(() => {
-            zipAndDownloadImages(
-              'Statistiques - Ateliers - ' + date.toLocaleDateString(),
-              {
-                ...workshopCardConfig
-              },
-              buttonFilter,
-              closeAlert
-            )
-          }, 200)
-        }
-      })
+  const { menus, isExporting } = useStatsExportMenus({
+    hasData: () => workshopCount.value?.total != 0,
+    cardConfig: () => workshopCardConfig,
+    mutation: () => trpcClient.stat.exportWorkshopStats.mutate(filters.value),
+    fileName: 'stats_ateliers',
+    matomoEvents: {
+      images: ExportEventAction.DownloadWorkshopStatsImages,
+      excel: ExportEventAction.DownloadWorkshopStatsExcel
     }
-
-    if (workshopCount.value?.total != 0) {
-      menus.push({
-        label: 'En tableur (.xlsx)',
-        icon: 'fr-icon-file-excel-line',
-        onClick: () => {
-          matomo.trackEvent(
-            EventCategory.ExportStats,
-            ExportEventAction.DownloadWorkshopStatsExcel
-          )
-          handleExportExcel()
-        }
-      })
-    }
-    return menus
   })
-
-  const buttonFilter = (node: HTMLElement | Node) => {
-    return (node as HTMLElement).tagName !== 'BUTTON'
-  }
-
-  const closeAlert = () => {
-    alertClose.value = true
-  }
 </script>

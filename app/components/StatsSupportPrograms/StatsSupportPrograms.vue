@@ -15,7 +15,8 @@
         <h3 class="fr-sr-only">Résultats</h3>
         <StatsHeader
           class="fr-my-2w"
-          :menus="[]"
+          :menus="menus"
+          :is-exporting="isExporting"
         >
           <template #header>
             <h4 class="fr-sr-only">Nombre de bénéficiaires concernés</h4>
@@ -117,6 +118,7 @@
   import type { SupportProgramStatFilterInput } from '~~/server/schema'
   import { isSupportProgramPeriodFiltered } from '~/utils/stats'
   import type { Options } from '~/utils/options'
+  import { ExportEventAction } from '~~/types/matomo'
   import userPictogram from '@gouvfr/dsfr/dist/artwork/pictograms/digital/avatar.svg?url&no-inline'
 
   defineProps<{
@@ -166,4 +168,16 @@
       subtitle: 'Seuls les dispositifs avec dates sont comptés.'
     }
   }
+
+  const { menus, isExporting } = useStatsExportMenus({
+    hasData: () => !!count.value?.beneficiary,
+    cardConfig: () => supportProgramCardConfig,
+    mutation: () =>
+      trpcClient.stat.exportSupportProgramStats.mutate(filters.value),
+    fileName: 'stats_parcours_dispositifs',
+    matomoEvents: {
+      images: ExportEventAction.DownloadSupportProgramStatsImages,
+      excel: ExportEventAction.DownloadSupportProgramStatsExcel
+    }
+  })
 </script>

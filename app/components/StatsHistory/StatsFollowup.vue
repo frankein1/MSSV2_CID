@@ -19,6 +19,7 @@
       <h3 class="fr-sr-only">Résultats</h3>
       <StatsHeader
         :menus="menus"
+        :is-exporting="isExporting"
         class="fr-my-2w"
       >
         <template #header>
@@ -60,7 +61,6 @@
           </p>
         </template>
       </StatsHeader>
-      <StatsExportAlert v-if="!alertClose" />
 
       <AtomAlert
         v-if="error"
@@ -199,15 +199,10 @@
   import { AlertType } from '~/utils/constants/alert'
   import type { StatFilterInput } from '~~/server/schema'
   import type { Options } from '~/utils/options'
-  import type { MenuItem } from '~~/types/menu'
-  import { exportStats, zipAndDownloadImages } from '~/utils/stats/exportStats'
-  import { EventCategory, ExportEventAction } from '~~/types/matomo'
+  import { ExportEventAction } from '~~/types/matomo'
 
   const trpcClient = useTrpcClient()
   const { application } = usePermissions()
-  const matomo = useMatomo()
-
-  const alertClose = ref<boolean>(true)
 
   withDefaults(
     defineProps<{
@@ -228,7 +223,6 @@
     }
   )
 
-  const isDownloading = ref(false)
   const filters = ref<StatFilterInput>({})
 
   const {
@@ -321,68 +315,17 @@
     }
   }
 
-  const menus: ComputedRef<MenuItem[]> = computed(() => {
-    const menus: MenuItem[] = []
-
-    if (followupCount.value != 0) {
-      menus.push({
-        label: 'En images (.zip)',
-        icon: 'fr-icon-folder-image-line',
-        onClick: async () => {
-          matomo.trackEvent(
-            EventCategory.ExportStats,
-            ExportEventAction.DownloadFolloupStatsImages
-          )
-          alertClose.value = false
-          const date = new Date()
-          setTimeout(() => {
-            zipAndDownloadImages(
-              "Statistiques - Synthèses d'entretiens - " +
-                date.toLocaleDateString(),
-              {
-                ...followupCardsConfig,
-                ...(application.value.module.ministere && ministereConfig)
-              },
-              buttonFilter,
-              closeAlert
-            )
-          }, 200)
-        }
-      })
+  const { menus, isExporting } = useStatsExportMenus({
+    hasData: () => followupCount.value != 0,
+    cardConfig: () => ({
+      ...followupCardsConfig,
+      ...(application.value.module.ministere && ministereConfig)
+    }),
+    mutation: () => trpcClient.stat.exportFollowupStats.mutate(filters.value),
+    fileName: 'stats_entretiens',
+    matomoEvents: {
+      images: ExportEventAction.DownloadFolloupStatsImages,
+      excel: ExportEventAction.DownloadFolloupStatsExcel
     }
-
-    if (followupCount.value != 0) {
-      menus.push({
-        label: 'En tableur (.xlsx)',
-        icon: 'fr-icon-file-excel-line',
-        onClick: () => {
-          matomo.trackEvent(
-            EventCategory.ExportStats,
-            ExportEventAction.DownloadFolloupStatsExcel
-          )
-          handleExportExcel()
-        }
-      })
-    }
-    return menus
   })
-
-  const excelIsDownloading = (downloading: boolean) => {
-    isDownloading.value = downloading
-  }
-  const handleExportExcel = () => {
-    exportStats(
-      filters.value,
-      'stats_entretiens',
-      trpcClient,
-      excelIsDownloading
-    )
-  }
-
-  const buttonFilter = (node: HTMLElement | Node) => {
-    return (node as HTMLElement).tagName !== 'BUTTON'
-  }
-  const closeAlert = () => {
-    alertClose.value = true
-  }
 </script>

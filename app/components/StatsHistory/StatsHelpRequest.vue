@@ -17,6 +17,7 @@
       <h3 class="fr-sr-only">Résultats</h3>
       <StatsHeader
         :menus="menus"
+        :is-exporting="isExporting"
         class="fr-my-2w"
       >
         <template #header>
@@ -31,7 +32,6 @@
           </p>
         </template>
       </StatsHeader>
-      <StatsExportAlert v-if="!alertClose" />
 
       <!-- Alert + Loader -->
       <AtomAlert
@@ -192,15 +192,10 @@
   import { AlertType } from '~/utils/constants/alert'
   import type { StatFilterInput } from '~~/server/schema'
   import type { Options } from '~/utils/options'
-  import type { MenuItem } from '~~/types/menu'
-  import { exportStats, zipAndDownloadImages } from '~/utils/stats/exportStats'
-  import { EventCategory, ExportEventAction } from '~~/types/matomo'
+  import { ExportEventAction } from '~~/types/matomo'
 
   const trpcClient = useTrpcClient()
   const { application } = usePermissions()
-  const matomo = useMatomo()
-
-  const alertClose = ref<boolean>(true)
 
   withDefaults(
     defineProps<{
@@ -221,7 +216,6 @@
     }
   )
 
-  const isDownloading = ref(false)
   const filters = ref<StatFilterInput>({})
 
   const {
@@ -327,72 +321,22 @@
     }
   }
 
-  const menus: ComputedRef<MenuItem[]> = computed(() => {
-    const menus: MenuItem[] = []
-
-    if (helpRequestCount.value !== 0) {
-      menus.push({
-        label: 'En images (.zip)',
-        icon: 'fr-icon-folder-image-line',
-        onClick: async () => {
-          matomo.trackEvent(
-            EventCategory.ExportStats,
-            ExportEventAction.DownloadHelpRequestStatsImages
-          )
-          alertClose.value = false
-          const date = new Date()
-          setTimeout(() => {
-            zipAndDownloadImages(
-              'Statistiques - Instructions de dossiers - ' +
-                date.toLocaleDateString(),
-              {
-                ...baseConfig,
-                ...(displayed.value.instructionType && instructionTypeConfig),
-                ...(displayed.value.socialSupportSubjects && subjectConfig),
-                ...(displayed.value.housing && housingConfig),
-                ...(displayed.value.ministere && ministereConfig),
-                ...(displayed.value.financial && financialConfig)
-              },
-              buttonFilter,
-              closeAlert
-            )
-          }, 200)
-        }
-      })
+  const { menus, isExporting } = useStatsExportMenus({
+    hasData: () => helpRequestCount.value !== 0,
+    cardConfig: () => ({
+      ...baseConfig,
+      ...(displayed.value.instructionType && instructionTypeConfig),
+      ...(displayed.value.socialSupportSubjects && subjectConfig),
+      ...(displayed.value.housing && housingConfig),
+      ...(displayed.value.ministere && ministereConfig),
+      ...(displayed.value.financial && financialConfig)
+    }),
+    mutation: () =>
+      trpcClient.stat.exportHelpRequestStats.mutate(filters.value),
+    fileName: 'stats_instructions_dossier',
+    matomoEvents: {
+      images: ExportEventAction.DownloadHelpRequestStatsImages,
+      excel: ExportEventAction.DownloadHelpRequestStatsExcel
     }
-
-    if (helpRequestCount.value !== 0) {
-      menus.push({
-        label: 'En tableur (.xlsx)',
-        icon: 'fr-icon-file-excel-line',
-        onClick: () => {
-          matomo.trackEvent(
-            EventCategory.ExportStats,
-            ExportEventAction.DownloadHelpRequestStatsExcel
-          )
-          handleExportExcel()
-        }
-      })
-    }
-    return menus
   })
-
-  const excelIsDownloading = (downloading: boolean) => {
-    isDownloading.value = downloading
-  }
-  const handleExportExcel = () => {
-    exportStats(
-      filters.value,
-      'stats_instructions_dossier',
-      trpcClient,
-      excelIsDownloading
-    )
-  }
-
-  const buttonFilter = (node: HTMLElement | Node) => {
-    return (node as HTMLElement).tagName !== 'BUTTON'
-  }
-  const closeAlert = () => {
-    alertClose.value = true
-  }
 </script>

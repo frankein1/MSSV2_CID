@@ -1,6 +1,5 @@
 import type { StatsCardConfig } from '~~/types/stat'
 import { toBlob } from 'html-to-image'
-import type { StatFilterInput } from '~~/server/schema'
 import { getExportUrl } from '~/utils/export/getExportUrl'
 import { getExportFilename } from '~/utils/export/getExportFilename'
 import { FAILED_DOWNLOAD_ERROR_MESSAGE } from '~/utils/constants'
@@ -66,32 +65,20 @@ export const zipAndDownloadImages = async (
     )[0] as HTMLElement
     if (expandButton) {
       expandButton.click()
-      setTimeout(async () => {
-        const width = node.clientWidth
-        const height = node.clientHeight
-
-        const blob = await createBlob(node, { width, height }, filter)
-        if (blob == null) {
-          throw new Error(`L'image n'a pas pu être exportée ${node.id}`)
-        }
-        return zipWriter.add(
-          findImageName(statsCardConfig, node) + '.png',
-          new BlobReader(blob)
-        )
-      }, 300)
-    } else {
-      const width = node.clientWidth
-      const height = node.clientHeight
-
-      const blob = await createBlob(node, { width, height }, filter)
-      if (blob == null) {
-        throw new Error(`L'image n'a pas pu être exportée ${node.id}`)
-      }
-      return zipWriter.add(
-        findImageName(statsCardConfig, node) + '.png',
-        new BlobReader(blob)
-      )
+      // Wait for the card to expand before capturing it
+      await new Promise(resolve => setTimeout(resolve, 300))
     }
+    const width = node.clientWidth
+    const height = node.clientHeight
+
+    const blob = await createBlob(node, { width, height }, filter)
+    if (blob == null) {
+      throw new Error(`L'image n'a pas pu être exportée ${node.id}`)
+    }
+    return zipWriter.add(
+      findImageName(statsCardConfig, node) + '.png',
+      new BlobReader(blob)
+    )
   })
   try {
     await Promise.all(promises)
@@ -108,47 +95,29 @@ export const zipAndDownloadImages = async (
   }
 }
 
-type ExportType =
+export type ExportFileName =
   | 'stats_entretiens'
   | 'stats_instructions_dossier'
   | 'stats_beneficiaires'
   | 'stats_ateliers'
+  | 'stats_parcours_dispositifs'
 
 // export as Excel file
 export const exportStats = async (
-  filters: StatFilterInput,
-  exportType: ExportType,
-  client: any,
-  isDownloading: (downloading: boolean) => void
+  mutation: () => Promise<{ data: string }>,
+  fileName: ExportFileName
 ) => {
-  isDownloading(true)
   try {
-    let exportedFile: { data: string } | null = null
-    switch (exportType) {
-      case 'stats_entretiens':
-        exportedFile = await client.stat.exportFollowupStats.mutate(filters)
-        break
-      case 'stats_instructions_dossier':
-        exportedFile = await client.stat.exportHelpRequestStats.mutate(filters)
-        break
-      case 'stats_beneficiaires':
-        exportedFile = await client.stat.exportBeneficiaryStats.mutate(filters)
-        break
-      case 'stats_ateliers':
-        exportedFile = await client.stat.exportWorkshopStats.mutate(filters)
-        break
-    }
-    if (!exportedFile?.data) {
+    const exportedFile = await mutation()
+    if (!exportedFile.data) {
       throw new Error('no data')
     }
     const downloadLink = document.createElement('a')
     downloadLink.href = getExportUrl(exportedFile.data)
-    downloadLink.download = getExportFilename(exportType)
+    downloadLink.download = getExportFilename(fileName)
     downloadLink.click()
     downloadLink.remove()
   } catch {
     useSnackbar().error(FAILED_DOWNLOAD_ERROR_MESSAGE)
-  } finally {
-    isDownloading(false)
   }
 }

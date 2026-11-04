@@ -1,11 +1,9 @@
 <template>
-  <div class="fr-col-12">
-    <div class="export-alert">
-      <AtomAlert
-        :alert-type="AlertType.Success"
-        :message="alertContent"
-      />
-    </div>
+  <div class="export-alert">
+    <AtomAlert
+      :alert-type="AlertType.Success"
+      :message="alertContent"
+    />
   </div>
 </template>
 

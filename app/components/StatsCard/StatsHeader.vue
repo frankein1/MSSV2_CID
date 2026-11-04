@@ -14,6 +14,7 @@
       dropdown-btn-class="fr-btn--tertiary-no-outline"
       :align-right="true"
     />
+    <StatsExportAlert v-if="isExporting" />
   </div>
 </template>
 <script lang="ts" setup>
@@ -21,6 +22,7 @@
 
   defineProps<{
     menus: MenuItem[]
+    isExporting?: boolean
   }>()
 </script>
 
