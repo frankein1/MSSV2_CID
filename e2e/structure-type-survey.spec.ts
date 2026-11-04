@@ -45,7 +45,9 @@ async function authenticateAs(context: BrowserContext, userId: string) {
 
 async function selectSocialSupportType(page: Page, label: string) {
   await page.getByRole('textbox', { name: /Types de suivi/ }).click()
-  await page.getByRole('checkbox', { name: label }).check({ force: true })
+  // No `force`: the dropdown slides in, and a forced click skips Playwright's
+  // stability check, so it can land beside the checkbox while it still moves
+  await page.getByRole('checkbox', { name: label }).check()
 }
 
 test.beforeEach(async () => {

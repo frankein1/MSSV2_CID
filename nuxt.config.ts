@@ -197,6 +197,12 @@ export default defineNuxtConfig({
     transpile: ['trpc-nuxt']
   },
 
+  // Restrict routes to vue files only to allow colocation of nuxt pages and their tests
+  // Needed from nuxt 4.6.x
+  pages: {
+    pattern: '**/*.vue'
+  },
+
   ignore: [
     '**/*.stories.{js,cts,mts,ts,jsx,tsx}',
     '**/*.{spec,test}.{js,cts,mts,ts,jsx,tsx}',
