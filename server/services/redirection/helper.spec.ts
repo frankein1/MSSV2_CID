@@ -244,7 +244,6 @@ describe('update - nettoyage lors du changement de motif', () => {
 
     await trpc.socialWorker.followup.update({
       id: followup!.id,
-      socialSupportId,
       isMinistry: false,
       familyFileId,
       beneficiaryId,
@@ -320,7 +319,6 @@ describe('update - nettoyage lors du changement de motif', () => {
 
     await trpc.socialWorker.followup.update({
       id: followup!.id,
-      socialSupportId,
       isMinistry: false,
       familyFileId,
       beneficiaryId,

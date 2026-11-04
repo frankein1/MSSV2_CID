@@ -3,8 +3,7 @@ import { addFollowupSchemaBase } from './addFollowup.schema'
 
 export const editFollowupSchema = addFollowupSchemaBase
   .extend({
-    id: z.string().uuid(),
-    socialSupportId: z.string().uuid()
+    id: z.string().uuid()
   })
   .superRefine((data, ctx) => {
     if (data.isMinistry && !data.ministerId) {

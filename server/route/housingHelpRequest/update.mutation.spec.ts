@@ -55,11 +55,9 @@ afterEach(async () => {
 const baseUpdateInput = (
   familyFileId: string,
   beneficiaryId: string,
-  housingHelpRequestId: string,
-  socialSupportId: string
+  housingHelpRequestId: string
 ) => ({
   id: housingHelpRequestId,
-  socialSupportId,
   isMinistry: false as const,
   familyFileId,
   beneficiaryId,
@@ -162,12 +160,7 @@ describe('Housing Help Request - Update - Authorizations', () => {
     )
 
     const result = await trpc.structureManager.housingHelpRequest.update(
-      baseUpdateInput(
-        coursorId,
-        coursorId,
-        housingHelpRequest.id,
-        housingHelpRequest.socialSupportId
-      )
+      baseUpdateInput(coursorId, coursorId, housingHelpRequest.id)
     )
 
     expect(result).toStrictEqual({ id: housingHelpRequest.socialSupportId })
@@ -185,12 +178,7 @@ describe('Housing Help Request - Update - Authorizations', () => {
     )
 
     const result = await trpc.referent.housingHelpRequest.update(
-      baseUpdateInput(
-        coursorId,
-        coursorId,
-        housingHelpRequest.id,
-        housingHelpRequest.socialSupportId
-      )
+      baseUpdateInput(coursorId, coursorId, housingHelpRequest.id)
     )
 
     expect(result).toStrictEqual({ id: housingHelpRequest.socialSupportId })
@@ -209,12 +197,7 @@ describe('Housing Help Request - Update - Authorizations', () => {
     )
 
     const result = await trpc.socialWorker.housingHelpRequest.update(
-      baseUpdateInput(
-        apfelmannId,
-        apfelmannId,
-        housingHelpRequest.id,
-        housingHelpRequest.socialSupportId
-      )
+      baseUpdateInput(apfelmannId, apfelmannId, housingHelpRequest.id)
     )
 
     expect(result).toStrictEqual({ id: housingHelpRequest.socialSupportId })
@@ -233,12 +216,7 @@ describe('Housing Help Request - Update - Authorizations', () => {
 
     await expect(() =>
       trpc.socialWorker.housingHelpRequest.update(
-        baseUpdateInput(
-          coursorId,
-          coursorId,
-          housingHelpRequest.id,
-          housingHelpRequest.socialSupportId
-        )
+        baseUpdateInput(coursorId, coursorId, housingHelpRequest.id)
       )
     ).rejects.toThrow(/not allowed to access route/i)
   })
@@ -256,12 +234,7 @@ describe('Housing Help Request - Update - Authorizations', () => {
 
     await expect(() =>
       trpc.receptionAgent.housingHelpRequest.update(
-        baseUpdateInput(
-          coursorId,
-          coursorId,
-          housingHelpRequest.id,
-          housingHelpRequest.socialSupportId
-        )
+        baseUpdateInput(coursorId, coursorId, housingHelpRequest.id)
       )
     ).rejects.toThrow(/not allowed to access route/i)
   })
@@ -279,12 +252,7 @@ describe('Housing Help Request - Update - Authorizations', () => {
 
     await expect(() =>
       trpc.instructor.housingHelpRequest.update(
-        baseUpdateInput(
-          coursorId,
-          coursorId,
-          housingHelpRequest.id,
-          housingHelpRequest.socialSupportId
-        )
+        baseUpdateInput(coursorId, coursorId, housingHelpRequest.id)
       )
     ).rejects.toThrow(/not allowed to access route/i)
   })
@@ -302,12 +270,7 @@ describe('Housing Help Request - Update - Authorizations', () => {
 
     await expect(() =>
       trpc.administrator.housingHelpRequest.update(
-        baseUpdateInput(
-          coursorId,
-          coursorId,
-          housingHelpRequest.id,
-          housingHelpRequest.socialSupportId
-        )
+        baseUpdateInput(coursorId, coursorId, housingHelpRequest.id)
       )
     ).rejects.toThrow(/user routes are not available to admins/i)
   })
@@ -325,12 +288,7 @@ describe('Housing Help Request - Update - Authorizations', () => {
 
     await expect(() =>
       trpc.structureManagerMinistere.housingHelpRequest.update(
-        baseUpdateInput(
-          coursorId,
-          coursorId,
-          housingHelpRequest.id,
-          housingHelpRequest.socialSupportId
-        )
+        baseUpdateInput(coursorId, coursorId, housingHelpRequest.id)
       )
     ).rejects.toThrow(/housingHelpRequest[\s\S]*?no record/im)
   })
@@ -348,12 +306,7 @@ describe('Housing Help Request - Update - Authorizations', () => {
     )
 
     const result = await trpc.socialWorker.housingHelpRequest.update(
-      baseUpdateInput(
-        apfelmannId,
-        apfelmannId,
-        housingHelpRequest.id,
-        housingHelpRequest.socialSupportId
-      )
+      baseUpdateInput(apfelmannId, apfelmannId, housingHelpRequest.id)
     )
 
     expect(result).toStrictEqual({ id: housingHelpRequest.socialSupportId })
@@ -371,12 +324,7 @@ describe('Housing Help Request - Update - Authorizations', () => {
     )
 
     const result = await trpc.instructor.housingHelpRequest.update(
-      baseUpdateInput(
-        coursorId,
-        coursorId,
-        housingHelpRequest.id,
-        housingHelpRequest.socialSupportId
-      )
+      baseUpdateInput(coursorId, coursorId, housingHelpRequest.id)
     )
 
     expect(result).toStrictEqual({ id: housingHelpRequest.socialSupportId })
@@ -395,12 +343,7 @@ describe('Housing Help Request - Update - Authorizations', () => {
 
     await expect(() =>
       trpc.structureManager.housingHelpRequest.update({
-        ...baseUpdateInput(
-          coursorId,
-          coursorId,
-          housingHelpRequest.id,
-          housingHelpRequest.socialSupportId
-        ),
+        ...baseUpdateInput(coursorId, coursorId, housingHelpRequest.id),
         privateSynthesis: 'Private synthesis'
       })
     ).rejects.toThrow(/not allowed to access route/i)
@@ -420,12 +363,7 @@ describe('Housing Help Request - Update - Authorizations', () => {
     })
 
     const result = await trpc.structureManager.housingHelpRequest.update({
-      ...baseUpdateInput(
-        coursorId,
-        coursorId,
-        housingHelpRequest.id,
-        housingHelpRequest.socialSupportId
-      ),
+      ...baseUpdateInput(coursorId, coursorId, housingHelpRequest.id),
       privateSynthesis: null
     })
 
@@ -448,12 +386,7 @@ describe('Housing Help Request - Update - Authorizations', () => {
 
     await expect(() =>
       trpc.structureManager.housingHelpRequest.update({
-        ...baseUpdateInput(
-          coursorId,
-          coursorId,
-          housingHelpRequest.id,
-          housingHelpRequest.socialSupportId
-        ),
+        ...baseUpdateInput(coursorId, coursorId, housingHelpRequest.id),
         privateSynthesis: ''
       })
     ).rejects.toThrow(/not allowed to access route/i)
@@ -471,12 +404,7 @@ describe('Housing Help Request - Update - Authorizations', () => {
     )
 
     const result = await trpc.referent.housingHelpRequest.update({
-      ...baseUpdateInput(
-        coursorId,
-        coursorId,
-        housingHelpRequest.id,
-        housingHelpRequest.socialSupportId
-      ),
+      ...baseUpdateInput(coursorId, coursorId, housingHelpRequest.id),
       privateSynthesis: 'Private synthesis'
     })
 
@@ -494,12 +422,7 @@ describe('Housing Help Request - Update - Notifications', () => {
     )
 
     await trpc.structureManager.housingHelpRequest.update(
-      baseUpdateInput(
-        coursorId,
-        coursorId,
-        housingHelpRequest.id,
-        housingHelpRequest.socialSupportId
-      )
+      baseUpdateInput(coursorId, coursorId, housingHelpRequest.id)
     )
 
     const notifications = await prismaClient.notification.findMany({
@@ -528,12 +451,7 @@ describe('Housing Help Request - Update - Notifications', () => {
     )
 
     await trpc.structureManager.housingHelpRequest.update(
-      baseUpdateInput(
-        coursorId,
-        coursorId,
-        housingHelpRequest.id,
-        housingHelpRequest.socialSupportId
-      )
+      baseUpdateInput(coursorId, coursorId, housingHelpRequest.id)
     )
 
     const notifications = await prismaClient.notification.findMany({
@@ -557,12 +475,7 @@ describe('Housing Help Request - Update - Redirections', () => {
     )
 
     await trpc.structureManager.housingHelpRequest.update({
-      ...baseUpdateInput(
-        coursorId,
-        coursorId,
-        housingHelpRequest.id,
-        housingHelpRequest.socialSupportId
-      ),
+      ...baseUpdateInput(coursorId, coursorId, housingHelpRequest.id),
       socialSupportRedirections: [
         {
           type: SocialSupportRedirectionType.Intern,
@@ -598,12 +511,7 @@ describe('Housing Help Request - Update - Redirections', () => {
     )
 
     await trpc.structureManager.housingHelpRequest.update({
-      ...baseUpdateInput(
-        coursorId,
-        coursorId,
-        housingHelpRequest.id,
-        housingHelpRequest.socialSupportId
-      ),
+      ...baseUpdateInput(coursorId, coursorId, housingHelpRequest.id),
       socialSupportRedirections: [
         {
           type: SocialSupportRedirectionType.Other,
@@ -643,12 +551,7 @@ describe('Housing Help Request - Update - Redirections', () => {
     )
 
     await trpc.structureManager.housingHelpRequest.update({
-      ...baseUpdateInput(
-        coursorId,
-        coursorId,
-        housingHelpRequest.id,
-        housingHelpRequest.socialSupportId
-      ),
+      ...baseUpdateInput(coursorId, coursorId, housingHelpRequest.id),
       socialSupportRedirections: []
     })
 
@@ -693,12 +596,7 @@ describe('Housing Help Request - Update - Status-dependent field mutations', () 
     )
 
     await trpc.structureManager.housingHelpRequest.update({
-      ...baseUpdateInput(
-        coursorId,
-        coursorId,
-        housingHelpRequest.id,
-        housingHelpRequest.socialSupportId
-      ),
+      ...baseUpdateInput(coursorId, coursorId, housingHelpRequest.id),
       status: SocialSupportStatus.Accepted,
       externalStructure: 'false',
       examinationDate: new Date('2026-02-15'),
@@ -730,12 +628,7 @@ describe('Housing Help Request - Update - Status-dependent field mutations', () 
     )
 
     await trpc.structureManager.housingHelpRequest.update({
-      ...baseUpdateInput(
-        coursorId,
-        coursorId,
-        housingHelpRequest.id,
-        housingHelpRequest.socialSupportId
-      ),
+      ...baseUpdateInput(coursorId, coursorId, housingHelpRequest.id),
       status: SocialSupportStatus.Accepted,
       externalStructure: 'true',
       examinationDate: new Date('2026-02-15'),
@@ -765,24 +658,14 @@ describe('Housing Help Request - Update - Status-dependent field mutations', () 
     )
 
     await trpc.structureManager.housingHelpRequest.update({
-      ...baseUpdateInput(
-        coursorId,
-        coursorId,
-        refused.id,
-        refused.socialSupportId
-      ),
+      ...baseUpdateInput(coursorId, coursorId, refused.id),
       status: SocialSupportStatus.Refused,
       refusalReason: 'IncompleteFile',
       decisionDate: new Date('2026-03-10')
     })
 
     await trpc.structureManager.housingHelpRequest.update({
-      ...baseUpdateInput(
-        coursorId,
-        coursorId,
-        accepted.id,
-        accepted.socialSupportId
-      ),
+      ...baseUpdateInput(coursorId, coursorId, accepted.id),
       status: SocialSupportStatus.Accepted,
       refusalReason: 'IncompleteFile',
       decisionDate: new Date('2026-03-10')
@@ -815,12 +698,7 @@ describe('Housing Help Request - Update - Status-dependent field mutations', () 
     )
 
     await trpc.structureManager.housingHelpRequest.update({
-      ...baseUpdateInput(
-        coursorId,
-        coursorId,
-        housingHelpRequest.id,
-        housingHelpRequest.socialSupportId
-      ),
+      ...baseUpdateInput(coursorId, coursorId, housingHelpRequest.id),
       status: SocialSupportStatus.Accepted,
       externalStructure: 'true',
       examinationDate: new Date('2026-02-15'),
@@ -850,12 +728,7 @@ describe('Housing Help Request - Update - Status-dependent field mutations', () 
     )
 
     await trpc.structureManager.housingHelpRequest.update({
-      ...baseUpdateInput(
-        coursorId,
-        coursorId,
-        housingHelpRequest.id,
-        housingHelpRequest.socialSupportId
-      ),
+      ...baseUpdateInput(coursorId, coursorId, housingHelpRequest.id),
       status: SocialSupportStatus.Accepted,
       externalStructure: 'false',
       examinationDate: new Date('2026-02-15'),
@@ -901,12 +774,7 @@ describe('Housing Help Request - Update - Status-dependent field mutations', () 
     )
 
     await trpc.structureManager.housingHelpRequest.update({
-      ...baseUpdateInput(
-        coursorId,
-        coursorId,
-        housingHelpRequest.id,
-        housingHelpRequest.socialSupportId
-      ),
+      ...baseUpdateInput(coursorId, coursorId, housingHelpRequest.id),
       externalStructure: 'false',
       instructorOrganizationId: partnerOrganization.id,
       instructorOrganizationContactId: contact.id
@@ -958,12 +826,7 @@ describe('Housing Help Request - Update - Ministry', () => {
     })
 
     await trpc.structureManagerMinistere.housingHelpRequest.update({
-      ...baseUpdateInput(
-        martinId,
-        martinId,
-        housingHelpRequest.id,
-        housingHelpRequest.socialSupportId
-      ),
+      ...baseUpdateInput(martinId, martinId, housingHelpRequest.id),
       isMinistry: true,
       ministerId: newMinister.id
     })
@@ -987,15 +850,48 @@ describe('Housing Help Request - Update - Ministry', () => {
 
     await expect(() =>
       trpc.structureManager.housingHelpRequest.update({
-        ...baseUpdateInput(
-          coursorId,
-          coursorId,
-          housingHelpRequest.id,
-          housingHelpRequest.socialSupportId
-        ),
+        ...baseUpdateInput(coursorId, coursorId, housingHelpRequest.id),
         isMinistry: true,
         ministerId: null as unknown as string
       })
     ).rejects.toThrow(/veuillez renseigner ce champ/i)
+  })
+})
+
+describe('Housing Help Request - Update - SocialSupport derivation', () => {
+  test('Updating a housing help request only modifies its own parent social support', async ({
+    trpc
+  }) => {
+    const managerId = fixturesUsers[FixtureUserRole.StructureManager].id
+
+    const housingA = track(
+      await createTestHousingHelpRequest(coursorId, coursorId, managerId)
+    )
+    const housingB = track(
+      await createTestHousingHelpRequest(coursorId, coursorId, managerId)
+    )
+
+    const synthesisBefore = 'Original synthesis B'
+    await prismaClient.socialSupport.update({
+      where: { id: housingB.socialSupportId },
+      data: { synthesis: synthesisBefore }
+    })
+
+    await trpc.structureManager.housingHelpRequest.update({
+      ...baseUpdateInput(coursorId, coursorId, housingA.id),
+      synthesis: 'Updated synthesis A'
+    })
+
+    const ssA = await prismaClient.socialSupport.findUniqueOrThrow({
+      where: { id: housingA.socialSupportId },
+      select: { synthesis: true }
+    })
+    expect(ssA.synthesis).toBe('Updated synthesis A')
+
+    const ssB = await prismaClient.socialSupport.findUniqueOrThrow({
+      where: { id: housingB.socialSupportId },
+      select: { synthesis: true }
+    })
+    expect(ssB.synthesis).toBe(synthesisBefore)
   })
 })

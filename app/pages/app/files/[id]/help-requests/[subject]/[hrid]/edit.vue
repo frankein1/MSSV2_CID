@@ -171,7 +171,8 @@
           routes.file.AppFile.path(helpRequest.familyFileId, {
             beneficiaryId: helpRequest.beneficiaryId,
             tab: BeneficiaryTab.History,
-            item: helpRequest.socialSupportId
+            item: helpRequestData.value?.helpRequest.fileInstruction
+              .socialSupport.id
           })
         )
       },

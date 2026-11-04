@@ -3,8 +3,7 @@ import { createHousingHelpRequestSchemaBase } from './createHousingHelpRequest.s
 
 export const editHousingHelpRequestSchema = createHousingHelpRequestSchemaBase
   .extend({
-    id: z.string().uuid(),
-    socialSupportId: z.string().uuid()
+    id: z.string().uuid()
   })
   .superRefine((data, ctx) => {
     if (data.isMinistry && !data.ministerId) {

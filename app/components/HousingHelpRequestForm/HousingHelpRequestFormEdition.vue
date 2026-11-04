@@ -51,7 +51,6 @@
     validationSchema: toTypedSchema(editHousingHelpRequestSchema),
     initialValues: {
       id: housingHelpRequest.value.id,
-      socialSupportId: socialSupport.value.id,
       beneficiaryId: socialSupport.value.beneficiary.id,
       familyFileId: socialSupport.value.familyFileId,
       date: socialSupport.value.date,

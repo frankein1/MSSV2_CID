@@ -33,18 +33,24 @@ type UpdateParams = {
 }
 
 export const update = async ({ ctx, input }: UpdateParams) => {
-  const target = await SocialSupportRepo.findUniqueOrThrow(ctx.user, {
-    where: { id: input.socialSupportId },
+  const followup = await FollowupRepo.findUniqueOrThrow(ctx.user, {
+    where: { id: input.id },
     select: {
-      id: true,
-      beneficiaryId: true,
-      createdById: true,
-      documents: true,
-      subjects: true,
-      privateSynthesis: true,
-      privateSynthesisRichText: true
+      socialSupport: {
+        select: {
+          id: true,
+          beneficiaryId: true,
+          createdById: true,
+          documents: true,
+          subjects: true,
+          privateSynthesis: true,
+          privateSynthesisRichText: true
+        }
+      }
     }
   })
+
+  const target = followup.socialSupport
 
   const {
     subjects,
@@ -70,14 +76,13 @@ export const update = async ({ ctx, input }: UpdateParams) => {
     classified,
     forwardedToJustice,
     isDuringWalkInSession,
-    socialSupportId,
     duration,
     socialSupportRedirections,
     supportProgramId
   } = input
 
   const { socialSupportRedirections: previousRedirectionIds } =
-    await getSocialSupportWithRedirections(ctx.user, input.socialSupportId)
+    await getSocialSupportWithRedirections(ctx.user, target.id)
 
   const reasonIds = await resolveRedirectionReasonIds(
     ctx,
@@ -117,7 +122,7 @@ export const update = async ({ ctx, input }: UpdateParams) => {
 
   const updateSocialSupport = () =>
     SocialSupportRepo.update(ctx.user, {
-      where: { id: socialSupportId },
+      where: { id: target.id },
       data: {
         lastUpdatedBy: connect(ctx.user.id),
         documents: prepareDocumentsMutations(documents, target.documents),

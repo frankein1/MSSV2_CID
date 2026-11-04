@@ -127,7 +127,7 @@
           routes.file.AppFile.path(followup.familyFileId, {
             beneficiaryId: followup.beneficiaryId,
             tab: BeneficiaryTab.History,
-            item: followup.socialSupportId
+            item: followupData.value?.followup.socialSupportId
           })
         )
       },
